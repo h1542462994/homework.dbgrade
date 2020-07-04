@@ -4,5 +4,8 @@
     "middle": "yumy",
     "short": "ymy",
     "no": "1"
+  }, "options": {
+    "autocopy": false,
+    "autocopy-target": ""
   }
 }

@@ -37,6 +37,19 @@
 
 关闭，并将需要修改的文件放入`\data\source`内，其会将所有满足`@{arg}`的部分替换，替换规则遵循`args`的配置。
 
+### 自动拷贝
+
+在`config.json`中添加以下代码可以完成自动拷贝工作（仅拷贝`source`文件夹内的文件）
+
+```json
+{
+    "options": {
+        "autocopy": true,
+        "autocopy-target": "${directoryUri}"
+    }
+}
+```
+
 ## 注意事项
 
 - 在系统中出现难以解决的问题，请提交至[Issue](https://github.com/h1542462994/homework.dbgrade/issues)

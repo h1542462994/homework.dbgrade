@@ -17,6 +17,7 @@ namespace DbGrade.SqlCreator
         public static App Current { get; private set; }
         public Logger Logger { get; } = new Logger();
         public Settings Settings { get; } = new Settings();
+        public AutoCopy AutoCopy { get; } = new AutoCopy();
         public static void Create()
         {
             Current = new App();
@@ -46,7 +47,9 @@ namespace DbGrade.SqlCreator
             Console.WriteLine(Settings);
             Replacer replacer = new Replacer();
             replacer.DoReplace();
-            
+            AutoCopy autoCopy = new AutoCopy();
+            autoCopy.DoCopy();
+
             Console.ReadLine();
 
         }

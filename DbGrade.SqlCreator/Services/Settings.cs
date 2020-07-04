@@ -7,6 +7,21 @@ using Newtonsoft.Json;
 
 namespace DbGrade.SqlCreator.Services
 {
+    /// <summary>
+    /// 系统支持的设置选项
+    /// </summary>
+    public static class SettingsOptions
+    {
+        /// <summary>
+        /// 对应<see cref="Settings.options"/>的设置为autocopy的设置项。
+        /// </summary>
+        public static string AutoCopy => "autocopy";
+        /// <summary>
+        /// 对应<see cref="Settings.options"/>的设置为autocopy-target的设置项。
+        /// </summary>
+        public static string AutoCopyTarget => "autocopy-target";
+    }
+
     public class Settings: IInitable
     {
         public Dictionary<string, string> args = new Dictionary<string, string>
@@ -16,6 +31,13 @@ namespace DbGrade.SqlCreator.Services
             { "short", "ymy" },
             { "no", "1" }
         };
+        public Dictionary<string, object> options = new Dictionary<string, object>
+        {
+            { SettingsOptions.AutoCopy, false },
+            { SettingsOptions.AutoCopyTarget, "" }
+        };
+
+        
 
         public void Init()
         {
@@ -31,6 +53,7 @@ namespace DbGrade.SqlCreator.Services
                 if(settings != null)
                 {
                     args = settings.args;
+                    options = settings.options;
                 }
             }
         }
