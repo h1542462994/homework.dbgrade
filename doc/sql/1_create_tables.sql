@@ -1,3 +1,4 @@
+/* 创建各个数据表 */
 set xact_abort on
 begin transaction Tcreate_tables
 create table @{middle}_Professions@{no} (
@@ -13,13 +14,15 @@ create table @{middle}_Xclasses@{no} (
 
 create table @{middle}_Provinces@{no} (
     @{short}_Prno@{no} int primary key identity,
-    @{short}_Name@{no} varchar(20) not null
+    @{short}_Name@{no} varchar(20) not null,
+    @{short}_SummaryCount@{no} int default(0)
 )
 
 create table @{middle}_Cities@{no} (
     @{short}_Cino@{no} int primary key identity,
     @{short}_Name@{no} varchar(20) not null,
-    @{short}_Prno@{no} int not null foreign key references @{middle}_Provinces@{no} 
+    @{short}_Prno@{no} int not null foreign key references @{middle}_Provinces@{no},
+    @{short}_SummaryCount@{no} int default(0)
 )
 
 create table @{middle}_Students@{no} (

@@ -1,3 +1,4 @@
+/* 创建数据库 */
 set xact_abort on
 begin transaction Tcreate_database
 create database @{full}MIS@{no}
