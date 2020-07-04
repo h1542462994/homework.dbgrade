@@ -1,6 +1,5 @@
-﻿#nullable enable
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -17,33 +16,27 @@ namespace Tro.DbGrade.Server.Extensions
     /// </summary>
     public static class ModelExtensions
     {
-        /// <summary>
-        /// 获取<typeparamref name="T"/>的默认模型名。
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static string DefaultName<T>(this EntityTypeBuilder<T> builder) where T:class
+        public static void RenameEntity(ModelBuilder builder, IMutableEntityType type, IRenameDbService service)
         {
-            Type entityType = typeof(T);
-            string name = entityType.Name;
-            TableAttribute? tableAttribute = entityType.GetCustomAttribute<TableAttribute>();
-            if(tableAttribute != null)
+            string entityName = service.RenameEntity(type.GetTableName());
+            builder.Entity(type.ClrType).ToTable(entityName);
+            foreach (var item in type.GetProperties())
             {
-                name = tableAttribute.Name;
+                builder.Entity(type.ClrType)
+                    .Property(
+                        item.ClrType, 
+                        item.GetColumnName())
+                    .HasColumnName(
+                        service.RenameColumn(item.GetColumnName()));
             }
-
-            return name;
         }
 
         public static void RenameDb(this ModelBuilder modelBuilder, IRenameDbService service)
         {
             foreach (var item in modelBuilder.Model.GetEntityTypes())
             {
-                Console.WriteLine(item.Name);
+                RenameEntity(modelBuilder, item, service);
             }
-            
-                
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Tro.DbGrade.Server.Model
 {
     public class StuTest
     {
+        [Key]
         public string Sno { get; set; }
 
         public string Name { get; set; }

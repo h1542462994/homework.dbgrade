@@ -15,9 +15,6 @@ namespace Tro.DbGrade.Server.Model
         Female
     }
 
-
-
-
     public class Students
     {
         public string Sno { get; set; }

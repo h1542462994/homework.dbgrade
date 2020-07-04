@@ -12,8 +12,10 @@ namespace Tro.DbGrade.Server.Extensions
     /// </summary>
     public interface IRenameDbService
     {
-        string RenameEntity(Type entity);
-        string RenameProperty(Type entity, FieldInfo field);
+        string RenameEntity(string entityName);
 
+        string RenameColumn(string columnName);
+
+        string RenameConnectionString(string connectionString);
     }
 }

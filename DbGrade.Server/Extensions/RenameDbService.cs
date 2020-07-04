@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,14 +9,48 @@ namespace Tro.DbGrade.Server.Extensions
 {
     public class RenameDbService : IRenameDbService
     {
-        public string RenameEntity(Type entity)
+        public RenameDbOptions Options { get; }
+
+        public RenameDbService(IOptions<RenameDbOptions> options)
         {
-            return "hello";
+            this.Options = options.Value;
         }
 
-        public string RenameProperty(Type entity, FieldInfo field)
+        public string RenameEntity(string entityName)
         {
-            return "hello world";
+            if (Options.IsOpen)
+            {
+                return $"{Options.MiddleName}_{entityName}{Options.GroupNo}";
+            } 
+            else
+            {
+                return entityName;
+            }
+        }
+
+        public string RenameColumn(string columnName)
+        {
+            if (Options.IsOpen)
+            {
+                return $"{Options.ShortName}_{columnName}{Options.GroupNo}";
+            } 
+            else
+            {
+
+                return columnName;
+            }
+        }
+
+        public string RenameConnectionString(string connectionString)
+        {
+            if (Options.IsOpen)
+            {
+                return connectionString.Replace("@{DataBase}", $"{Options.FullName}MIS{Options.GroupNo}");
+            }
+            else
+            {
+                return connectionString;
+            }
         }
     }
 }
