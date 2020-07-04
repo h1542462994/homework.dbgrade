@@ -29,7 +29,7 @@ namespace Tro.DbGrade.Server.Controllers
         [HttpGet("students")]
         public IActionResult Students()
         {
-            return new JsonResult(from item in DbContext.StuTests where item.Sno == "S01" select item);
+            return new JsonResult(from item in DbContext.Students select item);
         }
     }
 }

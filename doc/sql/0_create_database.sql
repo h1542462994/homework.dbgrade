@@ -1,3 +1,5 @@
+set xact_abort on
+begin transaction Tcreate_database
 create database @{full}MIS@{no}
 on (
     name = @{full}MIS@{no}_data,
@@ -16,3 +18,4 @@ log on (
 go
 
 alter database @{full}MIS@{no} collate Chinese_PRC_CI_AS
+commit

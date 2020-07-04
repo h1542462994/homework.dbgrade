@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-
+using System.Collections.Generic;
 
 namespace Tro.DbGrade.Server.Extensions
 {
@@ -18,6 +12,7 @@ namespace Tro.DbGrade.Server.Extensions
     {
         public static void RenameEntity(ModelBuilder builder, IMutableEntityType type, IRenameDbService service)
         {
+            
             string entityName = service.RenameEntity(type.GetTableName());
             builder.Entity(type.ClrType).ToTable(entityName);
             foreach (var item in type.GetProperties())
@@ -33,6 +28,7 @@ namespace Tro.DbGrade.Server.Extensions
 
         public static void RenameDb(this ModelBuilder modelBuilder, IRenameDbService service)
         {
+            
             foreach (var item in modelBuilder.Model.GetEntityTypes())
             {
                 RenameEntity(modelBuilder, item, service);

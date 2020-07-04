@@ -23,6 +23,7 @@ namespace Tro.DbGrade.Server.Storage
         }
 
         public DbSet<StuTest> StuTests { get; set; }
+        public DbSet<Student> Students { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
