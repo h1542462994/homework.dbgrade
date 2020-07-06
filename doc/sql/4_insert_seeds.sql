@@ -6,6 +6,11 @@ delete from @{middle}_Provinces@{no};
 delete from @{middle}_Xclasses@{no};
 delete from @{middle}_Professions@{no};
 
+--枚举定义
+--sex 男：0；女：1
+--level（教师职称） 讲师：0；副教授：1；教授：2
+--term 上学期：0；下学期：1
+--way 考核方式 考试：0；考察：1
 
 /* 添加种子数据 省市 */
 insert into @{middle}_Provinces@{no} values ('浙江省', 0);
@@ -158,8 +163,8 @@ insert into @{middle}_Xclasses@{no} values('5班', @profession, 2018);
 
 declare @class int
 declare @city int
-select @class = @{short}_Cno@{no} from @{middle}_Xclasses@{no} first
-select @city = @{short}_Cino@{no} from @{middle}_Cities@{no} first
+select top 1 @class = @{short}_Cno@{no} from @{middle}_Xclasses@{no}
+select top 1 @city = @{short}_Cino@{no} from @{middle}_Cities@{no}
 /* 添加学生的种子数据 */
 insert into @{middle}_Students@{no} values('S000001', '学生1', 0, 18, 0.0, @class, @city);
 insert into @{middle}_Students@{no} values('S000002', '学生2', 1, 17, 0.0, @class, @city);
@@ -170,4 +175,37 @@ insert into @{middle}_Students@{no} values('S000006', '学生6', 1, 18, 0.0, @cl
 insert into @{middle}_Students@{no} values('S000007', '学生7', 1, 19, 0.0, @class, @city);
 insert into @{middle}_Students@{no} values('S000008', '学生8', 1, 18, 0.0, @class, @city);
 insert into @{middle}_Students@{no} values('S000009', '学生9', 1, 20, 0.0, @class, @city);
+
+/* 添加教师的种子数据 */
+insert into @{middle}_Teachers@{no} values('T000001', '教师1', 0, 34, 0, '13000000000');
+insert into @{middle}_Teachers@{no} values('T000002', '教师2', 0, 34, 0, '13000000000');
+insert into @{middle}_Teachers@{no} values('T000003', '教师3', 0, 34, 0, '13000000000');
+insert into @{middle}_Teachers@{no} values('T000004', '教师4', 0, 34, 0, '13000000000');
+insert into @{middle}_Teachers@{no} values('T000005', '教师5', 0, 34, 0, '13000000000');
+
+/* 添加学期的种子数据 */
+insert into @{middle}_Terms@{no} values(2020, 0)
+insert into @{middle}_Terms@{no} values(2020, 1)
+
+/* 添加课程的种子数据 */
+insert into @{middle}_Courses@{no} values('计算机组成原理', 48, 0, 3.0)
+insert into @{middle}_Courses@{no} values('数据库原理与应用', 48, 0, 3.0)
+
+declare @tno varchar(20)
+declare @cono int
+select top 1 @tno = @{short}_Tno@{no} from @{middle}_Teachers@{no}
+select top 1 @cono = @{short}_Cono@{no} from @{middle}_Courses@{no}
+
+/* 添加开课的种子数据 */
+insert into @{middle}_OpenCourses@{no} values(@cono, @class, 2020, 0, @tno)
+
+declare @ono int
+select top 1 @ono = @{short}_Ono@{no} from @{middle}_OpenCourses@{no}
+declare @sno varchar(20)
+select top 1 @sno = @{short}_Sno@{no} from @{middle}_Students@{no}
+
+/* 添加报告的数据 */
+insert into @{middle}_Reports@{no} values (@ono, @sno, 93)
+
 commit
+
