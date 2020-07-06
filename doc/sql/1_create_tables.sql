@@ -9,7 +9,8 @@ create table @{middle}_Professions@{no} (
 create table @{middle}_Xclasses@{no} (
     @{short}_Cno@{no} int primary key identity,
     @{short}_Name@{no} varchar(20) not null,
-    @{short}_Pno@{no} int not null foreign key references @{middle}_Professions@{no} 
+    @{short}_Pno@{no} int not null foreign key references @{middle}_Professions@{no},
+    @{short}_Year@{no} int not null
 )
 
 create table @{middle}_Provinces@{no} (

@@ -5,7 +5,7 @@ for insert,update,delete
 as
 begin
 	select @{short}_Sno@{no} sno,sum(@{short}_Grade@{no}) sum_grade into #inserted
-		from inserted group by @{short}_Sno@{no}
+		from inserted where @{short}_Grade@{no} >= 60 group by @{short}_Sno@{no}
 	update @{middle}_Students@{no} set @{short}_TotalCredit@{no} = @{short}_TotalCredit@{no} + (
 		select sum_grade from #inserted where #inserted.sno = @{middle}_Students@{no}.@{short}_Sno@{no}
 	) where exists (
@@ -13,7 +13,7 @@ begin
 	)
 
 	select @{short}_Sno@{no} sno,sum(@{short}_Grade@{no}) sum_grade into #deleted
-		from inserted group by @{short}_Sno@{no}
+		from inserted where @{short}_Grade@{no} >= 60 group by @{short}_Sno@{no}
 	update @{middle}_Students@{no} set @{short}_TotalCredit@{no} = @{short}_TotalCredit@{no} - (
 		select sum_grade from #deleted where #deleted.sno = @{middle}_Students@{no}.@{short}_Sno@{no}
 	) where exists (
