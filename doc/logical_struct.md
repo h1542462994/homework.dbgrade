@@ -12,7 +12,7 @@
 
 通过连接操作补全OpenCourses的基本信息，学期开设信息，课程信息，教师信息
 
-### 视图3 ReportsView : StudentsView, OpenCoursesView
+#### 视图3 ReportsView : StudentsView, OpenCoursesView
 
 ### 统计流式视图
 
