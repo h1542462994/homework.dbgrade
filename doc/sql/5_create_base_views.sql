@@ -129,7 +129,7 @@ select distinct
 	@{middle}_OpenCoursesView@{no}.@{short}_Ono@{no} @{short}_Ono@{no}, --开课课程号
 	@{middle}_OpenCoursesView@{no}.@{short}_Cono@{no} @{short}_Cono@{no}, --课程号
 	@{middle}_OpenCoursesView@{no}.@{short}_CoName@{no} @{short}_CoName@{no}, --课程名
-	@{middle}_OpenCoursesView@{no}.@{short}_Credit@{no} @{short}_Credit@{no}, --学分
+	iif(@{middle}_OpenCoursesView@{no}.@{short}_Credit@{no}>=60, @{middle}_OpenCoursesView@{no}.@{short}_Credit@{no}, 0) @{short}_Credit@{no}, --学分
 	@{middle}_OpenCoursesView@{no}.@{short}_Period@{no} @{short}_Period@{no}, --学时
 	@{middle}_OpenCoursesView@{no}.@{short}_Way@{no} @{short}_Way@{no}, --考核方式
 	@{middle}_OpenCoursesView@{no}.@{short}_Year@{no} @{short}_Year@{no}, --开课年份
@@ -145,4 +145,3 @@ from
 where
 	@{middle}_Reports@{no}.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no} and
 	@{middle}_Reports@{no}.@{short}_Ono@{no} = @{middle}_OpenCoursesView@{no}.@{short}_Ono@{no}
-

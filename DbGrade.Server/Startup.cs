@@ -31,8 +31,9 @@ namespace Tro.DbGrade.Server
             services.AddMvc();
             services.AddOptions<RenameDbOptions>()
                 .Bind(Configuration.GetSection(RenameDbOptions.RenameDb));
-            services.AddSingleton<IRenameDbService, RenameDbService>();
+            services.AddRenameDbService<RenameDbService>();
             services.AddDbContext<GradeDbContext>();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +49,7 @@ namespace Tro.DbGrade.Server
 
             app.UseEndpoints(endpoint => {
                 endpoint.MapDefaultControllerRoute();
+
             });
         }
     }

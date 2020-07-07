@@ -27,9 +27,9 @@ namespace Tro.DbGrade.Server.Storage
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options )
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            options.UseSqlServer(
+            builder.UseSqlServer(
                 RenameDbService.RenameConnectionString(
                     Configuration.GetConnectionString("GradeDatabase")));
         }

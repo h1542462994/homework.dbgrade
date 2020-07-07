@@ -45,7 +45,7 @@ namespace Tro.DbGrade.Server.Extensions
         {
             if (Options.IsOpen)
             {
-                return connectionString.Replace("@{DataBase}", $"{Options.FullName}MIS{Options.GroupNo}");
+                return connectionString.Replace("@{DataBase}", $"{Options.FullName}MIS{Options.GroupNo}", StringComparison.CurrentCulture);
             }
             else
             {
