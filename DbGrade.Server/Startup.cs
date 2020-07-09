@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Tro.DbGrade.FrameWork.Extensions.DataAcesses;
 using Tro.DbGrade.FrameWork.Extensions.Rename;
 using Tro.DbGrade.Server.Storage;
 
@@ -31,11 +30,6 @@ namespace Tro.DbGrade.Server
                 .Bind(Configuration.GetSection(RenameDbOptions.RenameDb));
             services.AddRenameDbService<RenameDbService>();
             services.AddDbContext<GradeDbContext>();
-            services.AddDataAccessService<GradeDbContext>(options =>
-            {
-                options.EachCount = 10;
-
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

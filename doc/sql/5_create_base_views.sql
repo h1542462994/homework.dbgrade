@@ -13,48 +13,51 @@ from
 where
 	@{middle}_Provinces@{no}.@{short}_Prno@{no} = @{middle}_Cities@{no}.@{short}_Prno@{no}
 
-/*创建班级概览视图*/
-create or alter view @{middle}_XclassSummaryView@{no}
-as
-select
-	
-	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no},
-	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_Year@{no},
-	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	studentSummary._count @{short}_Count@{no}
-from
-	@{middle}_Xclasses@{no}, (
-		select 
-			@{middle}_Students@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-			count(*) _count
-		from @{middle}_Students@{no}
-		group by @{middle}_Students@{no}.@{short}_Cno@{no}
-	) studentSummary
-where
-	@{middle}_Xclasses@{no}.@{short}_Cno@{no} = studentSummary.@{short}_Cno@{no}
-
-/*创建专业概览视图*/
-create or alter view @{middle}_ProfessionView@{no}
+/*创建结构概览视图*/
+create or alter view [@{middle}_StructView@{no}]
 as
 select
 	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
 	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
-	citySummary._count @{short}_PCount@{no},
-	@{middle}_XclassSummaryView@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-	@{middle}_XclassSummaryView@{no}.@{short}_CName@{no} @{short}_CName@{no},
-	@{middle}_XclassSummaryView@{no}.@{short}_Count@{no} @{short}_CCount@{no}
-from 
-	@{middle}_Professions@{no}, (
-		select 
-			@{middle}_XclassSummaryView@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-			sum(@{middle}_XclassSummaryView@{no}.@{short}_Count@{no}) _count
-		from @{middle}_XclassSummaryView@{no}
-		group by @{middle}_XclassSummaryView@{no}.@{short}_Pno@{no}
-	) citySummary, @{middle}_XclassSummaryView@{no}
-where 
-	@{middle}_Professions@{no}.@{short}_Pno@{no} = citySummary.@{short}_Pno@{no} and
-	@{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_XclassSummaryView@{no}.@{short}_Pno@{no}
+	(select @{short}_Count@{no} from @{middle}_ProfessionSummaryView@{no} where @{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_ProfessionSummaryView@{no}.@{short}_Pno@{no}) @{short}_PCount@{no},
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
+	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no},
+	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_Year@{no},
+	(select @{short}_Count@{no} from @{middle}_XclassSummaryView@{no} where @{middle}_Xclasses@{no}.@{short}_Cno@{no} = @{middle}_XclassSummaryView@{no}.@{short}_Cno@{no}) @{short}_CCount@{no}
+from
+	@{middle}_Professions@{no} left join @{middle}_Xclasses@{no} 
+on	
+	@{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_Xclasses@{no}.@{short}_Pno@{no}
+
+create or alter view @{middle}_XclassSummaryView@{no}
+as
+select 
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
+	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_Name@{no},
+	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
+	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	studentSummary._count @{short}_Count@{no}
+from
+	@{middle}_Xclasses@{no} left join (
+		select distinct @{short}_Cno@{no} @{short}_Cno@{no}, count(*)_count from @{middle}_Students@{no}
+		group by @{short}_Cno@{no}
+	) studentSummary
+on 
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} = studentSummary.@{short}_Cno@{no}
+
+create or alter view @{middle}_ProfessionSummaryView@{no}
+as
+select
+	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
+	studentSummary._count @{short}_Count@{no}
+from
+	@{middle}_Professions@{no} left join (
+	select @{short}_Pno@{no} @{short}_Pno@{no}, count(*)_count from @{middle}_StudentsView@{no}
+	group by @{short}_Pno@{no}
+	) studentSummary
+on
+	@{middle}_Professions@{no}.@{short}_Pno@{no} = studentSummary.@{short}_Pno@{no}
 
 /*创建学生详细视图*/
 create or alter view @{middle}_StudentsView@{no}
