@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Tro.DbGrade.Server.Model;
 using Tro.DbGrade. FrameWork.Extensions.Rename;
+using Tro.DbGrade.Server.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,8 +23,13 @@ namespace Tro.DbGrade.Server.Storage
             
         }
 
-        public DbSet<StuTest> StuTests { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Profession> Professions { get; set; }
+        public DbSet<Xclass> Xclasses { get; set; }
+        public DbSet<StudentsView> StudentsView { get; set; }
+        public DbSet<Province> Provinces { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<ReportsView> ReportsView { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
@@ -37,7 +43,10 @@ namespace Tro.DbGrade.Server.Storage
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
             modelBuilder.RenameDb(RenameDbService);
+            modelBuilder.Entity<StructView>().HasNoKey();
+            modelBuilder.Entity<ReportsView>().HasNoKey();
         }
 
     }

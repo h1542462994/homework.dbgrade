@@ -14,23 +14,16 @@ namespace Tro.DbGrade.Server.Controllers
     public class HomeController : Controller
     {
 
-        public HomeController(GradeDbContext dbContext)
+        public HomeController()
         {
-            this.DbContext = dbContext;
-        }
 
-        public GradeDbContext DbContext { get; }
+        }
 
         public IActionResult Index()
         {
             return new JsonResult("hello world");
         }
 
-        [HttpGet("students")]
-        public IActionResult Students()
-        {
-            return new JsonResult(from item in DbContext.Students select item);
-        }
 
 
     }

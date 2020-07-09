@@ -30,6 +30,7 @@ namespace Tro.DbGrade.Server
                 .Bind(Configuration.GetSection(RenameDbOptions.RenameDb));
             services.AddRenameDbService<RenameDbService>();
             services.AddDbContext<GradeDbContext>();
+            services.AddScoped<IGradeRepository, GradeRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
