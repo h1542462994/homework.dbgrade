@@ -9,8 +9,8 @@ select
 	@{middle}_Cities@{no}.@{short}_Name@{no} @{short}_CiName@{no},
 	@{middle}_Cities@{no}.@{short}_SummaryCount@{no} @{short}_CiSummaryCount@{no}
 from
-	@{middle}_Provinces@{no}, @{middle}_Cities@{no}
-where
+	@{middle}_Provinces@{no} left join @{middle}_Cities@{no}
+on
 	@{middle}_Provinces@{no}.@{short}_Prno@{no} = @{middle}_Cities@{no}.@{short}_Prno@{no}
 
 
@@ -62,7 +62,7 @@ on
 	@{middle}_Professions@{no}.@{short}_Pno@{no} = studentSummary.@{short}_Pno@{no}
 
 /*创建学生详细视图*/
-CREATE view @{middle}_StudentsView@{no}
+create or alter view @{middle}_StudentsView@{no}
 as
 	select 
 		@{middle}_Students@{no}.@{short}_Sno@{no} @{short}_Sno@{no}, --学号
@@ -124,7 +124,7 @@ select distinct
 	@{middle}_StudentsView@{no}.@{short}_TotalCredit@{no} @{short}_TotalCredit@{no}, --总学分
 	@{middle}_StudentsView@{no}.@{short}_Cno@{no} @{short}_Cno@{no}, --班级号
 	@{middle}_StudentsView@{no}.@{short}_CYear@{no} @{short}_CYear@{no},
-	@{middle}_StudentsView@{no}.@{short}_Name@{no} @{short}_CName@{no}, --班级名
+	@{middle}_StudentsView@{no}.@{short}_CName@{no} @{short}_CName@{no}, --班级名
 	@{middle}_StudentsView@{no}.@{short}_Pno@{no} @{short}_Pno@{no}, --专业号
 	@{middle}_StudentsView@{no}.@{short}_PName@{no} @{short}_PName@{no}, --专业名
 	@{middle}_StudentsView@{no}.@{short}_Cino@{no} @{short}_Cino@{no}, --城市号

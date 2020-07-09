@@ -14,17 +14,33 @@
 
 #### 视图3 ReportsView : StudentsView, OpenCoursesView
 
+通过连接视图补全Reports的基本信息，以及开课，课程、班级、学生信息。
+
 ### 统计流式视图
 
 #### 视图1 DestSummaryView : Provinces, Cities
+
+*此视图仅用于查看信息所用，并不在程序中使用。*
 
 地区统计视图
 
 #### 视图2 XclassSummaryView: Xclass, Students
 
-班级统计视图
+*此视图仅用于查看信息所用，并不在程序中使用。*
 
-#### 视图3 ProvinceSummaryView: Provinces, XclassSummaryView
+班级统计视图（统计人数）
+
+#### 视图3 ProfessionSummaryView: Profession, Students
+
+*此视图仅用于查看信息所用，并不在程序中使用。*
+
+专业统计视图（统计人数）
+
+#### 视图4 StructView: Profession, Xclasses, XclassSummaryView, ProfessionSummaryView
+
+*此视图仅用于查看信息所用，并不在程序中使用。*
+
+专业、班级统计视图
 
 ### 高级统计视图
 
@@ -138,7 +154,7 @@ api/report?[scope=all|profession|class|province|city|opencourse|course|student|t
         "totalCredit": 3,
         "cno": 1,
         "cYear": 2016,
-        "cName": "学生2",
+        "cName": "1班",
         "pno": 1,
         "pName": "实验班",
         "prno": 1,
