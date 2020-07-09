@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
-namespace Tro.FrameWork.Extensions.Rename
+namespace Tro.DbGrade.FrameWork.Extensions.Rename
 {
     public class RenameDbService : IRenameDbService
     {

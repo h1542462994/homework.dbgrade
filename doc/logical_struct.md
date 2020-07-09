@@ -27,3 +27,7 @@
 #### 视图3 ProvinceSummaryView: Provinces, XclassSummaryView
 
 ### 高级统计视图
+
+
+### paging
+

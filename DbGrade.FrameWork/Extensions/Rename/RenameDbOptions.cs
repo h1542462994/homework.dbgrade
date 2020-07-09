@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tro.FrameWork.Extensions.Rename
+namespace Tro.DbGrade.FrameWork.Extensions.Rename
 {
     /// <summary>
     /// 重命名服务的选项

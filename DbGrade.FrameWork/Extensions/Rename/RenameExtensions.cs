@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.DataAcesses;
 
-namespace Tro.FrameWork.Extensions.Rename
+namespace Tro.DbGrade.FrameWork.Extensions.Rename
 {
     public static class RenameExtensions
     {

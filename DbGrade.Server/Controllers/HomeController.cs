@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Tro.DbGrade.Server.DataAcesses;
+using Tro.DbGrade.FrameWork.Extensions.DataAcesses;
 using Tro.DbGrade.Server.Model;
 using Tro.DbGrade.Server.Storage;
 
@@ -16,14 +16,14 @@ namespace Tro.DbGrade.Server.Controllers
     public class HomeController : Controller
     {
 
-        public HomeController(GradeDbContext dbContext, DataAccessService dataAccessService)
+        public HomeController(GradeDbContext dbContext, DataAccessService<GradeDbContext> dataAccessService)
         {
             this.DbContext = dbContext;
             DataAccessService = dataAccessService;
         }
 
         public GradeDbContext DbContext { get; }
-        public DataAccessService DataAccessService { get; }
+        public DataAccessService<GradeDbContext> DataAccessService { get; }
 
         public IActionResult Index()
         {
@@ -37,9 +37,18 @@ namespace Tro.DbGrade.Server.Controllers
         }
 
         [HttpGet("test")]
-        public IActionResult Test(int pageIndex = 0, ResourceOrder[] orders = null)
+        public IActionResult Test(int pageIndex = 0, string orders = null)
         {
-            return new JsonResult( DataAccessService.Data<Student>(pageIndex, orders));
+            return new JsonResult(
+                DataAccessService.Data(pageIndex, orders.ToOrders<Student>())
+                );
+        }
+
+
+        [HttpGet("test2")]
+        public IActionResult Test2()
+        {
+           
         }
     }
 }
