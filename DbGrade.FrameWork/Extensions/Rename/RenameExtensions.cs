@@ -1,25 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Tro.DbGrade.Server.DataAcesses;
 
-namespace Tro.DbGrade.Server.Extensions
+namespace Tro.FrameWork.Extensions.Rename
 {
-    /// <summary>
-    /// 用于扩展<see cref="Microsoft.EntityFrameworkCore.DbContext"/>的相关方法，方便系统与数据库的交互。
-    /// </summary>
-    public static class ModelExtensions
+    public static class RenameExtensions
     {
+        public static IServiceCollection AddRenameDbService<T>(this IServiceCollection collection) where T: class, IRenameDbService 
+        {
+            return collection.AddSingleton<IRenameDbService, T>();
+        }
+
         public static void RenameEntity(ModelBuilder builder, IMutableEntityType type, IRenameDbService service)
         {
-            
+
             string entityName = service.RenameEntity(type.GetTableName());
             builder.Entity(type.ClrType).ToTable(entityName);
             foreach (var item in type.GetProperties())
             {
                 builder.Entity(type.ClrType)
                     .Property(
-                        item.ClrType, 
+                        item.ClrType,
                         item.GetColumnName())
                     .HasColumnName(
                         service.RenameColumn(item.GetColumnName()));
@@ -28,11 +32,12 @@ namespace Tro.DbGrade.Server.Extensions
 
         public static void RenameDb(this ModelBuilder modelBuilder, IRenameDbService service)
         {
-            
+
             foreach (var item in modelBuilder.Model.GetEntityTypes())
             {
                 RenameEntity(modelBuilder, item, service);
             }
         }
+
     }
 }

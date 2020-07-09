@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Tro.DbGrade.Server.Extensions;
+using Tro.DbGrade.Server.DataAcesses;
 using Tro.DbGrade.Server.Storage;
+using Tro.FrameWork.Extensions.Rename;
 
 namespace Tro.DbGrade.Server
 {
@@ -23,9 +24,6 @@ namespace Tro.DbGrade.Server
             this.Configuration = configuration;
         }
 
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -33,10 +31,13 @@ namespace Tro.DbGrade.Server
                 .Bind(Configuration.GetSection(RenameDbOptions.RenameDb));
             services.AddRenameDbService<RenameDbService>();
             services.AddDbContext<GradeDbContext>();
-           
+            services.AddDataAccessService(options =>
+            {
+                options.EachCount = 10;
+
+            });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

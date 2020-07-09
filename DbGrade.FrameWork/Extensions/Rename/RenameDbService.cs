@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Extensions
+namespace Tro.FrameWork.Extensions.Rename
 {
     public class RenameDbService : IRenameDbService
     {

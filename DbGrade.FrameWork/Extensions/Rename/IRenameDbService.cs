@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Extensions
+namespace Tro.FrameWork.Extensions.Rename
 {
     /// <summary>
     /// 根据课程设计的要求，提供重命名服务。
