@@ -11,19 +11,44 @@
     
 > 备注：总学分是指已经有报告的学分和（无论成绩有没有及格），已修学分指已经有报告且及格的学分和。总绩点和指（sum{(单科成绩-50)/10*单科的绩点}）
 
-### 成绩详细界面(route:page/report)
+### 学生详情界面(route:page/students/{id:string})
+
+### 成绩详细界面(route:page/reports)
 
 - 查看成绩的基本信息
-    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、课程名(CoName)、开课时间(CYear)、开课学期(Term)、授课教师(TName)、成绩(Grade)、学分(Credit)、获得的学分(CreditGet)
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(CYear)、班级名(CName)、课程名(CoName)、开课时间(Year)、开课学期(Term)、授课教师(TName)、成绩(Grade)、学分(Credit)、获得的学分(CreditGet)
     - 筛选：专业、班级；届数；开课时间
     - 引用api: struct,reports
 
-### 成绩统计界面(route:page/reportSummary)
+### 成绩统计界面(route:page/report_summary)
 
 - 查看学生的统计信息
-    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、总体成绩及排名(TotalGrade)、每年的成绩和排名(Grades)
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(CYear)、开课时间(Year)、班级名(CName)、总体成绩及排名(TotalGrade)、每年的成绩和排名(Grades)
     - 筛选：专业、班级；届数；开课时间
     - 引用api: report_summary
+
+### 课程统计界面
+
+- 查看课程的统计信息
+    - 列：课程号(Cono)、课程名(CoName)、专业(PName)、届数(CYear)、班级(CName)、开课教师(TName)、平均成绩(Avg_Grade)。
+    - 筛选：专业、班级、课程、任课教师；届数；开课时间
+    引用api: course_summary
+
+### 班级课表界面
+
+TODO: 待完善
+
+- 查看班级的课表信息
+    - 列: 
+    - 引用api: course_summary
+
+### 教师任课界面
+
+TODO: 待完善
+
+- 查看教师的任课信息
+    - 列：
+    - 引用api: course_summary
 
 ## 对应的api及其说明
 
@@ -165,7 +190,7 @@ api/report?[scope=all|profession|class|province|city|opencourse|course|student|t
 
 #### 查看成绩统计信息(api/report_summary)
 
-api/report_summary
+api/report_summary?[scope=all|profession|class]&[tag=?]&[year=?]&[cyear=?]
 
 ```json
 [
@@ -201,6 +226,40 @@ api/report_summary
                 "orderOfClass": 1
             }
         ]
+    }
+]
+```
+
+#### 查看课程统计信息(api/course_summary)
+
+api/course_summary?[scope=all|profession|class|teacher|course]&[tag=?]&[year=?]&[cyear=?]
+
+```json
+[
+    {
+        "ono": 1,
+        "cono": 1,
+        "coName": "计算机组成原理",
+        "credit": 3,
+        "period": 48,
+        "way": 0,
+        "year": 2020,
+        "term": 0,
+        "cno": 1,
+        "cName": "1班",
+        "cYear": 2016,
+        "pno": 1,
+        "pName": "实验班",
+        "tno": "T000001",
+        "tName": "教师1",
+        "tAge": 34,
+        "tSex": 0,
+        "tLevel": 0,
+        "tPhone": "13000000000",
+        "avgGrade": 87,
+        "orderOfSchool": 1,
+        "orderOfProfession": 1,
+        "orderOfClass": 1
     }
 ]
 ```

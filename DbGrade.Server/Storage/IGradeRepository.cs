@@ -18,5 +18,6 @@ namespace Tro.DbGrade.Server.Storage
         IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear);
 
         IEnumerable<ReportSummary> GetReportSummaries(string scope, int? tag, int? year, int? cyear);
+        IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear);
     }
 }

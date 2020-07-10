@@ -110,5 +110,19 @@ namespace Tro.DbGrade.Server.Storage
                        OrderOfClass = report.OrderOfClass})
                    };
         }
+
+        public IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear)
+        {
+            return from courseSummary in DbContext.CourseSummaryView
+                   where
+                   ((scope == Scope.Profession && courseSummary.Pno ==  int.Parse(tag)) ||
+                   (scope == Scope.Xclass && courseSummary.Cno == int.Parse(tag)) ||
+                   (scope == Scope.Course && courseSummary.Cono == int.Parse(tag)) ||
+                   (scope == Scope.Teacher && courseSummary.Tno == tag) ||
+                   (scope == Scope.All || scope == null)) && (year == null || year == courseSummary.CYear)
+                   select courseSummary;
+        }
+
+        
     }
 }

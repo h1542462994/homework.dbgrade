@@ -36,7 +36,8 @@ namespace Tro.DbGrade.Server.Models
         public string TName { get; set; }
         public int TAge { get; set; }
         public Sex Tsex { get; set; }
-        public Level Level { get; set; }
-        public string Phone { get; set; }
+        public Level TLevel { get; set; }
+        public string TPhone { get; set; }
+
     }
 }

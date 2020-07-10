@@ -31,6 +31,7 @@ namespace Tro.DbGrade.Server.Storage
         public DbSet<City> Cities { get; set; }
         public DbSet<ReportsView> ReportsView { get; set; }
         public DbSet<ReportSummaryView> ReportSummaryView { get; set; }
+        public DbSet<CourseSummaryView> CourseSummaryView { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 

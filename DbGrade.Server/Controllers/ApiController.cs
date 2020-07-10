@@ -51,5 +51,12 @@ namespace Tro.DbGrade.Server.Controllers
         {
             return GradeRepository.GetReportSummaries(scope, tag, year, cyear);
         }
+
+        [HttpGet("course_summary")]
+        [HttpPost("course_summary")]
+        public object CourseSummary(string scope, string tag, int? year, int? cyear)
+        {
+            return GradeRepository.GetCourseSummaries(scope, tag, year, cyear);
+        }
     }
 }
