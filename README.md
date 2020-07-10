@@ -5,17 +5,13 @@
 
 - [课程设计的内容](./doc/request.md)
 
-- 需求分析(./doc/require.md)
+- [需求分析](./doc/require.md)
 
-- 概念结构设计
+- [概念结构设计](./doc/abstract.md)
 
-- [逻辑结构设计](./doc/logical_struct.md)
+- [结构设计](./doc/logical_struct.md)
 
-- 物理结构设计
-
-- 数据库实现
-
-- 应用系统开发
+- [应用系统开发](./doc/program.md)
 
 ## 工作周期
 
