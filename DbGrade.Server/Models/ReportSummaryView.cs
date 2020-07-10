@@ -28,5 +28,17 @@ namespace Tro.DbGrade.Server.Models
         public double CompleteCredit { get; set; }
         public double Point { get; set; }
         public double GPA { get; set; }
+        /// <summary>
+        /// 在学校内的排名，只在同一届之内排名
+        /// </summary>
+        public long OrderOfSchool { get; set; }
+        /// <summary>
+        /// 在专业内的排名
+        /// </summary>
+        public long OrderOfProfession { get; set; }
+        /// <summary>
+        /// 在班级内的排名
+        /// </summary>
+        public long OrderOfClass { get; set; }
     }
 }

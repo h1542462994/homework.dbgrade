@@ -38,7 +38,7 @@ select
 	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_Name@{no},
 	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
 	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	studentSummary._count @{short}_Count@{no}
+	iif(studentSummary._count is null,0,studentSummary._count) @{short}_Count@{no}
 from
 	@{middle}_Xclasses@{no} left join (
 		select distinct @{short}_Cno@{no} @{short}_Cno@{no}, count(*)_count from @{middle}_Students@{no}
@@ -52,7 +52,7 @@ as
 select
 	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
 	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
-	studentSummary._count @{short}_Count@{no}
+	iif(studentSummary._count is null,0,studentSummary._count) @{short}_Count@{no}
 from
 	@{middle}_Professions@{no} left join (
 	select @{short}_Pno@{no} @{short}_Pno@{no}, count(*)_count from @{middle}_StudentsView@{no}
@@ -184,33 +184,44 @@ as
 	, @{middle}_StudentsView@{no}	
 	where summary.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no}
 
-create or alter view @{middle}_StudentOutView@{no}
+CREATE   view @{middle}_StudentOutView@{no}
 as
 select 
-	@{middle}_StudentsView@{no}.@{short}_Sno@{no} @{short}_Sno@{no},
-	@{middle}_StudentsView@{no}.@{short}_Name@{no} @{short}_Name@{no},
-	@{middle}_StudentsView@{no}.@{short}_Age@{no} @{short}_Age@{no},
-	@{middle}_StudentsView@{no}.@{short}_Sex@{no} @{short}_Sex@{no},
-	@{middle}_StudentsView@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	@{middle}_StudentsView@{no}.@{short}_PName@{no} @{short}_PName@{no},
-	@{middle}_StudentsView@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-	@{middle}_StudentsView@{no}.@{short}_CName@{no} @{short}_CName@{no},
-	@{middle}_StudentsView@{no}.@{short}_Prno@{no} @{short}_Prno@{no},
-	@{middle}_StudentsView@{no}.@{short}_PrName@{no} @{short}_Prname@{no},
-	@{middle}_StudentsView@{no}.@{short}_Cino@{no} @{short}_Cino@{no},
-	@{middle}_StudentsView@{no}.@{short}_CiName@{no} @{short}_CiName@{no},
- 	iif(reportSummary.totalCredit is null, 0, reportSummary.totalCredit) @{short}_TotalCredit@{no},
-	iif(reportSummary.completeCredit is null, 0, reportSummary.completeCredit) @{short}_CompleteCredit@{no},
-	iif(reportSummary.point is null, 0, reportSummary.point) @{short}_Point@{no}
-from 
-@{middle}_StudentsView@{no} left join (
-select
-	@{middle}_ReportSummaryView@{no}.@{short}_Sno@{no},
-	sum(@{middle}_ReportSummaryView@{no}.@{short}_TotalCredit@{no}) totalCredit,
-	sum(@{middle}_ReportSummaryView@{no}.@{short}_CompleteCredit@{no}) completeCredit,
-	sum(@{middle}_ReportSummaryView@{no}.@{short}_Point@{no}) point
-from @{middle}_ReportSummaryView@{no} group by
-@{middle}_ReportSummaryView@{no}.@{short}_Sno@{no}
-) reportSummary
-on
-	@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}
+	summary2.*,
+	rank() over (partition by @{short}_CYear@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfSchool@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Pno@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfProfession@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Cno@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfClass@{no}
+from
+	(select 
+		summary.*,
+		iif(summary.@{short}_TotalCredit@{no} = 0, 0, summary.@{short}_Point@{no}/summary.@{short}_TotalCredit@{no}) @{short}_GPA@{no}
+	from
+		(select 
+			@{middle}_StudentsView@{no}.@{short}_Sno@{no} @{short}_Sno@{no},
+			@{middle}_StudentsView@{no}.@{short}_Name@{no} @{short}_Name@{no},
+			@{middle}_StudentsView@{no}.@{short}_Age@{no} @{short}_Age@{no},
+			@{middle}_StudentsView@{no}.@{short}_Sex@{no} @{short}_Sex@{no},
+			@{middle}_StudentsView@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+			@{middle}_StudentsView@{no}.@{short}_PName@{no} @{short}_PName@{no},
+			@{middle}_StudentsView@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
+			@{middle}_StudentsView@{no}.@{short}_CYear@{no} @{short}_CYear@{no},
+			@{middle}_StudentsView@{no}.@{short}_CName@{no} @{short}_CName@{no},
+			@{middle}_StudentsView@{no}.@{short}_Prno@{no} @{short}_Prno@{no},
+			@{middle}_StudentsView@{no}.@{short}_PrName@{no} @{short}_Prname@{no},
+			@{middle}_StudentsView@{no}.@{short}_Cino@{no} @{short}_Cino@{no},
+			@{middle}_StudentsView@{no}.@{short}_CiName@{no} @{short}_CiName@{no},
+ 			iif(reportSummary.totalCredit is null, 0, reportSummary.totalCredit) @{short}_TotalCredit@{no},
+			iif(reportSummary.completeCredit is null, 0, reportSummary.completeCredit) @{short}_CompleteCredit@{no},
+			iif(reportSummary.point is null, 0, reportSummary.point) @{short}_Point@{no}
+		from 
+		@{middle}_StudentsView@{no} left join (
+		select
+			@{middle}_ReportSummaryView@{no}.@{short}_Sno@{no},
+			sum(@{middle}_ReportSummaryView@{no}.@{short}_TotalCredit@{no}) totalCredit,
+			sum(@{middle}_ReportSummaryView@{no}.@{short}_CompleteCredit@{no}) completeCredit,
+			sum(@{middle}_ReportSummaryView@{no}.@{short}_Point@{no}) point
+		from @{middle}_ReportSummaryView@{no} group by
+		@{middle}_ReportSummaryView@{no}.@{short}_Sno@{no}
+		) reportSummary
+		on
+			@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}) summary) summary2

@@ -77,23 +77,37 @@ namespace Tro.DbGrade.Server.Storage
                    ((scope == Scope.Profession && student.Pno == tag) ||
                    (scope == Scope.Xclass && student.Cno == tag) ||
                    (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
-                   select new Dto.ReportSummary()
+                   select new ReportSummary()
                    {
                        Sno = student.Sno,
+                       Name = student.Name,
+                       Age = student.Age,
+                       Sex = student.Sex,
+                       Cno = student.Cno,
+                       CName = student.CName,
+                       CYear = student.CYear,
+                       Pno = student.Pno,
+                       PName = student.PName,
                        TotalGrade = new Grade()
                        {
                            Year = null,
                            TotalCredit = student.TotalCredit,
                            CompleteCredit = student.CompleteCredit,
                            Point = student.Point,
-                           GPA = student.GPA
+                           GPA = student.GPA,
+                           OrderOfSchool = student.OrderOfSchool,
+                           OrderOfProfession = student.OrderOfProfession,
+                           OrderOfClass = student.OrderOfClass
                        },
                        Grades = (from report in DbContext.ReportSummaryView where student.Sno == report.Sno select new Grade() { 
                        Year = report.Year,
                        TotalCredit = report.TotalCredit,
                        CompleteCredit = report.CompleteCredit,
                        Point = report.Point,
-                       GPA = report.GPA})
+                       GPA = report.GPA,
+                       OrderOfSchool = report.OrderOfSchool,
+                       OrderOfProfession = report.OrderOfProfession,
+                       OrderOfClass = report.OrderOfClass})
                    };
         }
     }

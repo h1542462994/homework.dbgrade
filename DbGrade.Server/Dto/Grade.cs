@@ -30,5 +30,17 @@ namespace Tro.DbGrade.Server.Dto
         /// GPA积分
         /// </summary>
         public double Point { get; set; }
+        /// <summary>
+        /// 在学校内的排名，只在同一届之内排名
+        /// </summary>
+        public long OrderOfSchool { get; set; }
+        /// <summary>
+        /// 在专业内的排名
+        /// </summary>
+        public long OrderOfProfession { get; set; }
+        /// <summary>
+        /// 在班级内的排名
+        /// </summary>
+        public long OrderOfClass { get; set; }
     }
 }

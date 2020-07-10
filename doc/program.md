@@ -21,9 +21,9 @@
 ### 成绩统计界面(route:page/reportSummary)
 
 - 查看学生的统计信息
-    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、总学分(TotalCredit)、已修学分(CompleteCredit)、总绩点和(Point)、绩点(GPA)
-    - 筛选：
-
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、总体成绩及排名(TotalGrade)、每年的成绩和排名(Grades)
+    - 筛选：专业、班级；届数；开课时间
+    - 引用api: report_summary
 
 ## 对应的api及其说明
 
@@ -171,12 +171,23 @@ api/report_summary
 [
     {
         "sno": "S000002",
+        "name": "学生2",
+        "sex": 1,
+        "age": 17,
+        "cno": 1,
+        "cYear": 2016,
+        "cName": "1班",
+        "pno": 1,
+        "pName": "实验班",
         "totalGrade": {
             "year": null,
             "totalCredit": 3,
             "completeCredit": 3,
             "gpa": 3.6999999999999997,
-            "point": 11.1
+            "point": 11.1,
+            "orderOfSchool": 1,
+            "orderOfProfession": 1,
+            "orderOfClass": 1
         },
         "grades": [
             {
@@ -184,7 +195,10 @@ api/report_summary
                 "totalCredit": 3,
                 "completeCredit": 3,
                 "gpa": 3.6999999999999997,
-                "point": 11.1
+                "point": 11.1,
+                "orderOfSchool": 1,
+                "orderOfProfession": 1,
+                "orderOfClass": 1
             }
         ]
     }
