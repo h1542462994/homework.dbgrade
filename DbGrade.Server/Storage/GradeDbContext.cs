@@ -26,10 +26,11 @@ namespace Tro.DbGrade.Server.Storage
         public DbSet<Student> Students { get; set; }
         public DbSet<Profession> Professions { get; set; }
         public DbSet<Xclass> Xclasses { get; set; }
-        public DbSet<StudentsView> StudentsView { get; set; }
+        public DbSet<StudentOutView> StudentOutView { get; set; }
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<ReportsView> ReportsView { get; set; }
+        public DbSet<ReportSummaryView> ReportSummaryView { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
@@ -47,6 +48,7 @@ namespace Tro.DbGrade.Server.Storage
             modelBuilder.RenameDb(RenameDbService);
             modelBuilder.Entity<StructView>().HasNoKey();
             modelBuilder.Entity<ReportsView>().HasNoKey();
+            modelBuilder.Entity<ReportSummaryView>().HasNoKey();
         }
 
     }

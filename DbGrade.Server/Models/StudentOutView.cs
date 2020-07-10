@@ -7,14 +7,14 @@ using Tro.DbGrade.Server.Models.Types;
 
 namespace Tro.DbGrade.Server.Models
 {
-    public class StudentsView
+    public class StudentOutView
     {
         [Key]
         public string Sno { get; set; }
         public string Name { get; set; }
         public Sex Sex { get; set; }
         public int Age { get; set; }
-        
+
         public int Cno { get; set; }
         public int CYear { get; set; }
         public string CName { get; set; }
@@ -25,5 +25,8 @@ namespace Tro.DbGrade.Server.Models
         public int Cino { get; set; }
         public string CiName { get; set; }
         public double TotalCredit { get; set; }
+        public double CompleteCredit { get; set; }
+        public double Point { get; set; }
+        public double GPA { get; set; }
     }
 }

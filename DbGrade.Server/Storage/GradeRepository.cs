@@ -27,7 +27,7 @@ namespace Tro.DbGrade.Server.Storage
                 select new Dto.City(
                     city.Cino,
                     city.Name,
-                    (from student in DbContext.StudentsView where student.Cino == city.Cino && (year == null || student.CYear == year) select student).Count()
+                    (from student in DbContext.StudentOutView where student.Cino == city.Cino && (year == null || student.CYear == year) select student).Count()
                     )
                 );
 
@@ -45,16 +45,17 @@ namespace Tro.DbGrade.Server.Storage
                     xclass.Year,
                     (from student in DbContext.Students where student.Cno == xclass.Cno select student).Count()));
 
-        public IEnumerable<StudentsView> GetStudents(string scope, int? tag, int? year) =>
-             from student in DbContext.StudentsView
-             where
-                ((scope == Scope.Profession && student.Pno == tag) ||
-                (scope == Scope.Xclass && student.Cno == tag) ||
-                (scope == Scope.Province && student.Prno == tag) ||
-                (scope == Scope.City && student.Cino == tag) ||
-                (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
-             select student;
-
+        public IEnumerable<StudentOutView> GetStudents(string scope, int? tag, int? year)
+        {
+            return from student in DbContext.StudentOutView
+            where
+               ((scope == Scope.Profession && student.Pno == tag) ||
+               (scope == Scope.Xclass && student.Cno == tag) ||
+               (scope == Scope.Province && student.Prno == tag) ||
+               (scope == Scope.City && student.Cino == tag) ||
+               (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
+            select student;
+        }
         public IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear) =>
             from report in DbContext.ReportsView
             where
@@ -68,6 +69,32 @@ namespace Tro.DbGrade.Server.Storage
                 (scope) == Scope.Teacher && report.Tno == tag ||
                 scope == Scope.All || scope == null) && (year == null || year == report.Year) && (cyear == null || year == report.CYear)
             select report;
-        
+
+        public IEnumerable<ReportSummary> GetReportSummaries(string scope, int? tag, int? year, int? cyear)
+        {
+            return from student in DbContext.StudentOutView
+                   where
+                   ((scope == Scope.Profession && student.Pno == tag) ||
+                   (scope == Scope.Xclass && student.Cno == tag) ||
+                   (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
+                   select new Dto.ReportSummary()
+                   {
+                       Sno = student.Sno,
+                       TotalGrade = new Grade()
+                       {
+                           Year = null,
+                           TotalCredit = student.TotalCredit,
+                           CompleteCredit = student.CompleteCredit,
+                           Point = student.Point,
+                           GPA = student.GPA
+                       },
+                       Grades = (from report in DbContext.ReportSummaryView where student.Sno == report.Sno select new Grade() { 
+                       Year = report.Year,
+                       TotalCredit = report.TotalCredit,
+                       CompleteCredit = report.CompleteCredit,
+                       Point = report.Point,
+                       GPA = report.GPA})
+                   };
+        }
     }
 }

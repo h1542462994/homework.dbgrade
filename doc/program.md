@@ -2,4 +2,191 @@
 
 ## 界面的设计
 
+### 学生管理界面(route:page/students)
+
+- 查看学生的基本信息
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级(CName)、省(Province)、市(City)、总学分(TotalCredit)、已修学分(CompletedCredit)、总绩点和(Point)。
+    - 筛选：专业、班级、省、市；届数
+    - 引用api：struct,dest_struct,students
+    
+> 备注：总学分是指已经有报告的学分和（无论成绩有没有及格），已修学分指已经有报告且及格的学分和。总绩点和指（sum{(单科成绩-50)/10*单科的绩点}）
+
+### 成绩详细界面(route:page/report)
+
+- 查看成绩的基本信息
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、课程名(CoName)、开课时间(CYear)、开课学期(Term)、授课教师(TName)、成绩(Grade)、学分(Credit)、获得的学分(CreditGet)
+    - 筛选：专业、班级；届数；开课时间
+    - 引用api: struct,reports
+
+### 成绩统计界面(route:page/reportSummary)
+
+- 查看学生的统计信息
+    - 列：学号(Sno)、姓名(Name)、年龄(Age)、专业(PName)、届数(Year)、班级名(CName)、总学分(TotalCredit)、已修学分(CompleteCredit)、总绩点和(Point)、绩点(GPA)
+    - 筛选：
+
+
 ## 对应的api及其说明
+
+#### 查看结构信息(api/struct)
+
+ api/struct?[year=?]
+
+```json
+[
+    {
+        "pno": 1,
+        "name": "实验班",
+        "xclasses": [
+            {
+                "studentCount": 8,
+                "cno": 1,
+                "name": "1班",
+                "year": 2016
+            },
+            {
+                "studentCount": 1,
+                "cno": 2,
+                "name": "1班",
+                "year": 2017
+            },
+            {
+                "studentCount": 0,
+                "cno": 3,
+                "name": "1班",
+                "year": 2018
+            }
+        ]
+    }
+]
+```
+
+#### 查看地区结构信息(api/dest_struct)
+
+api/dest_struct?[year=?]
+
+```json
+[
+    {
+        "prno": 1,
+        "name": "浙江省",
+        "cities": [
+            {
+                "cino": 1,
+                "name": "杭州市",
+                "studentCount": 6
+            },
+            {
+                "cino": 2,
+                "name": "宁波市",
+                "studentCount": 0
+            },
+            {
+                "cino": 3,
+                "name": "温州市",
+                "studentCount": 0
+            },
+            {
+                "cino": 4,
+                "name": "嘉兴市",
+                "studentCount": 0
+            }
+        ]
+    }
+]
+```
+
+#### 查看学生信息(api/student)
+
+api/students?[scope=all|profession|class|province|city]&[tag=?]&[year=?]
+
+```json
+[
+    {
+        "sno": "S000002",
+        "name": "学生2",
+        "sex": 1,
+        "age": 17,
+        "cno": 1,
+        "cYear": 2016,
+        "cName": "1班",
+        "pno": 1,
+        "pName": "实验班",
+        "prno": 1,
+        "prName": "浙江省",
+        "cino": 1,
+        "ciName": "杭州市",
+        "totalCredit": 3,
+        "completeCredit": 3,
+        "point": 11.1,
+        "gpa": 3.6999999999999997
+    }
+]
+```
+
+#### 查看成绩详细信息(api/report)
+
+api/report?[scope=all|profession|class|province|city|opencourse|course|student|teacher]&[tag=?]&[year=?]&[cyear=?]
+
+```json
+[
+    {
+        "sno": "S000002",
+        "sName": "学生2",
+        "sSex": 1,
+        "sAge": 17,
+        "grade": 87,
+        "cno": 1,
+        "cYear": 2016,
+        "cName": "1班",
+        "pno": 1,
+        "pName": "实验班",
+        "prno": 1,
+        "prName": "浙江省",
+        "cino": 1,
+        "ciName": "杭州市",
+        "ono": 1,
+        "cono": 1,
+        "coName": "计算机组成原理",
+        "credit": 3,
+        "creditGet": 3,
+        "period": 48,
+        "way": 0,
+        "year": 2020,
+        "term": 0,
+        "tno": "T000001",
+        "tName": "教师1",
+        "tAge": 34,
+        "tsex": 0,
+        "level": 0,
+        "phone": "13000000000"
+    }
+]
+```
+
+#### 查看成绩统计信息(api/report_summary)
+
+api/report_summary
+
+```json
+[
+    {
+        "sno": "S000002",
+        "totalGrade": {
+            "year": null,
+            "totalCredit": 3,
+            "completeCredit": 3,
+            "gpa": 3.6999999999999997,
+            "point": 11.1
+        },
+        "grades": [
+            {
+                "year": 2020,
+                "totalCredit": 3,
+                "completeCredit": 3,
+                "gpa": 3.6999999999999997,
+                "point": 11.1
+            }
+        ]
+    }
+]
+```
