@@ -15,7 +15,6 @@ on
 
 
 /*创建结构概览视图*/
-/*创建班级概览视图*/
 create or alter view @{middle}_StructView@{no}
 as
 select
@@ -69,7 +68,7 @@ as
 		@{middle}_Students@{no}.@{short}_Name@{no} @{short}_Name@{no}, --姓名
 		@{middle}_Students@{no}.@{short}_Sex@{no} @{short}_Sex@{no}, --性别
 		@{middle}_Students@{no}.@{short}_Age@{no} @{short}_Age@{no}, --年龄
-		@{middle}_Students@{no}.@{short}_TotalCredit@{no} @{short}_TotalCredit@{no}, --总学分
+		@{middle}_Students@{no}.@{short}_TotalCredit@{no} @{short}_CompleteCredit@{no}, --总学分
 		@{middle}_Students@{no}.@{short}_Cno@{no} @{short}_Cno@{no}, --班级号
 		@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no}, --班级名
 		@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no}, --班级届数
@@ -85,7 +84,7 @@ as
 	where
 		@{middle}_Students@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no} and @{middle}_Xclasses@{no}.@{short}_Pno@{no} = @{middle}_Professions@{no}.@{short}_Pno@{no} and
 		@{middle}_Students@{no}.@{short}_Cino@{no} = @{middle}_Cities@{no}.@{short}_Cino@{no} and @{middle}_Cities@{no}.@{short}_Prno@{no} = @{middle}_Provinces@{no}.@{short}_Prno@{no}
-	
+
 /*创建开设课程详细视图*/
 create or alter view @{middle}_OpenCoursesView@{no}
 as
@@ -101,17 +100,20 @@ select
 	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
 	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no},
 	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
+	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
 	@{middle}_Teachers@{no}.@{short}_Tno@{no} @{short}_Tno@{no},
 	@{middle}_Teachers@{no}.@{short}_Name@{no} @{short}_TName@{no},
-	@{middle}_Teachers@{no}.@{short}_Age@{no} @{short}_Age@{no},
-	@{middle}_Teachers@{no}.@{short}_Sex@{no} @{short}_Sex@{no},
-	@{middle}_Teachers@{no}.@{short}_Level@{no} @{short}_Level@{no},
-	@{middle}_Teachers@{no}.@{short}_Phone@{no} @{short}_Phone@{no}
-from @{middle}_OpenCourses@{no}, @{middle}_Courses@{no}, @{middle}_Teachers@{no}, @{middle}_Xclasses@{no}
+	@{middle}_Teachers@{no}.@{short}_Age@{no} @{short}_TAge@{no},
+	@{middle}_Teachers@{no}.@{short}_Sex@{no} @{short}_TSex@{no},
+	@{middle}_Teachers@{no}.@{short}_Level@{no} @{short}_TLevel@{no},
+	@{middle}_Teachers@{no}.@{short}_Phone@{no} @{short}_TPhone@{no}
+from @{middle}_OpenCourses@{no}, @{middle}_Courses@{no}, @{middle}_Teachers@{no}, @{middle}_Xclasses@{no}, @{middle}_Professions@{no}
 where 
 	@{middle}_OpenCourses@{no}.@{short}_Cono@{no} = @{middle}_Courses@{no}.@{short}_Cono@{no} and
 	@{middle}_OpenCourses@{no}.@{short}_Tno@{no} = @{middle}_Teachers@{no}.@{short}_Tno@{no} and
-	@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no}
+	@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no} and
+	@{middle}_Xclasses@{no}.@{short}_Pno@{no} = @{middle}_Professions@{no}.@{short}_Pno@{no}
 
 create or alter view @{middle}_ReportsView@{no}
 as
@@ -121,7 +123,6 @@ select distinct
 	@{middle}_StudentsView@{no}.@{short}_Name@{no} @{short}_SName@{no}, --姓名
 	@{middle}_StudentsView@{no}.@{short}_Sex@{no} @{short}_SSex@{no}, --性别
 	@{middle}_StudentsView@{no}.@{short}_Age@{no} @{short}_SAge@{no}, --年龄
-	@{middle}_StudentsView@{no}.@{short}_TotalCredit@{no} @{short}_TotalCredit@{no}, --总学分
 	@{middle}_StudentsView@{no}.@{short}_Cno@{no} @{short}_Cno@{no}, --班级号
 	@{middle}_StudentsView@{no}.@{short}_CYear@{no} @{short}_CYear@{no},
 	@{middle}_StudentsView@{no}.@{short}_CName@{no} @{short}_CName@{no}, --班级名
@@ -142,10 +143,10 @@ select distinct
 	@{middle}_OpenCoursesView@{no}.@{short}_Term@{no} @{short}_Term@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_Tno@{no} @{short}_Tno@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_TName@{no} @{short}_TName@{no},
-	@{middle}_OpenCoursesView@{no}.@{short}_Age@{no} @{short}_TAge@{no},
-	@{middle}_OpenCoursesView@{no}.@{short}_Sex@{no} @{short}_TSex@{no},
-	@{middle}_OpenCoursesView@{no}.@{short}_Level@{no} @{short}_Level@{no},
-	@{middle}_OpenCoursesView@{no}.@{short}_Phone@{no} @{short}_Phone@{no}
+	@{middle}_OpenCoursesView@{no}.@{short}_TAge@{no} @{short}_TAge@{no},
+	@{middle}_OpenCoursesView@{no}.@{short}_TSex@{no} @{short}_TSex@{no},
+	@{middle}_OpenCoursesView@{no}.@{short}_TLevel@{no} @{short}_TLevel@{no},
+	@{middle}_OpenCoursesView@{no}.@{short}_TPhone@{no} @{short}_TPhone@{no}
 from
 	@{middle}_Reports@{no}, @{middle}_StudentsView@{no}, @{middle}_OpenCoursesView@{no}
 where
@@ -154,7 +155,13 @@ where
 
 create or alter view @{middle}_ReportSummaryView@{no}
 as
-	select
+select
+	summary2.*,
+	rank() over (partition by @{short}_CYear@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfSchool@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Pno@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfProfession@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Cno@{no} order by @{short}_GPA@{no} desc) @{short}_OrderOfClass@{no}
+from
+	(select
 		@{middle}_StudentsView@{no}.@{short}_Sno@{no} @{short}_Sno@{no}, --学号
 		@{middle}_StudentsView@{no}.@{short}_Name@{no} @{short}_SName@{no}, --姓名
 		@{middle}_StudentsView@{no}.@{short}_Sex@{no} @{short}_SSex@{no}, --性别
@@ -182,7 +189,7 @@ as
 		@{middle}_ReportsView@{no}
 		group by @{middle}_ReportsView@{no}.@{short}_Sno@{no}, @{middle}_ReportsView@{no}.@{short}_Year@{no}, @{middle}_ReportsView@{no}.@{short}_Term@{no}) summary
 	, @{middle}_StudentsView@{no}	
-	where summary.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no}
+	where summary.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no}) summary2
 
 create or alter view @{middle}_StudentOutView@{no}
 as
@@ -194,7 +201,7 @@ select
 from
 	(select 
 		summary.*,
-		case when (summary.@{short}_TotalCredit@{no} = 0) then 0 else summary.@{short}_Point@{no}/summary.@{short}_TotalCredit@{no} end @{short}_GPA@{no}
+		case when(summary.@{short}_TotalCredit@{no} = 0) then 0 else summary.@{short}_Point@{no}/summary.@{short}_TotalCredit@{no} end @{short}_GPA@{no}
 	from
 		(select 
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} @{short}_Sno@{no},
@@ -226,29 +233,29 @@ from
 		on
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}) summary) summary2
 
-create or alter view chenht_CourseSummaryView15
+create or alter view @{middle}_CourseSummaryView@{no}
 as
 select
 	summary3.*,
-	rank() over (partition by cht_CYear15 order by cht_AvgGrade15 desc) cht_OrderOfSchool15,
-	rank() over (partition by cht_CYear15, cht_Pno15 order by cht_AvgGrade15 desc) cht_OrderOfProfession15,
-	rank() over (partition by cht_CYear15, cht_Cno15 order by cht_AvgGrade15 desc) cht_OrderOfClass15
+	rank() over (partition by @{short}_CYear@{no} order by @{short}_AvgGrade@{no} desc) @{short}_OrderOfSchool@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Pno@{no} order by @{short}_AvgGrade@{no} desc) @{short}_OrderOfProfession@{no},
+	rank() over (partition by @{short}_CYear@{no}, @{short}_Cno@{no} order by @{short}_AvgGrade@{no} desc) @{short}_OrderOfClass@{no}
 from
 	(select 
-		chenht_OpenCoursesView15.*,
-		summary2.cht_AvgGrade15
+		@{middle}_OpenCoursesView@{no}.*,
+		summary2.@{short}_AvgGrade@{no}
 	from
 		(select 
-			summary.cht_Ono15 cht_Ono15,
-			gradeSum / _count cht_AvgGrade15
+			summary.@{short}_Ono@{no} @{short}_Ono@{no},
+			gradeSum / _count @{short}_AvgGrade@{no}
 		from
 			(select
-				chenht_OpenCourses15.cht_Ono15 cht_Ono15,
-				sum(chenht_Reports15.cht_Grade15) gradeSum,
+				@{middle}_OpenCourses@{no}.@{short}_Ono@{no} @{short}_Ono@{no},
+				sum(@{middle}_Reports@{no}.@{short}_Grade@{no}) gradeSum,
 				count(*) _count
 			from 
-				chenht_OpenCourses15, chenht_Reports15
+				@{middle}_OpenCourses@{no}, @{middle}_Reports@{no}
 			where
-				chenht_OpenCourses15.cht_Ono15 = chenht_Reports15.cht_Ono15
-			group by chenht_OpenCourses15.cht_Ono15) summary) summary2, chenht_OpenCoursesView15
-		where summary2.cht_Ono15 = chenht_OpenCoursesView15.cht_Ono15) summary3
+				@{middle}_OpenCourses@{no}.@{short}_Ono@{no} = @{middle}_Reports@{no}.@{short}_Ono@{no}
+			group by @{middle}_OpenCourses@{no}.@{short}_Ono@{no}) summary) summary2, @{middle}_OpenCoursesView@{no}
+		where summary2.@{short}_Ono@{no} = @{middle}_OpenCoursesView@{no}.@{short}_Ono@{no}) summary3
