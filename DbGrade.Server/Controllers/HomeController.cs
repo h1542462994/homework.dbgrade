@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Tro.DbGrade.Server.Model;
 using Tro.DbGrade.Server.Storage;
 
 
@@ -23,8 +22,6 @@ namespace Tro.DbGrade.Server.Controllers
         {
             return new JsonResult("hello world");
         }
-
-
 
     }
 }

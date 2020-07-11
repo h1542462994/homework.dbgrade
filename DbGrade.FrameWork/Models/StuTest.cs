@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Model
+namespace Tro.DbGrade.FrameWork.Models
 {
     public class StuTest
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Dto
+namespace Tro.DbGrade.FrameWork.Dto
 {
     public class Profession
     {

@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Tro.DbGrade.Server.Model;
-using Tro.DbGrade. FrameWork.Extensions.Rename;
-using Tro.DbGrade.Server.Models;
+using Tro.DbGrade.FrameWork.Extensions.Rename;
+using Tro.DbGrade.FrameWork.Models;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

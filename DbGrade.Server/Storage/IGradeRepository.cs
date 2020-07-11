@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.Dto;
-using Tro.DbGrade.Server.Models;
+using Tro.DbGrade.FrameWork.Dto;
+using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Server.Storage
 {
     public interface IGradeRepository
     {
-        IEnumerable<Dto.Profession> GetStruct(int? year);
+        IEnumerable<FrameWork.Dto.Profession> GetStruct(int? year);
 
-        IEnumerable<Dto.Province> GetDestStruct(int? year);
+        IEnumerable<FrameWork.Dto.Province> GetDestStruct(int? year);
 
         IEnumerable<StudentOutView> GetStudents(string scope, int? tag, int? year);
 

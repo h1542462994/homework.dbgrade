@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.Dto;
-using Tro.DbGrade.Server.Models;
+using Tro.DbGrade.FrameWork.Dto;
+using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Server.Storage
 {
@@ -17,29 +17,29 @@ namespace Tro.DbGrade.Server.Storage
 
         public GradeDbContext DbContext { get; }
 
-        public IEnumerable<Dto.Province> GetDestStruct(int? year) =>
+        public IEnumerable<FrameWork.Dto.Province> GetDestStruct(int? year) =>
             from province in DbContext.Provinces
-            select new Dto.Province(
+            select new FrameWork.Dto.Province(
                 province.Prno,
                 province.Name,
                 from city in DbContext.Cities
                 where city.Prno == province.Prno
-                select new Dto.City(
+                select new FrameWork.Dto.City(
                     city.Cino,
                     city.Name,
                     (from student in DbContext.StudentOutView where student.Cino == city.Cino && (year == null || student.CYear == year) select student).Count()
                     )
                 );
 
-        public IEnumerable<Dto.Profession> GetStruct(int? year) =>
+        public IEnumerable<FrameWork.Dto.Profession> GetStruct(int? year) =>
             from profession in DbContext.Professions
-            select new Dto.Profession(
+            select new FrameWork.Dto.Profession(
                 profession.Pno,
                 profession.Name,
                 from xclass in DbContext.Xclasses
                 where (year == null || year == xclass.Year)
                 where xclass.Pno == profession.Pno
-                select new Dto.Xclass(
+                select new FrameWork.Dto.Xclass(
                     xclass.Cno,
                     xclass.Name,
                     xclass.Year,

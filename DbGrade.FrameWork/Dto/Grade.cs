@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Dto
+namespace Tro.DbGrade.FrameWork.Dto
 {
     /// <summary>
     /// 表示一个成绩项

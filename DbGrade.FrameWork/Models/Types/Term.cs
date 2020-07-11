@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Models.Types
+namespace Tro.DbGrade.FrameWork.Models.Types
 {
-    public enum Way
+    public enum Term
     {
         /// <summary>
-        /// 考查
+        /// 上学期
         /// </summary>
-        View,
+        First,
         /// <summary>
-        /// 考试
+        /// 下学期
         /// </summary>
-        Examination,
+        Second
     }
 }

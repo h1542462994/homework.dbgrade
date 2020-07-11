@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.Models.Types;
+using Tro.DbGrade.FrameWork.Models.Types;
 
-namespace Tro.DbGrade.Server.Model
+namespace Tro.DbGrade.FrameWork.Models
 {
     
     public class Student

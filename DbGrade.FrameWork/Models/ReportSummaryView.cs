@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.Models.Types;
+using Tro.DbGrade.FrameWork.Models.Types;
 
-namespace Tro.DbGrade.Server.Models
+namespace Tro.DbGrade.FrameWork.Models
 {
-    public class StudentOutView
+    public class ReportSummaryView
     {
-        [Key]
         public string Sno { get; set; }
-        public string Name { get; set; }
-        public Sex Sex { get; set; }
-        public int Age { get; set; }
-
+        public string SName { get; set; }
+        public Sex SSex { get; set; }
+        public int SAge { get; set; }
+        public double Grade { get; set; }
         public int Cno { get; set; }
         public int CYear { get; set; }
         public string CName { get; set; }
@@ -24,6 +22,8 @@ namespace Tro.DbGrade.Server.Models
         public string PrName { get; set; }
         public int Cino { get; set; }
         public string CiName { get; set; }
+        public int? Year { get; set; }
+        public Term Term { get; set; }
         public double TotalCredit { get; set; }
         public double CompleteCredit { get; set; }
         public double Point { get; set; }

@@ -38,7 +38,7 @@ select
 	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_Name@{no},
 	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
 	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	iif(studentSummary._count is null,0,studentSummary._count) @{short}_Count@{no}
+	case when (studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
 from
 	@{middle}_Xclasses@{no} left join (
 		select distinct @{short}_Cno@{no} @{short}_Cno@{no}, count(*)_count from @{middle}_Students@{no}
@@ -52,7 +52,7 @@ as
 select
 	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
 	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
-	iif(studentSummary._count is null,0,studentSummary._count) @{short}_Count@{no}
+	case when(studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
 from
 	@{middle}_Professions@{no} left join (
 	select @{short}_Pno@{no} @{short}_Pno@{no}, count(*)_count from @{middle}_StudentsView@{no}
@@ -113,7 +113,7 @@ where
 	@{middle}_OpenCourses@{no}.@{short}_Tno@{no} = @{middle}_Teachers@{no}.@{short}_Tno@{no} and
 	@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no}
 
-creatr or alter view @{middle}_ReportsView@{no}
+create or alter view @{middle}_ReportsView@{no}
 as
 select distinct
 	@{middle}_Reports@{no}.@{short}_Grade@{no} @{short}_Grade@{no},
@@ -135,7 +135,7 @@ select distinct
 	@{middle}_OpenCoursesView@{no}.@{short}_Cono@{no} @{short}_Cono@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_CoName@{no} @{short}_CoName@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_Credit@{no} @{short}_Credit@{no},
-	iif(@{middle}_Reports@{no}.@{short}_Grade@{no}>=60, @{middle}_OpenCoursesView@{no}.@{short}_Credit@{no}, 0) @{short}_CreditGet@{no},
+	case when (@{middle}_Reports@{no}.@{short}_Grade@{no}>=60) then @{middle}_OpenCoursesView@{no}.@{short}_Credit@{no} else 0 end @{short}_CreditGet@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_Period@{no} @{short}_Period@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_Way@{no} @{short}_Way@{no},
 	@{middle}_OpenCoursesView@{no}.@{short}_Year@{no} @{short}_Year@{no},
@@ -184,7 +184,7 @@ as
 	, @{middle}_StudentsView@{no}	
 	where summary.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no}
 
-CREATE   view @{middle}_StudentOutView@{no}
+create or alter view @{middle}_StudentOutView@{no}
 as
 select 
 	summary2.*,
@@ -194,7 +194,7 @@ select
 from
 	(select 
 		summary.*,
-		iif(summary.@{short}_TotalCredit@{no} = 0, 0, summary.@{short}_Point@{no}/summary.@{short}_TotalCredit@{no}) @{short}_GPA@{no}
+		case when (summary.@{short}_TotalCredit@{no} = 0) then 0 else summary.@{short}_Point@{no}/summary.@{short}_TotalCredit@{no} end @{short}_GPA@{no}
 	from
 		(select 
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} @{short}_Sno@{no},
@@ -210,9 +210,9 @@ from
 			@{middle}_StudentsView@{no}.@{short}_PrName@{no} @{short}_Prname@{no},
 			@{middle}_StudentsView@{no}.@{short}_Cino@{no} @{short}_Cino@{no},
 			@{middle}_StudentsView@{no}.@{short}_CiName@{no} @{short}_CiName@{no},
- 			iif(reportSummary.totalCredit is null, 0, reportSummary.totalCredit) @{short}_TotalCredit@{no},
-			iif(reportSummary.completeCredit is null, 0, reportSummary.completeCredit) @{short}_CompleteCredit@{no},
-			iif(reportSummary.point is null, 0, reportSummary.point) @{short}_Point@{no}
+ 			case when (reportSummary.totalCredit is null) then 0 else reportSummary.totalCredit end @{short}_TotalCredit@{no},
+			case when (reportSummary.completeCredit is null) then 0 else reportSummary.completeCredit end @{short}_CompleteCredit@{no},
+			case when (reportSummary.point is null) then 0 else reportSummary.point end @{short}_Point@{no}
 		from 
 		@{middle}_StudentsView@{no} left join (
 		select
@@ -225,3 +225,30 @@ from
 		) reportSummary
 		on
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}) summary) summary2
+
+create or alter view chenht_CourseSummaryView15
+as
+select
+	summary3.*,
+	rank() over (partition by cht_CYear15 order by cht_AvgGrade15 desc) cht_OrderOfSchool15,
+	rank() over (partition by cht_CYear15, cht_Pno15 order by cht_AvgGrade15 desc) cht_OrderOfProfession15,
+	rank() over (partition by cht_CYear15, cht_Cno15 order by cht_AvgGrade15 desc) cht_OrderOfClass15
+from
+	(select 
+		chenht_OpenCoursesView15.*,
+		summary2.cht_AvgGrade15
+	from
+		(select 
+			summary.cht_Ono15 cht_Ono15,
+			gradeSum / _count cht_AvgGrade15
+		from
+			(select
+				chenht_OpenCourses15.cht_Ono15 cht_Ono15,
+				sum(chenht_Reports15.cht_Grade15) gradeSum,
+				count(*) _count
+			from 
+				chenht_OpenCourses15, chenht_Reports15
+			where
+				chenht_OpenCourses15.cht_Ono15 = chenht_Reports15.cht_Ono15
+			group by chenht_OpenCourses15.cht_Ono15) summary) summary2, chenht_OpenCoursesView15
+		where summary2.cht_Ono15 = chenht_OpenCoursesView15.cht_Ono15) summary3

@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Tro.DbGrade.Server.Models
+namespace Tro.DbGrade.FrameWork.Models
 {
-    public class Profession
+    public class Xclass
     {
         [Key]
-        public int Pno { get; set; }
+        public int Cno { get; set; }
         public string Name { get; set; }
-
-
+        public int Pno { get; set; }
+        public int Year { get; set; }
     }
 }

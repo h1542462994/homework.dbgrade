@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tro.DbGrade.Server.Models.Types;
+using Tro.DbGrade.FrameWork.Models.Types;
 
-namespace Tro.DbGrade.Server.Dto
+namespace Tro.DbGrade.FrameWork.Dto
 {
     public class ReportSummary
     {

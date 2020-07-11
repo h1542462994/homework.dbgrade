@@ -58,7 +58,7 @@ for insert,update
 as
 begin
 	select 
-		iif(@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Students@{no}.@{short}_Cno@{no},1,0) equal
+		case when (@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Students@{no}.@{short}_Cno@{no}) then 1 else 0 end equal
 	into #inserted
 	from inserted, @{middle}_OpenCourses@{no}, @{middle}_Students@{no}
 	where 
