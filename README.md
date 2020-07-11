@@ -5,6 +5,10 @@
 
 - [课程设计的内容](./doc/request.md)
 
+- [数据库系统系统课程设计考核与答辩程序](./doc/procedure.md)
+
+- [报告模板](./doc/post.md)
+
 - [需求分析](./doc/require.md)
 
 - [概念结构设计](./doc/abstract.md)
