@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using Tro.DbGrade.Client.Wpf.Models;
+using System.Collections.ObjectModel;
+using Tro.DbGrade.Client.Wpf.Pages;
 
 namespace Tro.DbGrade.Client.Wpf
 {
@@ -24,5 +28,27 @@ namespace Tro.DbGrade.Client.Wpf
         {
             InitializeComponent();
         }
+
+
+
+
+        public ObservableCollection<StringPage> StringPages
+        {
+            get { return (ObservableCollection<StringPage>)GetValue(StringPagesProperty); }
+            set { SetValue(StringPagesProperty, value); }
+        }
+
+        public static readonly DependencyProperty StringPagesProperty =
+            DependencyProperty.Register("StringPages", typeof(ObservableCollection<StringPage>), typeof(MainWindow), new PropertyMetadata(
+                new ObservableCollection<StringPage>
+                {
+                    new StringPage("学生详情", typeof(StudentPage)),
+                    new StringPage("教师详情", typeof(TeacherPage))
+                }
+                ));
+
+
+
+
     }
 }

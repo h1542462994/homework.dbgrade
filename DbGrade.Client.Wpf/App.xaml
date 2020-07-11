@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="TextCenterHV" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="TextBigCenterHV" TargetType="TextBlock" BasedOn="{StaticResource TextCenterHV}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="12,0,0,0"/>
+        </Style>
     </Application.Resources>
 </Application>
