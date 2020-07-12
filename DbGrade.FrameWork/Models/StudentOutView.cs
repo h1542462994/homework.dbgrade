@@ -18,6 +18,7 @@ namespace Tro.DbGrade.FrameWork.Models
         public int Cno { get; set; }
         public int CYear { get; set; }
         public string CName { get; set; }
+        public string CDisplay => $"{CYear}届{CName}";
         public int Pno { get; set; }
         public string PName { get; set; }
         public int Prno { get; set; }

@@ -175,8 +175,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        
         <convert:SexStringConverter x:Key="SexStringConverter"/>
+        <convert:DoubleStringConverter x:Key="DoubleStringConverter"/>
 
     </Application.Resources>
 </Application>

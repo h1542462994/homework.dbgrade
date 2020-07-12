@@ -19,10 +19,16 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <DataGrid HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="学号" Width="100" Binding="{Binding Sno}"/>
-                    <DataGridTextColumn Header="姓名" Width="100" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="性别" Width="60" Binding="{Binding Sex, Converter={StaticResource SexStringConverter}}"/>
-                    <DataGridTextColumn Header="年龄" Width="60" Binding="{Binding Age}"/>
+                    <DataGridTextColumn Header="学号" MinWidth="100" Binding="{Binding Sno}"/>
+                    <DataGridTextColumn Header="姓名" MinWidth="100" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="性别" MinWidth="60" Binding="{Binding Sex, Converter={StaticResource SexStringConverter}}"/>
+                    <DataGridTextColumn Header="年龄" MinWidth="60" Binding="{Binding Age}"/>
+                    <DataGridTextColumn Header="专业" MinWidth="60" Binding="{Binding PName}"/>
+                    <DataGridTextColumn Header="班级" MinWidth="120" Binding="{Binding CDisplay}"/>
+                    <DataGridTextColumn Header="省" MinWidth="80" Binding="{Binding PrName}"/>
+                    <DataGridTextColumn Header="市" MinWidth="80" Binding="{Binding CiName}"/>
+                    <DataGridTextColumn Header="绩点" MinWidth="80" Binding="{Binding GPA, Converter={StaticResource DoubleStringConverter}}"/>
+                    <DataGridTextColumn Header="排名" MinWidth="80" Binding="{Binding OrderOfSchool}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
