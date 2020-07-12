@@ -16,16 +16,13 @@ namespace Tro.DbGrade.Client.Wpf
     /// </summary>
     public partial class App : Application
     {
-      
+        public new static App Current => (App)Application.Current;
 
         public App()
         {
             var services = new ServiceCollection();
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appSettings.json");
-#if DEBUG
-            builder.AddJsonFile("appSettings.Development.json", optional:true);
-#endif
             var configuration = builder.Build();
             services.AddSingleton(configuration);
             ConfigureServices(services, configuration);
@@ -35,7 +32,7 @@ namespace Tro.DbGrade.Client.Wpf
 
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOptions<StorageOptions>().Bind(configuration.GetSection("Storage"));
+            services.AddOptions<StorageOptions>().Bind(configuration.GetSection("RemoteStorage"));
             services.AddSingleton<RemoteStorage>();
             services.AddHttpClient<GradeHttpClient>();
             services.AddSingleton(this);

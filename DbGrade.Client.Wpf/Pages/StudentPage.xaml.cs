@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tro.DbGrade.Client.Wpf.Storage;
 
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
@@ -21,6 +22,17 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         public StudentPage()
         {
             InitializeComponent();
+            Loaded += StudentPage_Loaded;
         }
+
+
+
+        private void StudentPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
+            RemoteStorage.FetchStudent();
+        }
+
+        public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }
 }

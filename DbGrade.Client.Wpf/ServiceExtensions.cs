@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Tro.DbGrade.Client.Wpf
 {
-    public static class HttpClientExtensions
+    public static class ServiceExtensions
     {
         public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string uri, IDictionary<string,string> parameters)
         {
@@ -33,6 +33,11 @@ namespace Tro.DbGrade.Client.Wpf
         {
             var str = await message.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(str);
+        }
+
+        public static T GetService<T>(this IServiceProvider provider)
+        {
+            return (T)provider.GetService(typeof(T));
         }
         
     }

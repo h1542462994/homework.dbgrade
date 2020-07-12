@@ -22,7 +22,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public async Task<IEnumerable<StudentOutView>> GetStudentsAsync(string scope, int? tag = null, int? year = null)
         {
-            var response = await Client.GetAsync("/api/student", new Dictionary<string, string>
+            var response = await Client.GetAsync("/api/students", new Dictionary<string, string>
             {
                 { "scope", scope },
                 { "tag", tag.ToString() },

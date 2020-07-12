@@ -1,4 +1,6 @@
-﻿<Page x:Class="Tro.DbGrade.Client.Wpf.Pages.StudentPage"
+﻿<Page 
+      x:Name="page"
+      x:Class="Tro.DbGrade.Client.Wpf.Pages.StudentPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,6 +11,20 @@
       Title="StudentPage" Background="White">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
         <TextBlock Text="学生详情页"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <DataGrid HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="学号" Width="100" Binding="{Binding Sno}"/>
+                    <DataGridTextColumn Header="姓名" Width="100" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Header="性别" Width="60" Binding="{Binding Sex, Converter={StaticResource SexStringConverter}}"/>
+                    <DataGridTextColumn Header="年龄" Width="60" Binding="{Binding Age}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
     </Grid>
 </Page>
