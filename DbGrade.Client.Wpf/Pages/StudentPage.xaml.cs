@@ -29,7 +29,8 @@ namespace Tro.DbGrade.Client.Wpf.Pages
 
         private void StudentPage_Loaded(object sender, RoutedEventArgs e)
         {
-            DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
+            //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
+            RemoteStorage.FetchStudentStruct();
             RemoteStorage.FetchStudent();
         }
 

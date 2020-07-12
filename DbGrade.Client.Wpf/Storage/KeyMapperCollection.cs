@@ -31,17 +31,17 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             {
                 if(index < Count)
                 {
-                    while (KeyMapper(this[index]).CompareTo(KeyMapper(item)) < 0)
+                    while (index < Count && KeyMapper(this[index]).CompareTo(KeyMapper(item)) < 0)
                     {
                         //删除键值对
                         Remove(this[index]);
                     }
-                    if (KeyMapper(this[index]).CompareTo(KeyMapper(item)) == 0)
+                    if (index < Count && KeyMapper(this[index]).CompareTo(KeyMapper(item)) == 0)
                     {
                         SetItem(index, item);
                         ++index;
                     }
-                    else if (KeyMapper( this[index]).CompareTo(KeyMapper(item)) > 0)
+                    else if (index < Count && KeyMapper( this[index]).CompareTo(KeyMapper(item)) > 0)
                     {
                         Insert(index, item);
                         ++index;

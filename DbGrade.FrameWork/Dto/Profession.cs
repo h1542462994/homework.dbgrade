@@ -29,5 +29,10 @@ namespace Tro.DbGrade.FrameWork.Dto
         public int Pno { get; set; }
         public string Name { get; set; }
         public IEnumerable<Xclass> Xclasses { get;set;}
+
+        public readonly static Profession All = new Profession(
+            pno: -1,
+            name: "--全部--"
+            );
     }
 }

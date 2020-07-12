@@ -10,23 +10,50 @@ namespace Tro.DbGrade.Client.Wpf
 {
     public static class ServiceExtensions
     {
-        public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string uri, IDictionary<string,string> parameters)
+        public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string uri, IDictionary<string,string> parameters = null)
         {
-            StringBuilder builder = new StringBuilder(uri);
-            builder.Append("?");
-            foreach (var item in parameters)
+            if (parameters != null)
             {
-                if (item.Value != null)
+                StringBuilder builder = new StringBuilder(uri);
+                builder.Append("?");
+                foreach (var item in parameters)
                 {
-                    builder.Append($"{item.Key}={item.Value}&");
+                    if (item.Value != null)
+                    {
+                        builder.Append($"{item.Key}={item.Value}&");
 
+                    }
                 }
+
+                uri = builder.ToString();
+                uri = uri.TrimEnd('&', '?');
             }
 
-            uri = builder.ToString();
-            uri = uri.TrimEnd('&', '?');
+
 
             return await client.GetAsync(uri);
+        }
+
+        public static async Task<HttpResponseMessage> PostAsync(this HttpClient client, string uri, IDictionary<string, string> parameters = null)
+        {
+            if (parameters != null)
+            {
+                StringBuilder builder = new StringBuilder(uri);
+                builder.Append("?");
+                foreach (var item in parameters)
+                {
+                    if (item.Value != null)
+                    {
+                        builder.Append($"{item.Key}={item.Value}&");
+
+                    }
+                }
+
+                uri = builder.ToString();
+                uri = uri.TrimEnd('&', '?');
+            }
+
+            return await client.PostAsync(uri, content:null);
         }
 
         public static async Task<T> ReadTo<T>(this HttpResponseMessage message)

@@ -13,5 +13,7 @@ namespace Tro.DbGrade.FrameWork.Models
         public string Name { get; set; }
         public int Pno { get; set; }
         public int Year { get; set; }
+
+
     }
 }

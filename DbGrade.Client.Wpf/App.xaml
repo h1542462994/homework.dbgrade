@@ -7,13 +7,17 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style x:Key="TextCenterHV" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
         <Style x:Key="TextBigCenterHV" TargetType="TextBlock" BasedOn="{StaticResource TextCenterHV}">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="12,0,0,0"/>
+        </Style>
+        <Style x:Key="TextTitle" TargetType="TextBlock" BasedOn="{StaticResource TextCenterHV}">
+            <Setter Property="FontSize" Value="20"/>
+            <!--<Setter Property="Margin" Value="20,6"/>-->
         </Style>
 
         <sys:Double x:Key="DataGridRow.Height">33</sys:Double>
@@ -178,6 +182,7 @@
         
         <convert:SexStringConverter x:Key="SexStringConverter"/>
         <convert:DoubleStringConverter x:Key="DoubleStringConverter"/>
+        <convert:IntJudgeConverter x:Key="IntJudgeConverter"/>
 
     </Application.Resources>
 </Application>

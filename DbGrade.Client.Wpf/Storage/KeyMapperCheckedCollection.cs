@@ -6,50 +6,75 @@ using System.Text;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
-    public class KeyMapperCheckedCollection<TKey, TValue>: ObservableCollection<CheckItem<TValue>> where TKey:IComparable
+    public class ReplaceCollection<T> : ObservableCollection<T>
     {
-        public KeyMapperCheckedCollection(Func<TValue, TKey> keyMapper)
+        public ReplaceCollection(IComparer<T> comparer = null)
         {
-            KeyMapper = keyMapper;
+            if (comparer == null)
+            {
+                Comparer = Comparer<T>.Default;
+            } else
+            {
+                Comparer = comparer;
+            }
         }
 
-        public Func<TValue, TKey> KeyMapper { get; }
-
-        public virtual void ReplaceItems(IEnumerable<TValue> collection)
+        public ReplaceCollection(Comparison<T> comparison)
         {
-            collection = collection.OrderBy(KeyMapper);
-            // 游标
-            int index = 0;
+            Comparer = Comparer<T>.Create(comparison);
+        }
+
+        public IComparer<T> Comparer { get; }
+
+        public void ReplaceItems(IEnumerable<T> collection)
+        {
+            var index = 0;
             foreach (var item in collection)
             {
-                if (index < Count)
+                while (index < Count && Comparer.Compare(this[index], item) <= 0)
                 {
-                    while (KeyMapper(this[index].Data).CompareTo(KeyMapper(item)) < 0)
+                    if (Comparer.Compare(this[index], item) <= 0)
                     {
-                        //删除键值对
-                        Remove(this[index]);
+                        RemoveAt(index);
                     }
-                    if (KeyMapper(this[index].Data).CompareTo(KeyMapper(item)) == 0)
+                    else
                     {
-                        this[index].Data = item;
-                        ++index;
+                        SetItem(index, item);
+                        continue;
                     }
-                    else if (KeyMapper(this[index].Data).CompareTo(KeyMapper(item)) > 0)
-                    {
-                        Insert(index, new CheckItem<TValue>() {
-                            IsChecked = false,
-                            Data = item
-                        });
-                        ++index;
-                    }
+                }
+
+                if (index < Count && Comparer.Compare(this[index], item) > 0)
+                {
+                    Insert(index, item);
+                    ++index;
                 }
                 else
                 {
-                    Add(new CheckItem<TValue>()
-                    {
-                        IsChecked = false,
-                        Data = item
-                    }) ;
+                    Add(item);
+                    ++index;
+                }
+            }
+
+            while (index < Count)
+            {
+                RemoveAt(index);
+            }
+        }
+
+        public void AddRange(IEnumerable<T> collection)
+        {
+            var index = 0;
+            foreach (var item in collection)
+            {
+                if (index < Count && Comparer.Compare(this[index], item) > 0)
+                {
+                    Insert(index, item);
+                    ++index;
+                }
+                else
+                {
+                    Add(item);
                     ++index;
                 }
             }

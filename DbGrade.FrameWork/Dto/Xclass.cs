@@ -13,6 +13,12 @@ namespace Tro.DbGrade.FrameWork.Dto
 
         }
 
+        public Xclass(int cno, string name)
+        {
+            Cno = cno;
+            Name = name;
+        }
+
         public Xclass(int cno, string name, int year, int studentCount)
         {
             Cno = cno;
@@ -26,5 +32,22 @@ namespace Tro.DbGrade.FrameWork.Dto
         public int Cno { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
+
+        public readonly static Xclass All = new Xclass(
+            cno: -1,
+            name: "--全部--"
+            );
+
+        public override string ToString()
+        {
+            if (Cno <= 0)
+            {
+                return "--全部--";
+            }
+            else
+            {
+                return $"{Year}届{Name}";
+            }
+        }
     }
 }

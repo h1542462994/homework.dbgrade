@@ -7,6 +7,7 @@ namespace Tro.DbGrade.FrameWork.Dto
 {
     public class Province
     {
+
         public Province()
         {
         }
