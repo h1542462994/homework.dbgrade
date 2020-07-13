@@ -31,7 +31,7 @@ namespace Tro.DbGrade.FrameWork.Models
 
         public Way Way { get; set; }
         public int Year { get; set; }
-        public Term Term { get; set; }
+        public int Term { get; set; }
         public string Tno { get; set; }
         public string TName { get; set; }
         public int TAge { get; set; }

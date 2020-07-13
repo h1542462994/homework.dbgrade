@@ -30,13 +30,22 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         private void StudentPage_Loaded(object sender, RoutedEventArgs e)
         {
             //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
-            RemoteStorage.FetchStudentStruct();
             //RemoteStorage.FetchStudent();
-            RemoteStorage.FetchDestStruct();
             ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudent(); };
            
         }
 
+        public GlobalState State => App.Current.ServiceProvider.GetService<GlobalState>();
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
+        public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
+
+        private void DataGridLink_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var textBlock = (TextBlock)sender;
+            string sno = textBlock.Tag as string;
+            State.Sno = sno;
+            PageNavigator.NavigateTo<StudentDetailPage>();
+            e.Handled = true;
+        }
     }
 }

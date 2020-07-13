@@ -10,21 +10,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Tro.DbGrade.Client.Wpf.Storage;
 
-namespace Tro.DbGrade.Client.Wpf.UI
+namespace Tro.DbGrade.Client.Wpf.Pages
 {
     /// <summary>
-    /// DataSelector.xaml 的交互逻辑
+    /// StudentDetailPage.xaml 的交互逻辑
     /// </summary>
-    public partial class DataSelector : UserControl
+    public partial class StudentDetailPage : Page
     {
-        public DataSelector()
+        public StudentDetailPage()
         {
             InitializeComponent();
         }
 
-        public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
-        public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
+        
     }
 }

@@ -123,6 +123,9 @@ namespace Tro.DbGrade.Server.Storage
                    select courseSummary;
         }
 
-        
+        public IEnumerable<XTerm> GetTerms()
+        {
+            return DbContext.Terms;
+        }
     }
 }

@@ -28,6 +28,13 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <DataGrid HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="" MinWidth="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <ItemContainerTemplate>
+                                <TextBlock TextDecorations="{x:Static TextDecorations.Underline}" Text="查看" Style="{StaticResource TextLink}" Tag="{Binding Sno}" MouseDown="DataGridLink_MouseDown"/>
+                            </ItemContainerTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="学号" MinWidth="100" Binding="{Binding Sno}"/>
                     <DataGridTextColumn Header="姓名" MinWidth="100" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="性别" MinWidth="60" Binding="{Binding Sex, Converter={StaticResource SexStringConverter}}"/>

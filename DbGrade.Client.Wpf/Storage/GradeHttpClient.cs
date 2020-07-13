@@ -10,6 +10,9 @@ using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
+    /// <summary>
+    /// 封装http服务，用于从服务器获取需要的数据。
+    /// </summary>
     public class GradeHttpClient
     {
         public GradeHttpClient(HttpClient client, IOptions<StorageOptions> options)
@@ -45,6 +48,14 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             var value = await response.ReadTo<IEnumerable<FrameWork.Dto.Province>>();
             return value;
         }
+
+        public async Task<IEnumerable<XTerm>> GetTermsAsync() {
+
+            var response = await Client.PostAsync(ApiRoute.Terms);
+            var value = await response.ReadTo<IEnumerable<XTerm>>();
+            return value;
+        }
+        
 
     }
 }

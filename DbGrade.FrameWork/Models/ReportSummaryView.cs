@@ -23,7 +23,7 @@ namespace Tro.DbGrade.FrameWork.Models
         public int Cino { get; set; }
         public string CiName { get; set; }
         public int? Year { get; set; }
-        public Term Term { get; set; }
+        public int? Term { get; set; }
         public double TotalCredit { get; set; }
         public double CompleteCredit { get; set; }
         public double Point { get; set; }

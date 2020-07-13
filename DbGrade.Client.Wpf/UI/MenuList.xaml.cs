@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Tro.DbGrade.Client.Wpf.Models;
+using Tro.DbGrade.Client.Wpf.Storage;
 
 namespace Tro.DbGrade.Client.Wpf.UI
 {
@@ -51,11 +52,13 @@ namespace Tro.DbGrade.Client.Wpf.UI
             set { SetValue(FrameProperty, value); }
         }
 
+        public event PageNavigateEventHandler PageNavigate;
         private void OnPageNavigate()
         {
             if(Frame != null)
             {
                 Frame.NavigateTo(StringPages[SelectedIndex].PageType);
+                PageNavigate?.Invoke(this, new PageNavigateEventArgs(StringPages[SelectedIndex].PageType, null));
             }
         }
 

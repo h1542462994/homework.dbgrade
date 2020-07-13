@@ -9,5 +9,6 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public const string Students = "api/students";
         public const string StudentStruct = "api/struct";
         public const string DestStruct = "api/dest_struct";
+        public const string Terms = "api/terms";
     }
 }

@@ -19,5 +19,6 @@ namespace Tro.DbGrade.Server.Storage
 
         IEnumerable<ReportSummary> GetReportSummaries(string scope, int? tag, int? year, int? cyear);
         IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear);
+        IEnumerable<XTerm> GetTerms();
     }
 }

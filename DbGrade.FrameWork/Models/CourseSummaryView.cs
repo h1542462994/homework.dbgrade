@@ -17,7 +17,7 @@ namespace Tro.DbGrade.FrameWork.Models
         public int Period { get; set; }
         public Way Way { get; set; }
         public int Year { get; set; }
-        public Term Term { get; set; }
+        public int Term { get; set; }
         public int Cno { get; set; }
         public string CName { get; set; }
         public int CYear { get; set; }

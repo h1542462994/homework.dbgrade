@@ -19,6 +19,17 @@
             <Setter Property="FontSize" Value="20"/>
             <!--<Setter Property="Margin" Value="20,6"/>-->
         </Style>
+        <Style x:Key="TextLink" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextDecorations" Value="{x:Static TextDecorations.Underline}"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <sys:Double x:Key="DataGridRow.Height">33</sys:Double>
 

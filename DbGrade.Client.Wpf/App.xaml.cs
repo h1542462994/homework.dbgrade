@@ -36,6 +36,9 @@ namespace Tro.DbGrade.Client.Wpf
             services.AddSingleton<RemoteStorage>();
             services.AddHttpClient<GradeHttpClient>();
             services.AddSingleton(this);
+            services.AddSingleton<GlobalState>();
+            services.AddSingleton<SelectorViewModel>();
+            services.AddSingleton<PageNavigator>();
         }
 
         public IServiceProvider ServiceProvider { get; }

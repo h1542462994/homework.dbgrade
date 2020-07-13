@@ -16,6 +16,7 @@ using System.ComponentModel;
 using Tro.DbGrade.Client.Wpf.Models;
 using System.Collections.ObjectModel;
 using Tro.DbGrade.Client.Wpf.Pages;
+using Tro.DbGrade.Client.Wpf.Storage;
 
 namespace Tro.DbGrade.Client.Wpf
 {
@@ -27,10 +28,18 @@ namespace Tro.DbGrade.Client.Wpf
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
         }
 
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            PageNavigator.OnPageNavigate += (o, e) =>
+            {
+                ContentFrame.NavigateTo(e.PageType);
+            };
+        }
 
-
+        public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
 
         public ObservableCollection<StringPage> StringPages
         {
