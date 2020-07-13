@@ -6,6 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf.Pages"
+      xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="StudentPage" Background="White">
@@ -17,64 +18,9 @@
         </Grid.RowDefinitions>
         <StackPanel Margin="20,6" Orientation="Vertical">
             <TextBlock Style="{StaticResource TextTitle}" Text="学生详情页"/>
-            <ComboBox x:Name="ComboBoxRange" HorizontalAlignment="Left" Margin="0,4" MinWidth="180" SelectedIndex="{Binding ElementName=page, Path=RemoteStorage.ModeIndex, Mode=TwoWay}">
-                <ComboBoxItem Content="使用专业、班级进行筛选" />
-                <ComboBoxItem Content="使用地区进行筛选"/>
-            </ComboBox>
-            <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
-                <TextBlock Margin="12,0,0,0" Text="届数：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150">
-
-                </ComboBox>
-                <TextBlock Text="专业：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150"
-                            ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentStruct}"
-                            SelectedIndex="{Binding ElementName=page, Path=RemoteStorage.ProfessionIndex, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <ContentPresenter Content="{Binding Name}"/>
-                        </ItemContainerTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <TextBlock Margin="12,0,0,0" Text="班级：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150"
-                              ItemsSource="{Binding ElementName=page, Path=RemoteStorage.Xclasses}"
-                              SelectedIndex="{Binding ElementName=page, Path=RemoteStorage.ClassIndex}">
-                    <ComboBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <ContentPresenter Content="{Binding}"/>
-                        </ItemContainerTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
-                <TextBlock Margin="12,0,0,0" Text="届数：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150">
-
-                </ComboBox>
-                <TextBlock Text="省：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150"
-                            ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentStruct}"
-                            SelectedIndex="{Binding ElementName=page, Path=RemoteStorage.ProfessionIndex, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <ContentPresenter Content="{Binding Name}"/>
-                        </ItemContainerTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <TextBlock Margin="12,0,0,0" Text="市：" Style="{StaticResource TextCenterHV}"/>
-                <ComboBox MinWidth="150"
-                              ItemsSource="{Binding ElementName=page, Path=RemoteStorage.Xclasses}"
-                              SelectedIndex="{Binding ElementName=page, Path=RemoteStorage.ClassIndex}">
-                    <ComboBox.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <ContentPresenter Content="{Binding}"/>
-                        </ItemContainerTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </StackPanel>
+            <ui:DataSelector/>
             <StackPanel Margin="0,4" Orientation="Horizontal">
-                <Button Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsStudentOutViewFetchingEnabled}"/>
+                <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsStudentOutViewFetchingEnabled}"/>
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
             </StackPanel>

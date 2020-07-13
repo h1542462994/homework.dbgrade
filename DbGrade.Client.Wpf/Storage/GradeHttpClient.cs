@@ -20,13 +20,13 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public HttpClient Client { get; }
 
-        public async Task<IEnumerable<StudentOutView>> GetStudentsAsync(string scope, int? tag = null, int? year = null)
+        public async Task<IEnumerable<StudentOutView>> GetStudentsAsync(string scope, string tag = null, int? year = null)
         {
-            var response = await Client.PostAsync(ApiRoute.Students, new Dictionary<string, string>
+            var response = await Client.PostAsync(ApiRoute.Students, new Dictionary<string, object>
             {
                 { "scope", scope },
-                { "tag", tag.ToString() },
-                { "year", year.ToString() }
+                { "tag", tag },
+                { "year", year }
             });
             var value = await response.ReadTo<IEnumerable<StudentOutView>>();
             return value;
@@ -36,6 +36,13 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         {
             var response = await Client.PostAsync(ApiRoute.StudentStruct);
             var value = await response.ReadTo<IEnumerable<FrameWork.Dto.Profession>>();
+            return value;
+        }
+
+        public async Task<IEnumerable<FrameWork.Dto.Province>> GetDestStructAsync()
+        {
+            var response = await Client.PostAsync(ApiRoute.DestStruct);
+            var value = await response.ReadTo<IEnumerable<FrameWork.Dto.Province>>();
             return value;
         }
 

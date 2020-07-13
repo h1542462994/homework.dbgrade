@@ -1,0 +1,77 @@
+﻿<UserControl
+    x:Name="control"
+            x:Class="Tro.DbGrade.Client.Wpf.UI.DataSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
+             mc:Ignorable="d">
+    <StackPanel Orientation="Vertical">
+        <ComboBox x:Name="ComboBoxRange" HorizontalAlignment="Left" Margin="0,4" MinWidth="180" SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.ModeIndex, Mode=TwoWay}">
+            <ComboBoxItem Content="使用专业、班级进行筛选" />
+            <ComboBoxItem Content="使用地区进行筛选"/>
+        </ComboBox>
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
+            <TextBlock Margin="12,0,0,0" Text="届数：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150" ItemsSource="{Binding ElementName=control, Path=RemoteStorage.CYears}" SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.CYearIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Converter={StaticResource IntStringConverter}}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="专业：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                            ItemsSource="{Binding ElementName=control, Path=RemoteStorage.StudentStruct}"
+                            SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.ProfessionIndex, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="12,0,0,0" Text="班级：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                              ItemsSource="{Binding ElementName=control, Path=RemoteStorage.Xclasses}"
+                              SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.ClassIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
+            <TextBlock Margin="12,0,0,0" Text="届数：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150" ItemsSource="{Binding ElementName=control, Path=RemoteStorage.CYears}" SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.CYearIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Converter={StaticResource IntStringConverter}}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="省：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                            ItemsSource="{Binding ElementName=control, Path=RemoteStorage.Provinces}"
+                            SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.ProvinceIndex, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Margin="12,0,0,0" Text="市：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                              ItemsSource="{Binding ElementName=control, Path=RemoteStorage.Cities}"
+                              SelectedIndex="{Binding ElementName=control, Path=RemoteStorage.CityIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+
+    </StackPanel>
+</UserControl>

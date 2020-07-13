@@ -12,29 +12,16 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Tro.DbGrade.Client.Wpf.Storage;
 
-namespace Tro.DbGrade.Client.Wpf.Pages
+namespace Tro.DbGrade.Client.Wpf.UI
 {
     /// <summary>
-    /// StudentPage.xaml 的交互逻辑
+    /// DataSelector.xaml 的交互逻辑
     /// </summary>
-    public partial class StudentPage : Page
+    public partial class DataSelector : UserControl
     {
-        public StudentPage()
+        public DataSelector()
         {
             InitializeComponent();
-            Loaded += StudentPage_Loaded;
-        }
-
-
-
-        private void StudentPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
-            RemoteStorage.FetchStudentStruct();
-            //RemoteStorage.FetchStudent();
-            RemoteStorage.FetchDestStruct();
-            ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudent(); };
-           
         }
 
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();

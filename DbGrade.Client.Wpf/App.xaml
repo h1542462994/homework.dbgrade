@@ -183,6 +183,7 @@
         <convert:SexStringConverter x:Key="SexStringConverter"/>
         <convert:DoubleStringConverter x:Key="DoubleStringConverter"/>
         <convert:IntJudgeConverter x:Key="IntJudgeConverter"/>
+        <convert:IntStringConverter x:Key="IntStringConverter"/>
 
     </Application.Resources>
 </Application>

@@ -10,7 +10,7 @@ namespace Tro.DbGrade.Client.Wpf
 {
     public static class ServiceExtensions
     {
-        public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string uri, IDictionary<string,string> parameters = null)
+        public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string uri, IDictionary<string,object> parameters = null)
         {
             if (parameters != null)
             {
@@ -34,7 +34,7 @@ namespace Tro.DbGrade.Client.Wpf
             return await client.GetAsync(uri);
         }
 
-        public static async Task<HttpResponseMessage> PostAsync(this HttpClient client, string uri, IDictionary<string, string> parameters = null)
+        public static async Task<HttpResponseMessage> PostAsync(this HttpClient client, string uri, IDictionary<string, object> parameters = null)
         {
             if (parameters != null)
             {
