@@ -127,5 +127,15 @@ namespace Tro.DbGrade.Server.Storage
         {
             return DbContext.Terms;
         }
+
+        public IEnumerable<DestSummaryView> GetDests(string scope, int? tag)
+        {
+            return from dest in DbContext.DestSummaryView
+                   where
+                   ((scope == Scope.Province && dest.Prno == tag) ||
+                   (scope == Scope.City && dest.Cino == tag) ||
+                   (scope == Scope.All || scope == null))
+                   select dest;
+        }
     }
 }

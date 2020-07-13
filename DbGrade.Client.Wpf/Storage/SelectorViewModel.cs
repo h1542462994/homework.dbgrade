@@ -120,6 +120,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(CityIndexProperty, value); }
         }
 
+        public int Mode
+        {
+            get { return (int)GetValue(ModeProperty); }
+            set { SetValue(ModeProperty, value); }
+        }
 
         public bool IsStudentStructFetchingEnabled
         {
@@ -138,6 +143,12 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(IsYearsFetchEnabledProperty, value); }
         }
 
+        public SelectorMode SelectorMode
+        {
+            get { return (SelectorMode)GetValue(SelectorModeProperty); }
+            set { SetValue(SelectorModeProperty, value); }
+        }
+
         public App App { get; }
         public GradeHttpClient HttpClient { get; }
         public GlobalState State { get; }
@@ -145,7 +156,13 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public Locator GetLocator()
         {
             int? cYear = CYears[CYearIndex] <= 0 ? default(int?) : CYears[CYearIndex];
-            if (ModeIndex == 0)
+            int modeIndex = ModeIndex;
+            if (modeIndex < 0 || modeIndex >= Modes.Count)
+            {
+                modeIndex = 0;
+            }
+            LocatorMode mode = Modes[modeIndex];
+            if (mode == LocatorMode.Struct)
             {
                 if (ProfessionIndex <= 0)
                 {
@@ -165,7 +182,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     }
                 }
             }
-            else if (ModeIndex == 1)
+            else if (mode == LocatorMode.Dest)
             {
                 if (ProvinceIndex <= 0)
                 {
@@ -241,6 +258,33 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     CityIndex = 0;
                 }
             }
+        }
+
+        private void OnSelectModeChanged()
+        {
+            if (SelectorMode == SelectorMode.StructDest)
+            {
+                Modes.ReplaceItems(new[] { LocatorMode.Dest, LocatorMode.Struct });
+            }
+            else if (SelectorMode == SelectorMode.StructOnly)
+            {
+                Modes.ReplaceItems(new[] { LocatorMode.Struct });
+            } else
+            {
+                Modes.ReplaceItems(new[] { LocatorMode.Dest });
+            }
+            ModeIndex = 0;
+        }
+
+        private void OnModeIndexChanged()
+        {
+            int index = ModeIndex;
+            if (index < 0 || index >= Modes.Count)
+            {
+                index = 0;
+            }
+            var locatorMode = Modes[index];
+            Mode = locatorMode.Index;
         }
 
         public async void FetchStudentStruct()
@@ -345,7 +389,6 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 IsDestStructFetchEnabled = true;
             });
         }
-
         public async void FetchYears()
         {
             App.Dispatcher.Invoke(() =>
@@ -420,12 +463,28 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(CYears), typeof(ReplaceCollection<int>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<int>() { -1 }));
 
 
+
+        public ReplaceCollection<LocatorMode> Modes
+        {
+            get { return (ReplaceCollection<LocatorMode>)GetValue(ModesProperty); }
+            set { SetValue(ModesProperty, value); }
+        }
+
+        public static readonly DependencyProperty ModesProperty =
+            DependencyProperty.Register(nameof(Modes), typeof(ReplaceCollection<LocatorMode>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<LocatorMode>() {
+                LocatorMode.Struct,
+                LocatorMode.Dest
+            }));
+
         public static readonly DependencyProperty YearsProperty =
             DependencyProperty.Register(nameof(Years), typeof(ReplaceCollection<int>), typeof(SelectorViewModel), new PropertyMetadata(
                 new ReplaceCollection<int>(){-1}));
 
         public static readonly DependencyProperty ModeIndexProperty =
-            DependencyProperty.Register(nameof(ModeIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(ModeIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0
+                ,(d,e)=> {
+                    ((SelectorViewModel)d).OnModeIndexChanged();
+                }));
 
         public static readonly DependencyProperty CYearIndexProperty =
             DependencyProperty.Register(nameof(CYearIndex), typeof(int), typeof(SelectorViewModel),
@@ -465,5 +524,16 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public static readonly DependencyProperty IsYearsFetchEnabledProperty =
             DependencyProperty.Register("IsYearsFetchEnabled", typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty SelectorModeProperty =
+            DependencyProperty.Register("SelectorMode", typeof(SelectorMode), typeof(SelectorViewModel), new PropertyMetadata(SelectorMode.StructDest, 
+                (d,e) => {
+                    ((SelectorViewModel)d).OnSelectModeChanged();
+                }));
+
+        public static readonly DependencyProperty ModeProperty =
+            DependencyProperty.Register("Mode", typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+
+
     }
 }

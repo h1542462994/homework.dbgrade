@@ -13,6 +13,8 @@ namespace Tro.DbGrade.Server.Storage
 
         IEnumerable<FrameWork.Dto.Province> GetDestStruct(int? year);
 
+        IEnumerable<DestSummaryView> GetDests(string scope, int? tag);
+
         IEnumerable<StudentOutView> GetStudents(string scope, int? tag, int? year);
 
         IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear);

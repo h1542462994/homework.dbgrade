@@ -32,6 +32,7 @@ namespace Tro.DbGrade.Server.Storage
         public DbSet<ReportSummaryView> ReportSummaryView { get; set; }
         public DbSet<CourseSummaryView> CourseSummaryView { get; set; }
         public DbSet<XTerm> Terms { get; set; }
+        public DbSet<DestSummaryView> DestSummaryView { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
@@ -51,6 +52,7 @@ namespace Tro.DbGrade.Server.Storage
             modelBuilder.Entity<ReportsView>().HasNoKey();
             modelBuilder.Entity<ReportSummaryView>().HasNoKey();
             modelBuilder.Entity<XTerm>().HasNoKey();
+            modelBuilder.Entity<DestSummaryView>().HasNoKey();
         }
 
     }

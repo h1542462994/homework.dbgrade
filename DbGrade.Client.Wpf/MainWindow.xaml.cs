@@ -51,13 +51,12 @@ namespace Tro.DbGrade.Client.Wpf
             DependencyProperty.Register("StringPages", typeof(ObservableCollection<StringPage>), typeof(MainWindow), new PropertyMetadata(
                 new ObservableCollection<StringPage>
                 {
-                    new StringPage("学生详情", typeof(StudentPage)),
-                    new StringPage("教师详情", typeof(TeacherPage))
-                }
-                ));
-
-
-
-
+                    new StringPage("地区概览信息", typeof(DestPage)),
+                    new StringPage("班级概览信息", typeof(StructPage)),
+                    new StringPage("学生基本信息", typeof(StudentPage)),
+                    new StringPage("教师基本信息", typeof(TeacherPage)),
+                    new StringPage("成绩查询", typeof(ReportsPage)),
+                    new StringPage("课程查询", typeof(CoursePage))
+                }));
     }
 }

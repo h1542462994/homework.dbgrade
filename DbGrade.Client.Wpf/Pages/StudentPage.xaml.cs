@@ -31,6 +31,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         {
             //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
             //RemoteStorage.FetchStudent();
+            SelectorViewModel.SelectorMode = SelectorMode.StructDest;
             ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudent(); };
            
         }
@@ -38,6 +39,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         public GlobalState State => App.Current.ServiceProvider.GetService<GlobalState>();
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
         public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
+        public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
 
         private void DataGridLink_MouseDown(object sender, MouseButtonEventArgs e)
         {

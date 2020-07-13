@@ -1,0 +1,25 @@
+﻿<Page x:Class="Tro.DbGrade.Client.Wpf.Pages.DestPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf.Pages"
+      xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DestPage" Background="Wheat">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="20,6" Orientation="Vertical">
+            <TextBlock Style="{StaticResource TextTitle}" Text="地区概览页"/>
+            <ui:DataSelector />
+            <StackPanel Margin="0,4" Orientation="Horizontal">
+                <Button x:Name="ButtonQuery" Width="80" Padding="0,4" Content="查询"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -9,7 +9,7 @@
       xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="StudentPage" Background="White">
+      Title="StudentPage" Background="Wheat">
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
@@ -25,8 +25,7 @@
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
             </StackPanel>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <DataGrid HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
+        <DataGrid Grid.Row="1" HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="" MinWidth="100">
                         <DataGridTemplateColumn.CellTemplate>
@@ -47,6 +46,6 @@
                     <DataGridTextColumn Header="排名" MinWidth="80" Binding="{Binding OrderOfSchool}"/>
                 </DataGrid.Columns>
             </DataGrid>
-        </ScrollViewer>
+ 
     </Grid>
 </Page>

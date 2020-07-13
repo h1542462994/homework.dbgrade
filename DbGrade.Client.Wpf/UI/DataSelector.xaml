@@ -9,9 +9,8 @@
              mc:Ignorable="d">
     <StackPanel Orientation="Vertical">
         <StackPanel Margin="0,4" Orientation="Horizontal">
-            <ComboBox x:Name="ComboBoxRange" HorizontalAlignment="Left" MinWidth="180" SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.ModeIndex, Mode=TwoWay}">
-                <ComboBoxItem Content="使用专业、班级进行筛选" />
-                <ComboBoxItem Content="使用地区进行筛选"/>
+            <ComboBox x:Name="ComboBoxRange" HorizontalAlignment="Left" MinWidth="180" SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.ModeIndex, Mode=TwoWay}"
+                      ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Modes}">
             </ComboBox>
             <TextBlock Margin="12,0,0,0" Text="届数：" Style="{StaticResource TextCenterHV}"/>
             <ComboBox MinWidth="150" ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.CYears}" SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.CYearIndex, Mode=TwoWay}">
@@ -31,7 +30,7 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
            
             <TextBlock Text="专业：" Style="{StaticResource TextCenterHV}"/>
             <ComboBox MinWidth="150"
@@ -54,7 +53,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=ComboBoxRange, Path=SelectedIndex, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
             <TextBlock Text="省：" Style="{StaticResource TextCenterHV}"/>
             <ComboBox MinWidth="150"
                             ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Provinces}"
