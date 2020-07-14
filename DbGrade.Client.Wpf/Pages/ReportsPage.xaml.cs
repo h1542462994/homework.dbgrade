@@ -28,7 +28,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         private void ReportsPage_Loaded(object sender, RoutedEventArgs e)
         {
             SelectorViewModel.SelectorMode = SelectorMode.StructDest;
-            ButtonQuery.Click += (o, e) => RemoteStorage.FetchReports();
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchReportsAsync();
         }
 
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();

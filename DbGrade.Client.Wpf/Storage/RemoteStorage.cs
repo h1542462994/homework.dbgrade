@@ -20,6 +20,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         }
   
         public App App { get; }
+        public GradeHttpClient HttpClient { get; }
+        public SelectorViewModel SelectorViewModel { get; }
+        public GlobalState State { get; }
+
+        #region Datas
 
         public ReplaceCollection<StudentOut> StudentOut
         {
@@ -32,11 +37,13 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (ReplaceCollection<DestSummary>)GetValue(DestSummariesProperty); }
             set { SetValue(DestSummariesProperty, value); }
         }
+
         public ReplaceCollection<ClassSummary> ClassSummaries
         {
             get { return (ReplaceCollection<ClassSummary>)GetValue(ClassSummariesProperty); }
             set { SetValue(ClassSummariesProperty, value); }
         }
+
         public ReplaceCollection<ReportsView> Reports
         {
             get { return (ReplaceCollection<ReportsView>)GetValue(ReportsProperty); }
@@ -48,11 +55,25 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (ReplaceCollection<Teacher>)GetValue(TeachersProperty); }
             set { SetValue(TeachersProperty, value); }
         }
+
         public ReplaceCollection<ReportSummaryOut> ReportSummaries
         {
             get { return (ReplaceCollection<ReportSummaryOut>)GetValue(ReportSummariesProperty); }
             set { SetValue(ReportSummariesProperty, value); }
         }
+
+        public ReplaceCollection<XTerm> Terms
+        {
+            get { return (ReplaceCollection<XTerm>)GetValue(TermsProperty); }
+            set { SetValue(TermsProperty, value); }
+        }
+
+        public ReplaceCollection<CourseSummaryView> CourseSummaries
+        {
+            get { return (ReplaceCollection<CourseSummaryView>)GetValue(CourseSummariesProperty); }
+            set { SetValue(CourseSummariesProperty, value); }
+        }
+        #endregion
 
         #region StateGetter&Setter
 
@@ -89,13 +110,22 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (bool)GetValue(IsReportSummariesFetchEnabledProperty); }
             set { SetValue(IsReportSummariesFetchEnabledProperty, value); }
         }
+        public bool IsTermsFetchEnabled
+        {
+            get { return (bool)GetValue(IsTermsFetchEnabledProperty); }
+            set { SetValue(IsTermsFetchEnabledProperty, value); }
+        }
+        public bool IsCourseSummariesFetchEnabled
+        {
+            get { return (bool)GetValue(IsCourseSummariesFetchEnabledProperty); }
+            set { SetValue(IsCourseSummariesFetchEnabledProperty, value); }
+        }
+
         #endregion
 
-        public GradeHttpClient HttpClient { get; }
-        public SelectorViewModel SelectorViewModel { get; }
-        public GlobalState State { get; }
+        #region Fetches
 
-        public async void FetchStudents()
+        public async void FetchStudentsAsync()
         {
             Locator locator = SelectorViewModel.GetLocator();
 
@@ -120,7 +150,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(()=> IsStudentOutViewFetchingEnabled = true);
         }
 
-        public async void FetchDestSummary()
+        public async void FetchDestSummaryAsync()
         {
             Locator locator = SelectorViewModel.GetLocator();
             App.Dispatcher.Invoke(() => IsDestSummaryFetchEnabled = false);
@@ -143,7 +173,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(() => IsDestSummaryFetchEnabled = true);
         }
 
-        public async void FetchClassSummary()
+        public async void FetchClassSummaryAsync()
         {
             Locator locator = SelectorViewModel.GetLocator();
             App.Dispatcher.Invoke(() => IsClassSummariesFetchEnabled = false);
@@ -167,7 +197,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(()=> IsClassSummariesFetchEnabled = true);
         }
 
-        public async void FetchReports()
+        public async void FetchReportsAsync()
         {
             Locator locator = SelectorViewModel.GetLocator();
             App.Dispatcher.Invoke(() => IsReportsFetchEnabled = false );
@@ -190,7 +220,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(() => IsReportsFetchEnabled = true );
         }
 
-        public async void FetchTeachers()
+        public async void FetchTeachersAsync()
         {
             App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = false);
 
@@ -213,7 +243,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = true);
         }
 
-        public async void FetchReportSummaries()
+        public async void FetchReportSummariesAsync()
         {
             App.Dispatcher.Invoke(() => IsReportSummariesFetchEnabled = false);
 
@@ -237,6 +267,55 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
             App.Dispatcher.Invoke(() => IsReportSummariesFetchEnabled = true);
         }
+
+        public async void FetchTermsAsync()
+        {
+            App.Dispatcher.Invoke(() => IsTermsFetchEnabled = false);
+
+            var terms = await HttpClient.GetTermsAsync();
+            lock (Terms)
+            {
+                App.Dispatcher.Invoke(() => {
+                    if (terms == null)
+                    {
+                        State.Message = "加载错误";
+                    }
+                    else
+                    {
+                        Terms.ReplaceItems(terms);
+                    }
+                });
+            }
+
+            App.Dispatcher.Invoke(() => IsTermsFetchEnabled = true);
+        }
+
+        public async void FetchCourseSummaryAsync()
+        {
+            App.Dispatcher.Invoke(() => IsCourseSummariesFetchEnabled = false);
+
+            var locator = SelectorViewModel.GetLocator();
+            var courseSummaries = await HttpClient.GetCourseSummariesAsync(locator.Scope, locator.Tag, locator.Year, locator.CYear);
+            lock (CourseSummaries)
+            {
+                App.Dispatcher.Invoke(() => {
+                    if (courseSummaries == null)
+                    {
+                        State.Message = "加载错误";
+                    }
+                    else
+                    {
+                        CourseSummaries.ReplaceItems(courseSummaries);
+                    }
+                });
+            }
+
+            App.Dispatcher.Invoke(() => IsCourseSummariesFetchEnabled = true);
+        }
+
+        #endregion
+
+        #region DataProperties
 
         public static readonly DependencyProperty StudentOutProperty =
             DependencyProperty.Register(nameof(StudentOut),
@@ -282,7 +361,19 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     new ReplaceCollection<ReportSummaryOut>()
                     ));
 
+        public static readonly DependencyProperty CourseSummariesProperty =
+            DependencyProperty.Register(
+                nameof(CourseSummaries), 
+                typeof(ReplaceCollection<CourseSummaryView>), 
+                typeof(RemoteStorage), 
+                new PropertyMetadata(
+                    new ReplaceCollection<CourseSummaryView>()
+                    ));
+        
+        #endregion
+
         #region StateDependencyProperty
+
         public static readonly DependencyProperty IsDestSummaryFetchEnabledProperty =
             DependencyProperty.Register(nameof(IsDestSummaryFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
 
@@ -299,7 +390,17 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(IsTeacherFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
 
         public static readonly DependencyProperty IsReportSummariesFetchEnabledProperty =
-            DependencyProperty.Register("IsReportSummariesFetchEnabled", typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(IsReportSummariesFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty TermsProperty =
+            DependencyProperty.Register(nameof(Terms), typeof(ReplaceCollection<XTerm>), typeof(RemoteStorage), new PropertyMetadata(new ReplaceCollection<XTerm>()));
+
+        public static readonly DependencyProperty IsTermsFetchEnabledProperty =
+            DependencyProperty.Register(nameof(IsTermsFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty IsCourseSummariesFetchEnabledProperty =
+            DependencyProperty.Register(nameof(IsCourseSummariesFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
+     
         #endregion
     }
 }

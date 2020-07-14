@@ -196,5 +196,6 @@
         <convert:IntJudgeConverter x:Key="IntJudgeConverter"/>
         <convert:IntStringConverter x:Key="IntStringConverter"/>
         <convert:LevalStringConverter x:Key="LevalStringConverter"/>
+        <convert:TermStringConverter x:Key="TermStringConverter"/>
     </Application.Resources>
 </Application>

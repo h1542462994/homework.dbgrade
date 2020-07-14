@@ -27,7 +27,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
 
         private void TeacherPage_Loaded(object sender, RoutedEventArgs e)
         {
-            ButtonQuery.Click += (o, e) => RemoteStorage.FetchTeachers();
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchTeachersAsync();
         }
 
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();

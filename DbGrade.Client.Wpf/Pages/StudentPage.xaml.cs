@@ -32,7 +32,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
             //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
             //RemoteStorage.FetchStudent();
             SelectorViewModel.SelectorMode = SelectorMode.StructDest;
-            ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudents(); };
+            ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudentsAsync(); };
            
         }
 

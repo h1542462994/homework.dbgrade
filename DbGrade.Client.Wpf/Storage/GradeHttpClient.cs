@@ -147,5 +147,24 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 return null;
             }
         }
+
+        public async Task<IEnumerable<CourseSummaryView>> GetCourseSummariesAsync(string scope, string tag, int? year, int? cyear)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.CourseSummary, new Dictionary<string, object> {
+                    { "scope", scope },
+                    { "tag", tag },
+                    { "year", year},
+                    { "cyear", cyear }
+                });
+                return await response.ReadTo<IEnumerable<CourseSummaryView>>();
+            } 
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

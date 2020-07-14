@@ -15,5 +15,6 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public const string Reports = "api/reports";
         public const string Teachers = "api/teachers";
         public const string ReportSummary = "api/report_summary";
+        public const string CourseSummary = "api/course_summary";
     }
 }

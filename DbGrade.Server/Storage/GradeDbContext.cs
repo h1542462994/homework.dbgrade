@@ -34,6 +34,7 @@ namespace Tro.DbGrade.Server.Storage
         public DbSet<XTerm> Terms { get; set; }
         public DbSet<DestSummaryView> DestSummaryView { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<OpenCoursesView> OpenCoursesView { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 
@@ -46,14 +47,18 @@ namespace Tro.DbGrade.Server.Storage
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            
-            modelBuilder.RenameDb(RenameDbService);
-            modelBuilder.Entity<StructView>().HasNoKey();
-            modelBuilder.Entity<ReportsView>().HasNoKey();
-            modelBuilder.Entity<ReportSummaryView>().HasNoKey();
-            modelBuilder.Entity<XTerm>().HasNoKey();
-            modelBuilder.Entity<DestSummaryView>().HasNoKey();
+            if (modelBuilder != null)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.RenameDb(RenameDbService);
+                modelBuilder.Entity<StructView>().HasNoKey();
+                modelBuilder.Entity<ReportsView>().HasNoKey();
+                modelBuilder.Entity<ReportSummaryView>().HasNoKey();
+                modelBuilder.Entity<XTerm>().HasNoKey();
+                modelBuilder.Entity<DestSummaryView>().HasNoKey();
+            }
+
         }
 
     }

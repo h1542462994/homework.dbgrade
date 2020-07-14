@@ -45,7 +45,7 @@
     - 筛选：专业、班级、课程、任课教师；届数；开课时间
     引用api: course_summary
 
-### 班级课表界面
+### 开课统计界面
 
 TODO: 待完善
 
@@ -382,6 +382,36 @@ api/terms
     {
         "year": 2020,
         "term": 1
+    }
+]
+```
+
+#### 查看开课信息(api/open_courses)
+
+api/open_courses?[scope=profession|class|course|teacher]&[tag=?]&[year=?]&[cyear=?]
+
+```json
+[
+    {
+        "ono": 1,
+        "cono": 1,
+        "coName": "计算机组成原理",
+        "credit": 3,
+        "period": 48,
+        "way": 0,
+        "year": 2020,
+        "term": 0,
+        "cno": 1,
+        "cName": "1班",
+        "cYear": 2016,
+        "pno": 1,
+        "pName": "实验班",
+        "tno": "T000001",
+        "tName": "教师1",
+        "tAge": 34,
+        "tSex": 0,
+        "tLevel": 0,
+        "tPhone": "13000000000"
     }
 ]
 ```

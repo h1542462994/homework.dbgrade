@@ -1,14 +1,34 @@
-﻿<Page x:Class="Tro.DbGrade.Client.Wpf.Pages.TermPage"
+﻿<Page x:Name="page"
+      x:Class="Tro.DbGrade.Client.Wpf.Pages.TermPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf.Pages"
+      xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="TermPage">
+      Title="TermPage" Background="Wheat">
 
-    <Grid>
-        
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Margin="20,6" Orientation="Vertical">
+            <TextBlock Style="{StaticResource TextTitle}" Text="学期查询"/>
+            <StackPanel Margin="0,4" Orientation="Horizontal">
+                <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsTermsFetchEnabled}"/>
+                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
+                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
+            </StackPanel>
+        </StackPanel>
+        <DataGrid Grid.Row="1" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.Terms}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="学年" MinWidth="100" Binding="{Binding Year}"/>
+                <DataGridTextColumn Header="学期" MinWidth="80" Binding="{Binding Term, Converter={StaticResource TermStringConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </Page>

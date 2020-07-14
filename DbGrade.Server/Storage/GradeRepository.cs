@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Dto;
 using Tro.DbGrade.FrameWork.Models;
 using Tro.DbGrade.FrameWork;
+using System.Runtime.Serialization;
+using System.Globalization;
 
 namespace Tro.DbGrade.Server.Storage
 {
@@ -110,8 +112,8 @@ namespace Tro.DbGrade.Server.Storage
                                            }
 
                             };
-            //强制读取summaries到内存，以切换QueryProvider。
-            return summaries.ToList().SelectMany(profession =>
+           
+            return summaries.SelectMany(profession =>
                 from xclass in profession.xclasses
                 where 
                     ((scope == Scope.Profession && tag == profession.pno) ||
@@ -173,12 +175,12 @@ namespace Tro.DbGrade.Server.Storage
         public IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear) =>
             from report in DbContext.ReportsView
             where
-                ((scope == Scope.Profession && report.Pno == int.Parse(tag)) ||
-                (scope == Scope.Xclass && report.Cno == int.Parse(tag)) ||
-                (scope == Scope.Province && report.Prno == int.Parse(tag)) ||
-                (scope == Scope.City && report.Cino == int.Parse(tag)) ||
-                (scope) == Scope.OpenCourse && report.Ono == int.Parse(tag) ||
-                (scope) == Scope.Course && report.Cno == int.Parse(tag) ||
+                ((scope == Scope.Profession && report.Pno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                (scope == Scope.Xclass && report.Cno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                (scope == Scope.Province && report.Prno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                (scope == Scope.City && report.Cino == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                (scope) == Scope.OpenCourse && report.Ono == int.Parse(tag, CultureInfo.InvariantCulture) ||
+                (scope) == Scope.Course && report.Cno == int.Parse(tag, CultureInfo.InvariantCulture) ||
                 (scope) == Scope.Student && report.Sno == tag ||
                 (scope) == Scope.Teacher && report.Tno == tag ||
                 scope == Scope.All || scope == null) && (year == null || year == report.Year) && (cyear == null || year == report.CYear)
@@ -298,9 +300,9 @@ namespace Tro.DbGrade.Server.Storage
         {
             return from courseSummary in DbContext.CourseSummaryView
                    where
-                   ((scope == Scope.Profession && courseSummary.Pno ==  int.Parse(tag)) ||
-                   (scope == Scope.Xclass && courseSummary.Cno == int.Parse(tag)) ||
-                   (scope == Scope.Course && courseSummary.Cono == int.Parse(tag)) ||
+                   ((scope == Scope.Profession && courseSummary.Pno ==  int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                   (scope == Scope.Xclass && courseSummary.Cno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                   (scope == Scope.Course && courseSummary.Cono == int.Parse(tag, CultureInfo.InvariantCulture)) ||
                    (scope == Scope.Teacher && courseSummary.Tno == tag) ||
                    (scope == Scope.All || scope == null)) && (year == null || year == courseSummary.CYear)
                    select courseSummary;
@@ -314,6 +316,19 @@ namespace Tro.DbGrade.Server.Storage
         public IEnumerable<Teacher> GetTeachers()
         {
             return DbContext.Teachers;
+        }
+
+        public IEnumerable<OpenCoursesView> GetOpenCourses(string scope, string tag, int? year, int? cyear)
+        {
+            return from openCourse in DbContext.OpenCoursesView
+                   where
+                   ((scope == Scope.Profession && openCourse.Pno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                   (scope == Scope.Xclass && openCourse.Cno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                   (scope == Scope.Course && openCourse.Cono == int.Parse(tag, CultureInfo.InvariantCulture)) ||
+                   (scope) == Scope.Teacher && openCourse.Tno == tag) ||
+                   (scope == Scope.All || scope == null) && (year == null || year == openCourse.Year) &&
+                   (cyear == null || cyear == openCourse.CYear)
+                   select openCourse;
         }
     }
 }

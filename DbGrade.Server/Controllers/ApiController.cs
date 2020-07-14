@@ -86,5 +86,12 @@ namespace Tro.DbGrade.Server.Controllers
         {
             return GradeRepository.GetTeachers();
         }
+
+        [HttpGet("open_courses")]
+        [HttpPost("open_courses")]
+        public object OpenCourses(string scope, string tag, int? year, int? cyear)
+        {
+            return GradeRepository.GetOpenCourses(scope, tag, year, cyear);
+        }
     }
 }

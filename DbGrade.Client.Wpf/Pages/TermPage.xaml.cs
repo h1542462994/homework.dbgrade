@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tro.DbGrade.Client.Wpf.Storage;
 
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
@@ -21,6 +22,14 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         public TermPage()
         {
             InitializeComponent();
+            Loaded += TermPage_Loaded;
         }
+
+        private void TermPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchTermsAsync();
+        }
+
+        public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }
 }
