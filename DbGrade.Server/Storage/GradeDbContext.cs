@@ -33,6 +33,7 @@ namespace Tro.DbGrade.Server.Storage
         public DbSet<CourseSummaryView> CourseSummaryView { get; set; }
         public DbSet<XTerm> Terms { get; set; }
         public DbSet<DestSummaryView> DestSummaryView { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
         public IConfiguration Configuration { get; }
         public IRenameDbService RenameDbService { get; }
 

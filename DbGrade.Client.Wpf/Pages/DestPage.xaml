@@ -1,4 +1,6 @@
-﻿<Page x:Class="Tro.DbGrade.Client.Wpf.Pages.DestPage"
+﻿<Page 
+    x:Name="page"
+    x:Class="Tro.DbGrade.Client.Wpf.Pages.DestPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -15,11 +17,19 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Margin="20,6" Orientation="Vertical">
-            <TextBlock Style="{StaticResource TextTitle}" Text="地区概览页"/>
+            <TextBlock Style="{StaticResource TextTitle}" Text="地区概览信息"/>
             <ui:DataSelector />
             <StackPanel Margin="0,4" Orientation="Horizontal">
-                <Button x:Name="ButtonQuery" Width="80" Padding="0,4" Content="查询"/>
+                <Button x:Name="ButtonQuery" Width="80" Padding="0,4" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsDestSummaryFetchEnabled}" />
             </StackPanel>
         </StackPanel>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.DestSummaries}" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="省份" MinWidth="100" Binding="{Binding PrName}"/>
+                <DataGridTextColumn Header="省人数" MinWidth="100" Binding="{Binding PrSummaryCount}"/>
+                <DataGridTextColumn Header="市" MinWidth="100" Binding="{Binding CiName}"/>
+                <DataGridTextColumn Header="市人数" MinWidth="100" Binding="{Binding CiSummaryCount}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

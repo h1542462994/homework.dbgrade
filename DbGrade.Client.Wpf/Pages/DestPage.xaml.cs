@@ -28,8 +28,14 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         private void DestPage_Loaded(object sender, RoutedEventArgs e)
         {
             SelectorViewModel.SelectorMode = SelectorMode.DestOnly;
+            ButtonQuery.Click += (o, e) => { RemoteStorage.FetchDestSummary(); };
+            //RemoteStorage.FetchDestSummary();
+
         }
 
+        
+
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
+        public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }
 }

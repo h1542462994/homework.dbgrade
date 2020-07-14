@@ -2,6 +2,14 @@
 
 ## 界面的设计
 
+### 地区概览页面(route:page/dest_summary)
+
+- 查看地区基本信息以及统计信息
+
+### 班级概览界面(route:page/class_summary)
+
+- 查看班级基本信息以及统计信息
+
 ### 学生管理界面(route:page/students)
 
 - 查看学生的基本信息
@@ -12,6 +20,9 @@
 > 备注：总学分是指已经有报告的学分和（无论成绩有没有及格），已修学分指已经有报告且及格的学分和。总绩点和指（sum{(单科成绩-50)/10*单科的绩点}）
 
 ### 学生详情界面(route:page/students/{id:string})
+
+### 班级管理界面(route:page/teachers)
+
 
 ### 成绩详细界面(route:page/reports)
 
@@ -52,9 +63,63 @@ TODO: 待完善
 
 ## 对应的api及其说明
 
+#### 查看地区概览信息(api/dest_summary)
+
+api/dest_summary?[scope=all|province|city]&[tag=?]&[year=?]
+
+```json
+[
+    {
+        "prno": 1,
+        "prName": "浙江省",
+        "prSummaryCount": 7,
+        "cino": 1,
+        "ciName": "杭州市",
+        "ciSummaryCount": 6
+    },
+    {
+        "prno": 1,
+        "prName": "浙江省",
+        "prSummaryCount": 7,
+        "cino": 2,
+        "ciName": "宁波市",
+        "ciSummaryCount": 0
+    }
+]
+```
+
+#### 查看班级概览信息(api/class_summary)
+
+api/class_summary?[scope=all|profession|class]&[tag=?]&[year=?]
+
+```json
+[
+    {
+        "pno": 1,
+        "pName": "实验班",
+        "pSummaryCount": 9,
+        "cno": 1,
+        "cYear": 2016,
+        "cName": "1班",
+        "cSummaryCount": 8,
+        "cDisplay": "2016届1班"
+    },
+    {
+        "pno": 1,
+        "pName": "实验班",
+        "pSummaryCount": 9,
+        "cno": 2,
+        "cYear": 2017,
+        "cName": "1班",
+        "cSummaryCount": 1,
+        "cDisplay": "2017届1班"
+    }
+]
+```
+
 #### 查看结构信息(api/struct)
 
- api/struct?[year=?]
+ api/struct
 
 ```json
 [
@@ -63,19 +128,16 @@ TODO: 待完善
         "name": "实验班",
         "xclasses": [
             {
-                "studentCount": 8,
                 "cno": 1,
                 "name": "1班",
                 "year": 2016
             },
             {
-                "studentCount": 1,
                 "cno": 2,
                 "name": "1班",
                 "year": 2017
             },
             {
-                "studentCount": 0,
                 "cno": 3,
                 "name": "1班",
                 "year": 2018
@@ -87,7 +149,7 @@ TODO: 待完善
 
 #### 查看地区结构信息(api/dest_struct)
 
-api/dest_struct?[year=?]
+api/dest_struct
 
 ```json
 [
@@ -97,30 +159,22 @@ api/dest_struct?[year=?]
         "cities": [
             {
                 "cino": 1,
-                "name": "杭州市",
-                "studentCount": 6
+                "name": "杭州市"
             },
             {
                 "cino": 2,
-                "name": "宁波市",
-                "studentCount": 0
+                "name": "宁波市"
             },
             {
                 "cino": 3,
-                "name": "温州市",
-                "studentCount": 0
-            },
-            {
-                "cino": 4,
-                "name": "嘉兴市",
-                "studentCount": 0
+                "name": "温州市"
             }
         ]
     }
 ]
 ```
 
-#### 查看学生信息(api/student)
+#### 查看学生信息(api/students)
 
 api/students?[scope=all|profession|class|province|city]&[tag=?]&[year=?]
 
@@ -134,6 +188,7 @@ api/students?[scope=all|profession|class|province|city]&[tag=?]&[year=?]
         "cno": 1,
         "cYear": 2016,
         "cName": "1班",
+        "cDisplay": "2016届1班",
         "pno": 1,
         "pName": "实验班",
         "prno": 1,
@@ -143,7 +198,57 @@ api/students?[scope=all|profession|class|province|city]&[tag=?]&[year=?]
         "totalCredit": 3,
         "completeCredit": 3,
         "point": 11.1,
-        "gpa": 3.6999999999999997
+        "gpa": 3.6999999999999997,
+        "order": 1
+    }
+]
+```
+
+#### 查看教师信息(api/teachers)
+
+api/teachers
+
+```json
+[
+    {
+        "tno": "T000001",
+        "name": "教师1",
+        "sex": 0,
+        "age": 34,
+        "level": 0,
+        "phone": "13000000000"
+    },
+    {
+        "tno": "T000002",
+        "name": "教师2",
+        "sex": 0,
+        "age": 34,
+        "level": 0,
+        "phone": "13000000000"
+    },
+    {
+        "tno": "T000003",
+        "name": "教师3",
+        "sex": 0,
+        "age": 34,
+        "level": 0,
+        "phone": "13000000000"
+    },
+    {
+        "tno": "T000004",
+        "name": "教师4",
+        "sex": 0,
+        "age": 34,
+        "level": 0,
+        "phone": "13000000000"
+    },
+    {
+        "tno": "T000005",
+        "name": "教师5",
+        "sex": 0,
+        "age": 34,
+        "level": 0,
+        "phone": "13000000000"
     }
 ]
 ```
@@ -260,6 +365,23 @@ api/course_summary?[scope=all|profession|class|teacher|course]&[tag=?]&[year=?]&
         "orderOfSchool": 1,
         "orderOfProfession": 1,
         "orderOfClass": 1
+    }
+]
+```
+
+#### 查看学期(api/terms)
+
+api/terms
+
+```json
+[
+    {
+        "year": 2020,
+        "term": 0
+    },
+    {
+        "year": 2020,
+        "term": 1
     }
 ]
 ```

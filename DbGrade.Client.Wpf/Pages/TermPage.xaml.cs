@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
     /// <summary>
-    /// CoursePage.xaml 的交互逻辑
+    /// TermPage.xaml 的交互逻辑
     /// </summary>
-    public partial class OpenCoursePage : Page
+    public partial class TermPage : Page
     {
-        public OpenCoursePage()
+        public TermPage()
         {
             InitializeComponent();
         }

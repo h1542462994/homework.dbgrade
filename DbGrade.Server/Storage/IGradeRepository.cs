@@ -9,18 +9,22 @@ namespace Tro.DbGrade.Server.Storage
 {
     public interface IGradeRepository
     {
-        IEnumerable<FrameWork.Dto.Profession> GetStruct(int? year);
+        IEnumerable<FrameWork.Dto.Profession> GetStruct();
 
-        IEnumerable<FrameWork.Dto.Province> GetDestStruct(int? year);
+        IEnumerable<FrameWork.Dto.Province> GetDestStruct();
 
-        IEnumerable<DestSummaryView> GetDests(string scope, int? tag);
+        IEnumerable<DestSummary> GetDestSummaries(string scope, int? tag, int? year);
 
-        IEnumerable<StudentOutView> GetStudents(string scope, int? tag, int? year);
+        IEnumerable<ClassSummary> GetClassSummaries(string scope, int? tag, int? year);
+
+
+        IEnumerable<StudentOut> GetStudents(string scope, int? tag, int? year);
 
         IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear);
 
-        IEnumerable<ReportSummary> GetReportSummaries(string scope, int? tag, int? year, int? cyear);
+        IEnumerable<ReportSummaryOut> GetReportSummaries(string scope, int? tag, int? year, int? cyear);
         IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear);
         IEnumerable<XTerm> GetTerms();
+        IEnumerable<Teacher> GetTeachers();
     }
 }

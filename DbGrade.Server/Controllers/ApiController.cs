@@ -19,9 +19,9 @@ namespace Tro.DbGrade.Server.Controllers
 
         [HttpGet("struct")]
         [HttpPost("struct")]
-        public object Struct(int? year)
+        public object Struct()
         {
-            return GradeRepository.GetStruct(year);
+            return GradeRepository.GetStruct();
         }
 
         [HttpGet("students")]
@@ -33,9 +33,23 @@ namespace Tro.DbGrade.Server.Controllers
 
         [HttpGet("dest_struct")]
         [HttpPost("dest_struct")]
-        public object DestStruct(int? year)
+        public object DestStruct()
         {
-            return GradeRepository.GetDestStruct(year);
+            return GradeRepository.GetDestStruct();
+        }
+
+        [HttpGet("dest_summary")]
+        [HttpPost("dest_summary")]
+        public object DestSummary(string scope, int? tag, int? year)
+        {
+            return GradeRepository.GetDestSummaries(scope, tag, year);
+        }
+
+        [HttpGet("class_summary")]
+        [HttpPost("class_summary")]
+        public object ClassSummary(string scope, int? tag, int? year)
+        {
+            return GradeRepository.GetClassSummaries(scope, tag, year);
         }
 
         [HttpGet("reports")]
@@ -64,6 +78,13 @@ namespace Tro.DbGrade.Server.Controllers
         public object Terms()
         {
             return GradeRepository.GetTerms();
+        }
+
+        [HttpGet("teachers")]
+        [HttpPost("teachers")]
+        public object Teachers()
+        {
+            return GradeRepository.GetTeachers();
         }
     }
 }

@@ -28,6 +28,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public void ReplaceItems(IEnumerable<T> collection)
         {
+            collection = collection.OrderBy(item => item, Comparer);
             var index = 0;
             foreach (var item in collection)
             {

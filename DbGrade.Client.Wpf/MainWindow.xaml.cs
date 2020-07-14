@@ -55,8 +55,10 @@ namespace Tro.DbGrade.Client.Wpf
                     new StringPage("班级概览信息", typeof(StructPage)),
                     new StringPage("学生基本信息", typeof(StudentPage)),
                     new StringPage("教师基本信息", typeof(TeacherPage)),
-                    new StringPage("成绩查询", typeof(ReportsPage)),
-                    new StringPage("课程查询", typeof(CoursePage))
+                    new StringPage("成绩详细查询", typeof(ReportsPage)),
+                    new StringPage("成绩统计查询", typeof(ReportSummaryPage)),
+                    new StringPage("开课详细查询", typeof(OpenCoursePage)),
+                    new StringPage("学期查询", typeof(TermPage))
                 }));
     }
 }

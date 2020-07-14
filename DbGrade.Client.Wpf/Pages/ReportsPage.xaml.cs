@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tro.DbGrade.Client.Wpf.Storage;
 
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
@@ -21,6 +22,16 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         public ReportsPage()
         {
             InitializeComponent();
+            Loaded += ReportsPage_Loaded;
         }
+
+        private void ReportsPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            SelectorViewModel.SelectorMode = SelectorMode.StructDest;
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchReports();
+        }
+
+        public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
+        public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }
 }

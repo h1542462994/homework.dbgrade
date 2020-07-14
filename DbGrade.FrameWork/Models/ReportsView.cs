@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Models.Types;
 
 namespace Tro.DbGrade.FrameWork.Models
 {
-    public class ReportsView
+    public class ReportsView : IComparable<ReportsView>
     {
         public string Sno { get; set; }
         public string SName { get; set; }
@@ -22,6 +23,8 @@ namespace Tro.DbGrade.FrameWork.Models
         public string PrName { get; set; }
         public int Cino { get; set; }
         public string CiName { get; set; }
+
+        public string CDisplay => $"{CYear}届{CName}";
         public int Ono { get; set; }
         public int Cono { get; set; }
         public string CoName { get; set; }
@@ -39,5 +42,15 @@ namespace Tro.DbGrade.FrameWork.Models
         public Level TLevel { get; set; }
         public string TPhone { get; set; }
 
+        public int CompareTo([AllowNull] ReportsView other)
+        {
+            if (Sno == other.Sno)
+            {
+                return Ono.CompareTo(other.Ono);
+            } else
+            {
+                return Sno.CompareTo(other.Sno);
+            }
+        }
     }
 }

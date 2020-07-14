@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Dto;
 using Tro.DbGrade.FrameWork.Models;
+using Tro.DbGrade.FrameWork;
 
 namespace Tro.DbGrade.Server.Storage
 {
@@ -17,7 +18,21 @@ namespace Tro.DbGrade.Server.Storage
 
         public GradeDbContext DbContext { get; }
 
-        public IEnumerable<FrameWork.Dto.Province> GetDestStruct(int? year) =>
+        [Completed]
+        public IEnumerable<FrameWork.Dto.Profession> GetStruct() =>
+            from profession in DbContext.Professions
+            select new FrameWork.Dto.Profession(
+                profession.Pno,
+                profession.Name,
+                from xclass in DbContext.Xclasses
+                where xclass.Pno == profession.Pno
+                select new FrameWork.Dto.Xclass(
+                    xclass.Cno,
+                    xclass.Name,
+                    xclass.Year));
+
+        [Completed]
+        public IEnumerable<FrameWork.Dto.Province> GetDestStruct() =>
             from province in DbContext.Provinces
             select new FrameWork.Dto.Province(
                 province.Prno,
@@ -26,28 +41,101 @@ namespace Tro.DbGrade.Server.Storage
                 where city.Prno == province.Prno
                 select new FrameWork.Dto.City(
                     city.Cino,
-                    city.Name,
-                    (from student in DbContext.StudentOutView where student.Cino == city.Cino && (year == null || student.CYear == year) select student).Count()
-                    )
+                    city.Name)
                 );
 
-        public IEnumerable<FrameWork.Dto.Profession> GetStruct(int? year) =>
-            from profession in DbContext.Professions
-            select new FrameWork.Dto.Profession(
-                profession.Pno,
-                profession.Name,
-                from xclass in DbContext.Xclasses
-                where (year == null || year == xclass.Year)
-                where xclass.Pno == profession.Pno
-                select new FrameWork.Dto.Xclass(
-                    xclass.Cno,
-                    xclass.Name,
-                    xclass.Year,
-                    (from student in DbContext.Students where student.Cno == xclass.Cno select student).Count()));
-
-        public IEnumerable<StudentOutView> GetStudents(string scope, int? tag, int? year)
+        [Completed]
+        public IEnumerable<DestSummary> GetDestSummaries(string scope, int? tag, int? year)
         {
-            return from student in DbContext.StudentOutView
+            var summaries = from province in DbContext.Provinces
+                          select new
+                          {
+                              prno = province.Prno,
+                              name = province.Name,
+                              pCount = (from student in DbContext.StudentOutView
+                                        where student.Prno == province.Prno && (year == null || year == student.CYear)
+                                        select student).Count(),
+                              cities = from city in DbContext.Cities
+                                       where city.Prno == province.Prno
+                                       select new
+                                       {
+                                           cino = city.Cino,
+                                           name = city.Name,
+                                           pCount = (from student in DbContext.StudentOutView
+                                                     where student.Cino == city.Cino && (year == null || year == student.CYear)
+                                                     select student).Count()
+                                       }
+                          };
+            return summaries.SelectMany((province) => 
+                from city in province.cities
+                where 
+                    ((scope == Scope.Province && tag == province.prno) ||
+                    (scope == Scope.City && tag == city.cino) ||
+                    (scope == Scope.All || scope == null))
+                select
+                     new DestSummary()
+                     {
+                         Prno = province.prno,
+                         PrName = province.name,
+                         PrSummaryCount = province.pCount,
+                         Cino = city.cino,
+                         CiName = city.name,
+                         CiSummaryCount = city.pCount
+                     });
+        }
+
+        [Completed]
+        public IEnumerable<ClassSummary> GetClassSummaries(string scope, int? tag, int? year)
+        {
+            var summaries = from profession in DbContext.Professions
+                            select new
+                            {
+                                pno = profession.Pno,
+                                name = profession.Name,
+                                pCount = (from student in DbContext.StudentOutView
+                                          where student.Pno == profession.Pno && (year == null || year == student.CYear)
+                                          select student).Count(),
+                                xclasses = from xclass in DbContext.Xclasses
+                                           where xclass.Pno == profession.Pno
+                                           select new
+                                           {
+                                               cno = xclass.Cno,
+                                               cyear = xclass.Year,
+                                               name = xclass.Name,
+                                               pCount = (
+                                               from student in DbContext.StudentOutView
+                                               where student.Cno == xclass.Cno && (year == null || year == student.CYear)
+                                               select student
+                                               ).Count()
+                                           }
+
+                            };
+            //强制读取summaries到内存，以切换QueryProvider。
+            return summaries.ToList().SelectMany(profession =>
+                from xclass in profession.xclasses
+                where 
+                    ((scope == Scope.Profession && tag == profession.pno) ||
+                    (scope == Scope.Xclass && tag == xclass.cno) ||
+                    (scope == Scope.All || scope == null))
+                select 
+                    new ClassSummary()
+                    {
+                        Pno = profession.pno,
+                        PName = profession.name,
+                        PSummaryCount = profession.pCount,
+                        Cno = xclass.cno,
+                        CYear = xclass.cyear,
+                        CName = xclass.name,
+                        CSummaryCount = xclass.pCount
+                    }
+            );
+            
+        }
+        
+        [Completed]
+        public IEnumerable<StudentOut> GetStudents(string scope, int? tag, int? year)
+        {
+            var students = from student in DbContext.StudentOutView
             where
                ((scope == Scope.Profession && student.Pno == tag) ||
                (scope == Scope.Xclass && student.Cno == tag) ||
@@ -55,7 +143,33 @@ namespace Tro.DbGrade.Server.Storage
                (scope == Scope.City && student.Cino == tag) ||
                (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
             select student;
+
+            
+
+            return from student in students select 
+                   new StudentOut()
+                   {
+                        Sno = student.Sno,
+                        Name = student.Name,
+                        Sex = student.Sex,
+                        Age = student.Age,
+                        Cno = student.Cno,
+                        CYear = student.CYear,
+                        CName = student.CName,
+                        Pno = student.Pno,
+                        PName = student.PName,
+                        Prno = student.Prno,
+                        PrName =student.PrName,
+                        Cino = student.Cino,
+                        CiName = student.CiName,
+                        TotalCredit = student.TotalCredit,
+                        CompleteCredit = student.CompleteCredit,
+                        Point = student.Point,
+                        GPA = student.GPA,
+                        Order = scope == Scope.Xclass? student.OrderOfClass:(scope == Scope.Profession? student.OrderOfProfession: student.OrderOfSchool)
+                   };
         }
+
         public IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear) =>
             from report in DbContext.ReportsView
             where
@@ -70,13 +184,13 @@ namespace Tro.DbGrade.Server.Storage
                 scope == Scope.All || scope == null) && (year == null || year == report.Year) && (cyear == null || year == report.CYear)
             select report;
 
-        public IEnumerable<ReportSummary> GetReportSummaries(string scope, int? tag, int? year, int? cyear)
+        public IEnumerable<ReportSummaryOut> GetReportSummaries(string scope, int? tag, int? year, int? cyear)
         {
-            return from student in DbContext.StudentOutView
+            var reports = from student in DbContext.StudentOutView
                    where
                    ((scope == Scope.Profession && student.Pno == tag) ||
                    (scope == Scope.Xclass && student.Cno == tag) ||
-                   (scope == Scope.All || scope == null)) && (year == null || year == student.CYear)
+                   (scope == Scope.All || scope == null)) && (cyear == null || cyear == student.CYear)
                    select new ReportSummary()
                    {
                        Sno = student.Sno,
@@ -99,16 +213,85 @@ namespace Tro.DbGrade.Server.Storage
                            OrderOfProfession = student.OrderOfProfession,
                            OrderOfClass = student.OrderOfClass
                        },
-                       Grades = (from report in DbContext.ReportSummaryView where student.Sno == report.Sno select new Grade() { 
-                       Year = report.Year,
-                       TotalCredit = report.TotalCredit,
-                       CompleteCredit = report.CompleteCredit,
-                       Point = report.Point,
-                       GPA = report.GPA,
-                       OrderOfSchool = report.OrderOfSchool,
-                       OrderOfProfession = report.OrderOfProfession,
-                       OrderOfClass = report.OrderOfClass})
+                       Grades = (from report in DbContext.ReportSummaryView
+                                where student.Sno == report.Sno
+                                select new Grade()
+                                {
+                                    Year = report.Year,
+                                    TotalCredit = report.TotalCredit,
+                                    CompleteCredit = report.CompleteCredit,
+                                    Point = report.Point,
+                                    GPA = report.GPA,
+                                    OrderOfSchool = report.OrderOfSchool,
+                                    OrderOfProfession = report.OrderOfProfession,
+                                    OrderOfClass = report.OrderOfClass
+                                })
                    };
+
+
+            if (year == null)
+            {
+                return from report in reports
+                       select new ReportSummaryOut()
+                       {
+                           Sno = report.Sno,
+                           Name = report.Name,
+                           Age = report.Age,
+                           Sex = report.Sex,
+                           Cno = report.Cno,
+                           CName = report.CName,
+                           CYear = report.CYear,
+                           Pno = report.Pno,
+                           PName = report.PName,
+                           TotalCredit = report.TotalGrade.TotalCredit,
+                           CompleteCredit = report.TotalGrade.CompleteCredit,
+                           Point = report.TotalGrade.Point,
+                           GPA = report.TotalGrade.GPA,
+                           Order = scope == Scope.Xclass ? report.TotalGrade.OrderOfClass: (scope == Scope.Profession ? report.TotalGrade.OrderOfProfession: report.TotalGrade.OrderOfSchool)
+                       };
+            } 
+            else
+            {
+                //使用ToList()，强制读取reports到内存，以切换QueryProvider。
+                return reports.ToList().SelectMany((report) => 
+                    (from item in report.Grades where year == item.Year select item).Any() ?    
+
+                    from item in report.Grades
+                    where year == item.Year
+                    select new ReportSummaryOut()
+                    {
+                        Sno = report.Sno,
+                        Name = report.Name,
+                        Age = report.Age,
+                        Sex = report.Sex,
+                        Cno = report.Cno,
+                        CName = report.CName,
+                        CYear = report.CYear,
+                        Pno = report.Pno,
+                        PName = report.PName,
+                        TotalCredit = item.TotalCredit,
+                        CompleteCredit = item.CompleteCredit,
+                        Point = item.Point,
+                        GPA = item.GPA,
+                        Order = scope == Scope.Xclass ? item.OrderOfClass : (scope == Scope.Profession ? item.OrderOfProfession : item.OrderOfSchool)
+                    } : (
+                        new ReportSummaryOut[]
+                        {
+                            new ReportSummaryOut()
+                            {               
+                                Sno = report.Sno,
+                                Name = report.Name,
+                                Age = report.Age,
+                                Sex = report.Sex,
+                                Cno = report.Cno,
+                                CName = report.CName,
+                                CYear = report.CYear,
+                                Pno = report.Pno,
+                                PName = report.PName,
+                            }
+                        })
+                );
+            }
         }
 
         public IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear)
@@ -128,14 +311,9 @@ namespace Tro.DbGrade.Server.Storage
             return DbContext.Terms;
         }
 
-        public IEnumerable<DestSummaryView> GetDests(string scope, int? tag)
+        public IEnumerable<Teacher> GetTeachers()
         {
-            return from dest in DbContext.DestSummaryView
-                   where
-                   ((scope == Scope.Province && dest.Prno == tag) ||
-                   (scope == Scope.City && dest.Cino == tag) ||
-                   (scope == Scope.All || scope == null))
-                   select dest;
+            return DbContext.Teachers;
         }
     }
 }

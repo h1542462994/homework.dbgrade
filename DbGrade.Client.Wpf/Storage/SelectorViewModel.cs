@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
@@ -264,7 +265,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         {
             if (SelectorMode == SelectorMode.StructDest)
             {
-                Modes.ReplaceItems(new[] { LocatorMode.Dest, LocatorMode.Struct });
+                Modes.ReplaceItems(new[] { LocatorMode.Struct, LocatorMode.Dest });
             }
             else if (SelectorMode == SelectorMode.StructOnly)
             {
@@ -279,12 +280,12 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         private void OnModeIndexChanged()
         {
             int index = ModeIndex;
-            if (index < 0 || index >= Modes.Count)
+            if (index >=0 && index < Modes.Count)
             {
-                index = 0;
+                var locatorMode = Modes[index];
+                Mode = locatorMode.Index;
             }
-            var locatorMode = Modes[index];
-            Mode = locatorMode.Index;
+
         }
 
         public async void FetchStudentStruct()
@@ -461,6 +462,20 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public static readonly DependencyProperty CYearsProperty =
             DependencyProperty.Register(nameof(CYears), typeof(ReplaceCollection<int>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<int>() { -1 }));
+
+
+
+
+        public ReplaceCollection<FrameWork.Models.Teacher> Teachers
+        {
+            get { return (ReplaceCollection<FrameWork.Models.Teacher>)GetValue(TeachersProperty); }
+            set { SetValue(TeachersProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Teachers.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TeachersProperty =
+            DependencyProperty.Register("Teachers", typeof(ReplaceCollection<FrameWork.Models.Teacher>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Teacher>()));
+
 
 
 

@@ -17,7 +17,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Margin="20,6" Orientation="Vertical">
-            <TextBlock Style="{StaticResource TextTitle}" Text="学生详情页"/>
+            <TextBlock Style="{StaticResource TextTitle}" Text="学生基本信息"/>
             <ui:DataSelector/>
             <StackPanel Margin="0,4" Orientation="Horizontal">
                 <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsStudentOutViewFetchingEnabled}"/>
@@ -25,7 +25,7 @@
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
             </StackPanel>
         </StackPanel>
-        <DataGrid Grid.Row="1" HorizontalAlignment="Left" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOutView}">
+        <DataGrid Grid.Row="1" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOut}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="" MinWidth="100">
                         <DataGridTemplateColumn.CellTemplate>
@@ -42,8 +42,9 @@
                     <DataGridTextColumn Header="班级" MinWidth="120" Binding="{Binding CDisplay}"/>
                     <DataGridTextColumn Header="省" MinWidth="80" Binding="{Binding PrName}"/>
                     <DataGridTextColumn Header="市" MinWidth="80" Binding="{Binding CiName}"/>
+                    <DataGridTextColumn Header="已修学分" MinWidth="80" Binding="{Binding CompleteCredit}"/>
                     <DataGridTextColumn Header="绩点" MinWidth="80" Binding="{Binding GPA, Converter={StaticResource DoubleStringConverter}}"/>
-                    <DataGridTextColumn Header="排名" MinWidth="80" Binding="{Binding OrderOfSchool}"/>
+                    <DataGridTextColumn Header="排名" MinWidth="80" Binding="{Binding Order}"/>
                 </DataGrid.Columns>
             </DataGrid>
  
