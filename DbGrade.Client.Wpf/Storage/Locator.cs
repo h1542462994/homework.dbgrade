@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
@@ -27,5 +27,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public static Locator Xclass(int xclass, int? cYear, int? year = null) => new Locator(scope: FrameWork.Models.Scope.Xclass, tag: xclass.ToString(), cYear: cYear, year: year);
         public static Locator Province(int province, int? cYear, int? year = null) => new Locator(scope: FrameWork.Models.Scope.Province, tag: province.ToString(), cYear: cYear, year: year);
         public static Locator City(int city, int? cYear, int? year = null) => new Locator(scope: FrameWork.Models.Scope.City, tag: city.ToString(), cYear: cYear, year: year);
+        public static Locator Teacher(string tno, int? cYear, int? year) => new Locator(scope: FrameWork.Models.Scope.Teacher, tag: tno, cYear: cYear, year: year);
+        public static Locator Course(int cono, int? cYear, int? year) => new Locator(scope: FrameWork.Models.Scope.Course, tag: cono.ToString(), cYear: cYear, year: year);
     }
 }

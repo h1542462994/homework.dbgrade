@@ -95,6 +95,13 @@ namespace Tro.DbGrade.Server.Controllers
             return GradeRepository.GetOpenCourses(scope, tag, year, cyear);
         }
 
+        [HttpGet("courses")]
+        [HttpPost("courses")]
+        public object Courses()
+        {
+            return GradeRepository.GetCourses();
+        }
+
         [HttpGet("dest/add")]
         [HttpPost("dest/add")]
         public object AddDest(string province, string city)
@@ -102,6 +109,16 @@ namespace Tro.DbGrade.Server.Controllers
             if (string.IsNullOrEmpty(province) || string.IsNullOrEmpty(city)) return ApiResponse.BadRequest("参数不能为空");
             if (province.Length > 20 || city.Length > 20) return ApiResponse.BadRequest("参数太长");
             GradeRepository.AddDest(province, city);
+            return ApiResponse.OK();
+        }
+
+        [HttpGet("struct/add")]
+        [HttpPost("struct/add")]
+        public object AddStruct(string profession, string xclass, int year)
+        {
+            if (string.IsNullOrEmpty(profession) || string.IsNullOrEmpty(xclass)) return ApiResponse.BadRequest("参数不能为空");
+            if (profession.Length > 20 || xclass.Length > 20) return ApiResponse.BadRequest("参数太长");
+            GradeRepository.AddStruct(profession, xclass, year);
             return ApiResponse.OK();
         }
     }

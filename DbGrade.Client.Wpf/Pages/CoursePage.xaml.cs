@@ -17,18 +17,17 @@ namespace Tro.DbGrade.Client.Wpf.Pages
     /// <summary>
     /// CoursePage.xaml 的交互逻辑
     /// </summary>
-    public partial class OpenCoursePage : Page
+    public partial class CoursePage : Page
     {
-        public OpenCoursePage()
+        public CoursePage()
         {
             InitializeComponent();
-            Loaded += OpenCoursePage_Loaded;
+            Loaded += CoursePage_Loaded;
         }
 
-        private void OpenCoursePage_Loaded(object sender, RoutedEventArgs e)
+        private void CoursePage_Loaded(object sender, RoutedEventArgs e)
         {
-            SelectorViewModel.SelectorMode = SelectorMode.StructTeacherCourse;
-            ButtonQuery.Click += (o, e) => RemoteStorage.FetchCourseSummaryAsync();
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchCoursesAsync();
         }
 
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();

@@ -212,5 +212,6 @@
         <convert:IntStringConverter x:Key="IntStringConverter"/>
         <convert:LevalStringConverter x:Key="LevalStringConverter"/>
         <convert:TermStringConverter x:Key="TermStringConverter"/>
+        <convert:WayStringConverter x:Key="WayStringConverter"/>
     </Application.Resources>
 </Application>

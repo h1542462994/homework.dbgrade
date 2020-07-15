@@ -30,11 +30,11 @@
             </ComboBox>
         </StackPanel>
 
-        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode.Index, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
            
             <TextBlock Text="专业：" Style="{StaticResource TextCenterHV}"/>
             <ComboBox MinWidth="150"
-                            ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.StudentStruct}"
+                            ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Professions}"
                             SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.ProfessionIndex, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <ItemContainerTemplate>
@@ -53,7 +53,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </StackPanel>
-        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode.Index, Converter={StaticResource IntJudgeConverter}, ConverterParameter=1}">
             <TextBlock Text="省：" Style="{StaticResource TextCenterHV}"/>
             <ComboBox MinWidth="150"
                             ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Provinces}"
@@ -68,6 +68,30 @@
             <ComboBox MinWidth="150"
                               ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Cities}"
                               SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.CityIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode.Index, Converter={StaticResource IntJudgeConverter}, ConverterParameter=2}">
+            <TextBlock Text="教师：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                            ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Teachers}"
+                            SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.TeacherIndex, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+        <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode.Index, Converter={StaticResource IntJudgeConverter}, ConverterParameter=3}">
+            <TextBlock Text="课程：" Style="{StaticResource TextCenterHV}"/>
+            <ComboBox MinWidth="150"
+                            ItemsSource="{Binding ElementName=control, Path=SelectorViewModel.Courses}"
+                            SelectedIndex="{Binding ElementName=control, Path=SelectorViewModel.CourseIndex, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <ItemContainerTemplate>
                         <ContentPresenter Content="{Binding Name}"/>

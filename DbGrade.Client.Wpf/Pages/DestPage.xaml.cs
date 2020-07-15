@@ -29,7 +29,17 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         {
             SelectorViewModel.SelectorMode = SelectorMode.DestOnly;
             ButtonQuery.Click += (o, e) => RemoteStorage.FetchDestSummaryAsync();
-            ButtonAdd.Click += (o, e) => PageNavigator.NavigateToPopup<DestAddPage>();
+            ButtonAdd.Click += (o, e) =>
+            {
+                if (SelectorViewModel.Province == FrameWork.Dto.Province.All)
+                {
+                    PageNavigator.NavigateToPopup<DestAddPage>();
+                } else
+                {
+                    PageNavigator.NavigateToPopup<DestAddPage>(SelectorViewModel.Province);
+                }
+                
+            };
             //RemoteStorage.FetchDestSummary();
 
         }

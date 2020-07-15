@@ -73,6 +73,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (ReplaceCollection<CourseSummaryView>)GetValue(CourseSummariesProperty); }
             set { SetValue(CourseSummariesProperty, value); }
         }
+        public ReplaceCollection<Course> Courses
+        {
+            get { return (ReplaceCollection<Course>)GetValue(CoursesProperty); }
+            set { SetValue(CoursesProperty, value); }
+        }
         #endregion
 
         #region StateGetter&Setter
@@ -119,6 +124,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         {
             get { return (bool)GetValue(IsCourseSummariesFetchEnabledProperty); }
             set { SetValue(IsCourseSummariesFetchEnabledProperty, value); }
+        }
+        public bool IsCourseFetchEnabled
+        {
+            get { return (bool)GetValue(IsCourseFetchEnabledProperty); }
+            set { SetValue(IsCourseFetchEnabledProperty, value); }
         }
 
         #endregion
@@ -313,6 +323,27 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(() => IsCourseSummariesFetchEnabled = true);
         }
 
+        public async void FetchCoursesAsync()
+        {
+            App.Dispatcher.Invoke(() => IsCourseFetchEnabled = false);
+            var courses = await HttpClient.GetCoursesAysnc();
+            lock (Courses)
+            {
+                App.Dispatcher.Invoke(() =>
+                {
+                    if (courses == null)
+                    {
+                        State.Message = "加载错误";
+                    }
+                    else
+                    {
+                        Courses.ReplaceItems(courses);
+                    }
+                });
+            }
+            App.Dispatcher.Invoke(() => IsCourseFetchEnabled = true);
+        }
+
         #endregion
 
         #region DataProperties
@@ -369,7 +400,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 new PropertyMetadata(
                     new ReplaceCollection<CourseSummaryView>()
                     ));
-        
+
         #endregion
 
         #region StateDependencyProperty
@@ -401,6 +432,12 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public static readonly DependencyProperty IsCourseSummariesFetchEnabledProperty =
             DependencyProperty.Register(nameof(IsCourseSummariesFetchEnabled), typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
      
+        public static readonly DependencyProperty IsCourseFetchEnabledProperty =
+            DependencyProperty.Register("IsCourseFetchEnabled", typeof(bool), typeof(RemoteStorage), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty CoursesProperty =
+            DependencyProperty.Register("Courses", typeof(ReplaceCollection<Course>), typeof(RemoteStorage), new PropertyMetadata(new ReplaceCollection<Course>()));
+
         #endregion
     }
 }

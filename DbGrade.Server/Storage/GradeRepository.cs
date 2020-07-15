@@ -331,9 +331,19 @@ namespace Tro.DbGrade.Server.Storage
                    select openCourse;
         }
 
+        public IEnumerable<Course> GetCourses()
+        {
+            return DbContext.Courses;
+        }
+
         public void AddDest(string province, string city)
         {
             DbContext.Database.ExecuteSqlInterpolated($"exec addDest {province},{city}");
+        }
+
+        public void AddStruct(string profession, string xclass, int year)
+        {
+            DbContext.Database.ExecuteSqlInterpolated($"exec addStruc {profession},{xclass},{year}");
         }
     }
 }

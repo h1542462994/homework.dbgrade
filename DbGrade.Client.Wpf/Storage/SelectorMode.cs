@@ -4,6 +4,7 @@
     {
         DestOnly,
         StructOnly,
-        StructDest
+        StructDest,
+        StructTeacherCourse,
     }
 }

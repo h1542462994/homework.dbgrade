@@ -167,6 +167,20 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             }
         }
 
+        public async Task<IEnumerable<Course>> GetCoursesAysnc()
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.Course);
+                return await response.ReadTo<IEnumerable<Course>>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public async Task<ApiResponse> AddDest(string province, string city)
         {
             try
@@ -183,6 +197,25 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 Console.WriteLine(e);
                 return null;
             }
+        }
+
+        public async Task<ApiResponse> AddStruct(string profession, string xclass, int year)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddStruct, new Dictionary<string, object>
+                {
+                    { "profession", profession },
+                    { "xclass", xclass },
+                    { "year", year }
+                });
+                return await response.ReadTo<ApiResponse>();
+            }
+            catch(JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            } 
         }
     }
 }

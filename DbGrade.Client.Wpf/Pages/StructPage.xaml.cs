@@ -29,8 +29,20 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         {
             SelectorViewModel.SelectorMode = SelectorMode.StructOnly;
             ButtonQuery.Click += (o, e) => RemoteStorage.FetchClassSummaryAsync();
+            ButtonAdd.Click += (o, e) =>
+            {
+                if (SelectorViewModel.Profession == FrameWork.Dto.Profession.All)
+                {
+                    PageNavigator.NavigateToPopup<StructAddPage>();
+                }
+                else
+                {
+                    PageNavigator.NavigateToPopup<StructAddPage>(SelectorViewModel.Profession);
+                }
+            };
         }
 
+        public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }

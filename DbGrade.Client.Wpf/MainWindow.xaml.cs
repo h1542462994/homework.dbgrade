@@ -35,11 +35,11 @@ namespace Tro.DbGrade.Client.Wpf
         {
             PageNavigator.OnPageNavigate += (o, e) =>
             {
-                ContentFrame.NavigateTo(e.PageType);
+                ContentFrame.NavigateTo(e.PageType, e.Args);
             };
             PageNavigator.OnPopupPageNavigate += (o, e) =>
             {
-                FramePopup.NavigateTo(e.PageType);
+                FramePopup.NavigateTo(e.PageType, e.Args);
                 GridPopup.Visibility = Visibility.Visible;
             };
             PageNavigator.OnPopupClose += (o, e) => GridPopup.Visibility = Visibility.Hidden;
@@ -67,6 +67,7 @@ namespace Tro.DbGrade.Client.Wpf
                     new StringPage("教师基本信息", typeof(TeacherPage)),
                     new StringPage("成绩详细查询", typeof(ReportsPage)),
                     new StringPage("成绩统计查询", typeof(ReportSummaryPage)),
+                    new StringPage("课程查询", typeof(CoursePage)),
                     new StringPage("开课详细查询", typeof(OpenCoursePage)),
                     new StringPage("学期查询", typeof(TermPage))
                 }));

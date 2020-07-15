@@ -3,27 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Threading;
 using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
-    public class SelectorViewModel: DependencyObject
+    public class SelectorViewModel : DependencyObject
     {
         public SelectorViewModel(App app, GradeHttpClient httpClient, GlobalState state)
         {
             App = app;
             HttpClient = httpClient;
             State = state;
-            FetchDestStruct();
-            FetchStudentStruct();
-            FetchYears();
+            timer = new DispatcherTimer(DispatcherPriority.ApplicationIdle, App.Dispatcher)
+            {
+                Interval = TimeSpan.FromMinutes(1)
+            };
+            timer.Tick += (o, e) => FetchData();
+            FetchData();
         }
+        private readonly DispatcherTimer timer;
 
-
-        public ReplaceCollection<FrameWork.Dto.Profession> StudentStruct
+        public ReplaceCollection<FrameWork.Dto.Profession> Professions
         {
-            get { return (ReplaceCollection<FrameWork.Dto.Profession>)GetValue(StudentStructProperty); }
-            set { SetValue(StudentStructProperty, value); }
+            get { return (ReplaceCollection<FrameWork.Dto.Profession>)GetValue(ProfessionsProperty); }
+            set { SetValue(ProfessionsProperty, value); }
         }
 
         public ReplaceCollection<FrameWork.Dto.Xclass> Xclasses
@@ -56,21 +60,81 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(YearsProperty, value); }
         }
 
+
+        public ReplaceCollection<Teacher> Teachers
+        {
+            get { return (ReplaceCollection<Teacher>)GetValue(TeachersProperty); }
+            set { SetValue(TeachersProperty, value); }
+        }
+        public ReplaceCollection<Course> Courses
+        {
+            get { return (ReplaceCollection<Course>)GetValue(CoursesProperty); }
+            set { SetValue(CoursesProperty, value); }
+        }
+
         public int ModeIndex
         {
-            get { return (int)GetValue(ModeIndexProperty); }
+            get
+            {
+                int v = (int)GetValue(ModeIndexProperty);
+                if (v > 0 && v < Modes.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             set { SetValue(ModeIndexProperty, value); }
         }
 
+
         public int ProfessionIndex
         {
-            get { return (int)GetValue(ProfessionIndexProperty); }
+            get
+            {
+                int v = (int)GetValue(ProfessionIndexProperty);
+                if (v > 0 && v < Professions.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             set { SetValue(ProfessionIndexProperty, value); }
+        }
+
+        public FrameWork.Dto.Profession Profession{
+            get
+            {
+                if (Mode == LocatorMode.Struct)
+                {
+                    return Professions[ProfessionIndex];
+                } 
+                else
+                {
+                    return FrameWork.Dto.Profession.All;
+                }
+            }    
         }
 
         public int ClassIndex
         {
-            get { return (int)GetValue(ClassIndexProperty); }
+            get
+            {
+                int v = (int)GetValue(ClassIndexProperty);
+                if (v > 0 && v < Xclasses.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             set { SetValue(ClassIndexProperty, value); }
         }
 
@@ -112,18 +176,87 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public int ProvinceIndex
         {
-            get { return (int)GetValue(ProvinceIndexProperty); }
+            get
+            {
+                int v = (int)GetValue(ProvinceIndexProperty);
+                if (v > 0 && v < Provinces.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             set { SetValue(ProvinceIndexProperty, value); }
         }
+
+        public FrameWork.Dto.Province Province
+        {
+            get
+            {
+                if (Mode == LocatorMode.Dest)
+                {
+                    return Provinces[ProvinceIndex];
+                } else
+                {
+                    return FrameWork.Dto.Province.All;
+                }
+            }
+        }
+
         public int CityIndex
         {
-            get { return (int)GetValue(CityIndexProperty); }
+            get
+            {
+                int v = (int)GetValue(CityIndexProperty);
+                if (v > 0 && v < Cities.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
             set { SetValue(CityIndexProperty, value); }
         }
 
-        public int Mode
+        public int TeacherIndex
         {
-            get { return (int)GetValue(ModeProperty); }
+            get
+            {
+                int v = (int)GetValue(TeacherIndexProperty);
+                if (v > 0 && v < Teachers.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            set { SetValue(TeacherIndexProperty, value); }
+        }
+        public int CourseIndex
+        {
+            get
+            {
+                int v = (int)GetValue(CourseIndexProperty);
+                if (v > 0 && v < Courses.Count)
+                {
+                    return v;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            set { SetValue(CourseIndexProperty, value); }
+        }
+        public LocatorMode Mode
+        {
+            get { return (LocatorMode)GetValue(ModeProperty); }
             set { SetValue(ModeProperty, value); }
         }
 
@@ -143,6 +276,16 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (bool)GetValue(IsYearsFetchEnabledProperty); }
             set { SetValue(IsYearsFetchEnabledProperty, value); }
         }
+        public bool IsTeacherFetchEnabled
+        {
+            get { return (bool)GetValue(IsTeacherFetchEnabledProperty); }
+            set { SetValue(IsTeacherFetchEnabledProperty, value); }
+        }
+        public bool IsCourseFetchEnabled
+        {
+            get { return (bool)GetValue(IsCourseFetchEnabledProperty); }
+            set { SetValue(IsCourseFetchEnabledProperty, value); }
+        }
 
         public SelectorMode SelectorMode
         {
@@ -157,6 +300,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public Locator GetLocator()
         {
             int? cYear = CYears[CYearIndex] <= 0 ? default(int?) : CYears[CYearIndex];
+            int? year = Years[YearIndex] <= 0 ? default(int?) : Years[YearIndex];
             int modeIndex = ModeIndex;
             if (modeIndex < 0 || modeIndex >= Modes.Count)
             {
@@ -167,19 +311,19 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             {
                 if (ProfessionIndex <= 0)
                 {
-                    return Locator.All(cYear);
+                    return Locator.All(cYear, year);
                 }
                 else
                 {
-                    var profession = StudentStruct[ProfessionIndex];
+                    var profession = Professions[ProfessionIndex];
                     if (ClassIndex <= 0)
                     {
-                        return Locator.Profession(profession.Pno, cYear);
+                        return Locator.Profession(profession.Pno, cYear, year);
                     }
                     else
                     {
                         var xclass = Xclasses[ClassIndex];
-                        return Locator.Xclass(xclass.Cno, cYear);
+                        return Locator.Xclass(xclass.Cno, cYear, year);
                     }
                 }
             }
@@ -187,20 +331,44 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             {
                 if (ProvinceIndex <= 0)
                 {
-                    return Locator.All(cYear);
+                    return Locator.All(cYear, year);
                 }
                 else
                 {
                     var province = Provinces[ProvinceIndex];
                     if (CityIndex <= 0)
                     {
-                        return Locator.Province(province.Prno, cYear);
+                        return Locator.Province(province.Prno, cYear, year);
                     }
                     else
                     {
                         var city = Cities[CityIndex];
-                        return Locator.City(city.Cino, cYear);
+                        return Locator.City(city.Cino, cYear, year);
                     }
+                }
+            }
+            else if (mode == LocatorMode.Teacher)
+            {
+                if (TeacherIndex <= 0)
+                {
+                    return Locator.All(cYear, year);
+                } 
+                else
+                {
+                    var teacher = Teachers[TeacherIndex];
+                    return Locator.Teacher(teacher.Tno, cYear, year);
+                }
+            }
+            else if (mode == LocatorMode.Course)
+            {
+                if (CourseIndex <= 0)
+                {
+                    return Locator.All(cYear, year);
+                }
+                else
+                {
+                    var course = Courses[CourseIndex];
+                    return Locator.Course(course.Cono, cYear, year);
                 }
             }
             return Locator.All();
@@ -210,7 +378,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         {
 
 
-            if (ProfessionIndex <= 0 || ProfessionIndex >= StudentStruct.Count)
+            if (ProfessionIndex <= 0 || ProfessionIndex >= Professions.Count)
             {
                 Xclasses.ReplaceItems(new[] { FrameWork.Dto.Xclass.All });
                 ClassIndex = 0;
@@ -220,7 +388,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 var classIndex = ClassIndex;
                 // Xclasses.Clear();
                 var cyear = CYears[CYearIndex];
-                Xclasses.ReplaceItems(from item in StudentStruct[ProfessionIndex].Xclasses where cyear <= 0 || cyear == item.Year select item);
+                Xclasses.ReplaceItems(from item in Professions[ProfessionIndex].Xclasses where cyear <= 0 || cyear == item.Year select item);
                 Xclasses.Insert(0, FrameWork.Dto.Xclass.All);
                 //foreach (var item in StudentStruct[ProfessionIndex].Xclasses)
                 //{
@@ -270,9 +438,12 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             else if (SelectorMode == SelectorMode.StructOnly)
             {
                 Modes.ReplaceItems(new[] { LocatorMode.Struct });
-            } else
+            } else if(SelectorMode == SelectorMode.DestOnly)
             {
                 Modes.ReplaceItems(new[] { LocatorMode.Dest });
+            } else if(SelectorMode == SelectorMode.StructTeacherCourse)
+            {
+                Modes.ReplaceItems(new[] { LocatorMode.Struct, LocatorMode.Teacher, LocatorMode.Course });
             }
             ModeIndex = 0;
         }
@@ -283,7 +454,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             if (index >=0 && index < Modes.Count)
             {
                 var locatorMode = Modes[index];
-                Mode = locatorMode.Index;
+                Mode = locatorMode;
             }
 
         }
@@ -296,7 +467,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             });
 
             var studentStruct = await HttpClient.GetStudentStructAsync();
-            lock (StudentStruct)
+            lock (Professions)
             {
                 App.Dispatcher.Invoke(() => {
                     if (studentStruct == null)
@@ -306,9 +477,9 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     else
                     {
                         int index = ProfessionIndex;
-                        StudentStruct.ReplaceItems(studentStruct);
-                        StudentStruct.Insert(0, FrameWork.Dto.Profession.All);
-                        if (index >= 0 && index < StudentStruct.Count)
+                        Professions.ReplaceItems(studentStruct);
+                        Professions.Insert(0, FrameWork.Dto.Profession.All);
+                        if (index >= 0 && index < Professions.Count)
                         {
                             ProfessionIndex = index;
                         }
@@ -399,29 +570,33 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
             var terms = await HttpClient.GetTermsAsync();
 
-            App.Dispatcher.Invoke(() =>
+            lock (Years)
             {
-                var index = YearIndex;
-                HashSet<int> sets = new HashSet<int>();
-                sets.Add(-1);
-                foreach (var item in terms)
+                App.Dispatcher.Invoke(() =>
                 {
-                    sets.Add(item.Year);
-                }
+                    var index = YearIndex;
+                    HashSet<int> sets = new HashSet<int>();
+                    sets.Add(-1);
+                    foreach (var item in terms)
+                    {
+                        sets.Add(item.Year);
+                    }
 
 
-                Years.ReplaceItems(sets.OrderBy(item => item));
+                    Years.ReplaceItems(sets.OrderBy(item => item));
 
 
-                if (index > 0 && index < Years.Count)
-                {
-                    YearIndex = index;
-                }
-                else
-                {
-                    YearIndex = 0;
-                }
-            });
+                    if (index > 0 && index < Years.Count)
+                    {
+                        YearIndex = index;
+                    }
+                    else
+                    {
+                        YearIndex = 0;
+                    }
+                });
+            }
+
 
             App.Dispatcher.Invoke(() =>
             {
@@ -429,8 +604,76 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             });
         }
 
-        public static readonly DependencyProperty StudentStructProperty =
-            DependencyProperty.Register(nameof(StudentStruct),
+        public async void FetchTeachers()
+        {
+            App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = false);
+            var teachers = await HttpClient.GetTeachersAsync();
+            lock (Teachers)
+            {
+                App.Dispatcher.Invoke(() =>
+                {
+                    if (teachers == null)
+                    {
+                        State.Message = "加载错误";
+                    }
+                    var teacherIndex = TeacherIndex;
+                    Teachers.ReplaceItems(teachers);
+                    Teachers.Insert(0, Teacher.All);
+                    if (teacherIndex > 0 && teacherIndex < Teachers.Count)
+                    {
+                        TeacherIndex = teacherIndex;
+                    } else
+                    {
+                        TeacherIndex = 0;
+                    }
+                });
+            }
+
+
+            App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = true);
+        }
+
+        public async void FetchCourses()
+        {
+            App.Dispatcher.Invoke(() => IsCourseFetchEnabled = false);
+            var courses = await HttpClient.GetCoursesAysnc();
+            lock (Courses)
+            {
+                App.Dispatcher.Invoke(() =>
+                {
+                    if (courses == null)
+                    {
+                        State.Message = "加载错误";
+                    }
+                    var courseIndex = CourseIndex;
+                    Courses.ReplaceItems(courses);
+                    Courses.Insert(0, Course.All);
+                    if (courseIndex > 0 && courseIndex < Courses.Count)
+                    {
+                        CourseIndex = courseIndex;
+                    }
+                    else
+                    {
+                        CourseIndex = 0;
+                    }
+                });
+            }
+
+
+            App.Dispatcher.Invoke(() => IsCourseFetchEnabled = true);
+        }
+
+        public void FetchData()
+        {
+            FetchStudentStruct();
+            FetchDestStruct();
+            FetchYears();
+            FetchTeachers();
+            FetchCourses();
+        }
+
+        public static readonly DependencyProperty ProfessionsProperty =
+            DependencyProperty.Register(nameof(Professions),
         typeof(ReplaceCollection<FrameWork.Dto.Profession>),
         typeof(SelectorViewModel),
         new PropertyMetadata(new ReplaceCollection<FrameWork.Dto.Profession>((left, right) => left.Pno.CompareTo(right.Pno)) {
@@ -464,20 +707,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(CYears), typeof(ReplaceCollection<int>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<int>() { -1 }));
 
 
+        public static readonly DependencyProperty CoursesProperty =
+            DependencyProperty.Register(nameof(Courses), typeof(ReplaceCollection<Course>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Course>() { Course.All }));
 
-
-        public ReplaceCollection<FrameWork.Models.Teacher> Teachers
-        {
-            get { return (ReplaceCollection<FrameWork.Models.Teacher>)GetValue(TeachersProperty); }
-            set { SetValue(TeachersProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Teachers.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TeachersProperty =
-            DependencyProperty.Register("Teachers", typeof(ReplaceCollection<FrameWork.Models.Teacher>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Teacher>()));
-
-
-
+            DependencyProperty.Register("Teachers", typeof(ReplaceCollection<Teacher>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Teacher>() { Teacher.All }));
 
         public ReplaceCollection<LocatorMode> Modes
         {
@@ -531,6 +765,13 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public static readonly DependencyProperty CityIndexProperty =
             DependencyProperty.Register(nameof(CityIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
 
+        public static readonly DependencyProperty CourseIndexProperty =
+            DependencyProperty.Register(nameof(CourseIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+
+        public static readonly DependencyProperty TeacherIndexProperty =
+            DependencyProperty.Register(nameof(TeacherIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+
+
         public static readonly DependencyProperty IsStudentStructFetchingEnabledProperty =
             DependencyProperty.Register(nameof(IsStudentStructFetchingEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
 
@@ -538,17 +779,22 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(IsDestStructFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
 
         public static readonly DependencyProperty IsYearsFetchEnabledProperty =
-            DependencyProperty.Register("IsYearsFetchEnabled", typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
+            DependencyProperty.Register(nameof(IsYearsFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
 
         public static readonly DependencyProperty SelectorModeProperty =
-            DependencyProperty.Register("SelectorMode", typeof(SelectorMode), typeof(SelectorViewModel), new PropertyMetadata(SelectorMode.StructDest, 
+            DependencyProperty.Register(nameof(SelectorMode), typeof(SelectorMode), typeof(SelectorViewModel), new PropertyMetadata(SelectorMode.StructDest, 
                 (d,e) => {
                     ((SelectorViewModel)d).OnSelectModeChanged();
                 }));
 
         public static readonly DependencyProperty ModeProperty =
-            DependencyProperty.Register("Mode", typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(Mode), typeof(LocatorMode), typeof(SelectorViewModel), new PropertyMetadata(LocatorMode.Struct));
 
 
+        public static readonly DependencyProperty IsTeacherFetchEnabledProperty =
+            DependencyProperty.Register(nameof(IsTeacherFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty IsCourseFetchEnabledProperty =
+            DependencyProperty.Register(nameof(IsCourseFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
     }
 }

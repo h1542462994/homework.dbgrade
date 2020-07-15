@@ -19,7 +19,25 @@ namespace Tro.DbGrade.FrameWork.Models
 
         public int CompareTo([AllowNull] Teacher other)
         {
+            if (Tno == null && other.Tno == null)
+            {
+                return 0;
+            }
+            else if (Tno == null)
+            {
+                return -1;
+            }
+            else if (other.Tno == null)
+            {
+                return 1;
+            }
             return Tno.CompareTo(other.Tno);
         }
+
+        public static readonly Teacher All = new Teacher()
+        {
+            Tno = null,
+            Name = "--全部--"
+        };
     }
 }

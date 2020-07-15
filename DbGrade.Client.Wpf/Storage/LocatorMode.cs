@@ -46,7 +46,16 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             else if (this == Dest)
             {
                 return "根据地区筛选";
-            } else
+            }
+            else if (this == Teacher)
+            {
+                return "根据教师筛选";
+            }
+            else if (this == Course)
+            {
+                return "根据课程筛选";
+            }
+            else
             {
                 return null;
             }
@@ -67,6 +76,8 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         }
 
         public static readonly LocatorMode Struct = new LocatorMode("struct", 0);
-        public static readonly LocatorMode Dest = new LocatorMode("dest",1);
+        public static readonly LocatorMode Dest = new LocatorMode("dest", 1);
+        public static readonly LocatorMode Teacher = new LocatorMode("teacher", 2);
+        public static readonly LocatorMode Course = new LocatorMode("course", 3);
     }
 }
