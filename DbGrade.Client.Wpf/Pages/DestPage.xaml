@@ -9,7 +9,7 @@
       xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DestPage" Background="Wheat">
+      Title="地区概览信息" Background="Wheat">
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
@@ -17,10 +17,11 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Margin="20,6" Orientation="Vertical">
-            <TextBlock Style="{StaticResource TextTitle}" Text="地区概览信息"/>
+            <TextBlock Style="{StaticResource TextTitle}" Text="{Binding ElementName=page, Path=Title}"/>
             <ui:DataSelector />
             <StackPanel Margin="0,4" Orientation="Horizontal">
-                <Button x:Name="ButtonQuery" Width="80" Padding="0,4" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsDestSummaryFetchEnabled}" />
+                <Button x:Name="ButtonQuery" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsDestSummaryFetchEnabled}" />
+                <Button x:Name="ButtonAdd"  Margin="12,0,0,0" Content="添加"/>
             </StackPanel>
         </StackPanel>
         <DataGrid Grid.Row="1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.DestSummaries}" >

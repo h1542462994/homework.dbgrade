@@ -15,7 +15,24 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             NavigateTo(typeof(T), args);
         }
 
+        public void NavigateToPopup(Type pageType, params object[] args)
+        {
+            OnPopupPageNavigate?.Invoke(this, new PageNavigateEventArgs(pageType, args));
+        }
+
+        public void NavigateToPopup<T>(params object[] args)
+        {
+            NavigateToPopup(typeof(T), args);
+        }
+
+        public void PopupClose()
+        {
+            OnPopupClose?.Invoke(this, new EventArgs());
+        }
+
         public event PageNavigateEventHandler OnPageNavigate;
+        public event PageNavigateEventHandler OnPopupPageNavigate;
+        public event EventHandler OnPopupClose;
     }
 
     public class PageNavigateEventArgs

@@ -27,5 +27,6 @@ namespace Tro.DbGrade.Server.Storage
         IEnumerable<OpenCoursesView> GetOpenCourses(string scope, string tag, int? year, int? cyear);
         IEnumerable<XTerm> GetTerms();
         IEnumerable<Teacher> GetTeachers();
+        void AddDest(string province, string city);
     }
 }

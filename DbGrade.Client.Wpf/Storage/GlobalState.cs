@@ -21,10 +21,19 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(MessageProperty, value); }
         }
 
+        public string AddMessage
+        {
+            get { return (string)GetValue(AddMessageProperty); }
+            set { SetValue(AddMessageProperty, value); }
+        }
+
         public static readonly DependencyProperty MessageProperty =
             DependencyProperty.Register(nameof(Message), typeof(string), typeof(GlobalState), new PropertyMetadata(""));
 
         public static readonly DependencyProperty SnoProperty =
             DependencyProperty.Register("Sno", typeof(string), typeof(GlobalState), new PropertyMetadata(""));
+
+        public static readonly DependencyProperty AddMessageProperty =
+            DependencyProperty.Register("AddMessage", typeof(string), typeof(GlobalState), new PropertyMetadata(""));
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Models.Types;
 
 namespace Tro.DbGrade.FrameWork.Models
 {
-    public class CourseSummaryView
+    public class CourseSummaryView : IComparable<CourseSummaryView>
     {
         [Key]
         public int Ono { get; set; }
@@ -43,5 +44,10 @@ namespace Tro.DbGrade.FrameWork.Models
         /// 在班级内的排名
         /// </summary>
         public long OrderOfClass { get; set; }
+
+        public int CompareTo([AllowNull] CourseSummaryView other)
+        {
+            return Ono.CompareTo(other.Ono);
+        }
     }
 }

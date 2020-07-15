@@ -37,6 +37,16 @@ namespace Tro.DbGrade.Client.Wpf
             {
                 ContentFrame.NavigateTo(e.PageType);
             };
+            PageNavigator.OnPopupPageNavigate += (o, e) =>
+            {
+                FramePopup.NavigateTo(e.PageType);
+                GridPopup.Visibility = Visibility.Visible;
+            };
+            PageNavigator.OnPopupClose += (o, e) => GridPopup.Visibility = Visibility.Hidden;
+            GridPopup.MouseUp += (o, e) => GridPopup.Visibility = Visibility.Hidden;
+            //在Frame中监听MouseUp，防止事件向上冒泡。
+            FramePopup.MouseUp += (o, e) => e.Handled = true;
+            
         }
 
         public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();

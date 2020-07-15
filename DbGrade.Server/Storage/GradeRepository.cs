@@ -330,5 +330,10 @@ namespace Tro.DbGrade.Server.Storage
                    (cyear == null || cyear == openCourse.CYear)
                    select openCourse;
         }
+
+        public void AddDest(string province, string city)
+        {
+            DbContext.Database.ExecuteSqlInterpolated($"exec addDest {province},{city}");
+        }
     }
 }

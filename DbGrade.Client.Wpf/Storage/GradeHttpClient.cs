@@ -166,5 +166,23 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 return null;
             }
         }
+
+        public async Task<ApiResponse> AddDest(string province, string city)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddDest, new Dictionary<string, object>
+                {
+                    { "province", province },
+                    { "city", city }
+                });
+                return await response.ReadTo<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
 }

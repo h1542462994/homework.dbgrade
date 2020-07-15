@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tro.DbGrade.FrameWork.Dto;
 using Tro.DbGrade.Server.Storage;
 
 namespace Tro.DbGrade.Server.Controllers
@@ -92,6 +93,16 @@ namespace Tro.DbGrade.Server.Controllers
         public object OpenCourses(string scope, string tag, int? year, int? cyear)
         {
             return GradeRepository.GetOpenCourses(scope, tag, year, cyear);
+        }
+
+        [HttpGet("dest/add")]
+        [HttpPost("dest/add")]
+        public object AddDest(string province, string city)
+        {
+            if (string.IsNullOrEmpty(province) || string.IsNullOrEmpty(city)) return ApiResponse.BadRequest("参数不能为空");
+            if (province.Length > 20 || city.Length > 20) return ApiResponse.BadRequest("参数太长");
+            GradeRepository.AddDest(province, city);
+            return ApiResponse.OK();
         }
     }
 }
