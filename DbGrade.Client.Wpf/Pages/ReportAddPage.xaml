@@ -1,0 +1,83 @@
+﻿<Page x:Name="page"
+      x:Class="Tro.DbGrade.Client.Wpf.Pages.ReportAddPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Tro.DbGrade.Client.Wpf.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="报告添加" Background="Wheat">
+    
+    <Grid Margin="22,18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource TextTitle}" Text="{Binding ElementName=page, Path=Title}"/>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="7*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="学生" Style="{StaticResource TextLabel}"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="10,5">
+                <ComboBox MinWidth="120" ItemsSource="{Binding ElementName=page, Path=SelectorViewModel.Professions}" SelectedIndex="{Binding ElementName=page, Path=SelectorViewModel.ProfessionIndex}">
+                    <ComboBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <ContentPresenter Content="{Binding Name}"/>
+                        </ItemContainerTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox Margin="12,0,0,0" MinWidth="120" ItemsSource="{Binding ElementName=page, Path=SelectorViewModel.Xclasses}" SelectedIndex="{Binding ElementName=page, Path=SelectorViewModel.ClassIndex}">
+                    <ComboBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <ContentPresenter Content="{Binding}"/>
+                        </ItemContainerTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox x:Name="ComboBoxStudent" Margin="12,0,0,0" MinWidth="120" ItemsSource="{Binding ElementName=page, Path=SelectorViewModel.Students}" SelectedIndex="{Binding ElementName=page, Path=SelectorViewModel.StudentIndex}">
+                    <ComboBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <ContentPresenter Content="{Binding Name}"/>
+                        </ItemContainerTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <TextBlock Grid.Row="1" Text="课程" Style="{StaticResource TextLabel}"/>
+            <ComboBox x:Name="ComboBoxCourse" Grid.Row="1" Grid.Column="1" Margin="10,6" MinWidth="120" HorizontalAlignment="Left" ItemsSource="{Binding ElementName=page, Path=SelectorViewModel.Courses}" SelectedIndex="{Binding ElementName=page, Path=SelectorViewModel.CourseIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <!--<TextBlock Grid.Row="2" Text="任课教师" Style="{StaticResource TextLabel}"/>
+            <ComboBox x:Name="ComboBoxTeacher" Grid.Row="2" Grid.Column="1" Margin="10,6" MinWidth="120" HorizontalAlignment="Left" ItemsSource="{Binding ElementName=page, Path=SelectorViewModel.Teachers}" SelectedIndex="{Binding ElementName=page, Path=SelectorViewModel.TeacherIndex}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <ContentPresenter Content="{Binding Name}"/>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>-->
+            <TextBlock Grid.Row="2" Text="成绩" Style="{StaticResource TextLabel}"/>
+            <TextBox x:Name="TextBoxGrade" Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBoxInput}"/>
+        </Grid>
+        <Grid Grid.Row="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding ElementName=page, Path=State.AddMessage}" Foreground="OrangeRed"/>
+            <Button x:Name="ButtonCommit" Grid.Column="1" Content="提交" />
+        </Grid>
+    </Grid>
+</Page>

@@ -33,28 +33,28 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 { "tag", tag },
                 { "year", year }
             });
-            var value = await response.ReadTo<IEnumerable<StudentOut>>();
+            var value = await response.ReadToAsync<IEnumerable<StudentOut>>();
             return value;
         }
 
         public async Task<IEnumerable<FrameWork.Dto.Profession>> GetStudentStructAsync()
         {
             var response = await Client.PostAsync(ApiRoute.StudentStruct);
-            var value = await response.ReadTo<IEnumerable<FrameWork.Dto.Profession>>();
+            var value = await response.ReadToAsync<IEnumerable<FrameWork.Dto.Profession>>();
             return value;
         }
 
         public async Task<IEnumerable<FrameWork.Dto.Province>> GetDestStructAsync()
         {
             var response = await Client.PostAsync(ApiRoute.DestStruct);
-            var value = await response.ReadTo<IEnumerable<FrameWork.Dto.Province>>();
+            var value = await response.ReadToAsync<IEnumerable<FrameWork.Dto.Province>>();
             return value;
         }
 
         public async Task<IEnumerable<XTerm>> GetTermsAsync() {
 
             var response = await Client.PostAsync(ApiRoute.Terms);
-            var value = await response.ReadTo<IEnumerable<XTerm>>();
+            var value = await response.ReadToAsync<IEnumerable<XTerm>>();
             return value;
         }
         
@@ -67,7 +67,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "tag", tag },
                     { "year", year }
                 });
-                var value = await response.ReadTo<IEnumerable<DestSummary>>();
+                var value = await response.ReadToAsync<IEnumerable<DestSummary>>();
                 return value;
             }
             catch (JsonException e)
@@ -87,7 +87,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "tag", tag },
                     { "year", year }
                 });
-                return await response.ReadTo<IEnumerable<ClassSummary>>();
+                return await response.ReadToAsync<IEnumerable<ClassSummary>>();
             }
             catch (JsonException e)
             {
@@ -107,7 +107,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "year", year},
                     { "cyear", cyear }
                 });
-                return await response.ReadTo<IEnumerable<ReportsView>>();
+                return await response.ReadToAsync<IEnumerable<ReportsView>>();
             }
             catch (JsonException e)
             {
@@ -121,7 +121,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             try
             {
                 var response = await Client.PostAsync(ApiRoute.Teachers);
-                return await response.ReadTo<IEnumerable<Teacher>>();
+                return await response.ReadToAsync<IEnumerable<Teacher>>();
             }
             catch (JsonException e)
             {
@@ -140,7 +140,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "year", year},
                     { "cyear", cyear }
                 });
-                return await response.ReadTo<IEnumerable<ReportSummaryOut>>();
+                return await response.ReadToAsync<IEnumerable<ReportSummaryOut>>();
             }
             catch (JsonException e)
             {
@@ -159,7 +159,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "year", year},
                     { "cyear", cyear }
                 });
-                return await response.ReadTo<IEnumerable<CourseSummaryView>>();
+                return await response.ReadToAsync<IEnumerable<CourseSummaryView>>();
             } 
             catch (JsonException e)
             {
@@ -173,7 +173,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             try
             {
                 var response = await Client.PostAsync(ApiRoute.Course);
-                return await response.ReadTo<IEnumerable<Course>>();
+                return await response.ReadToAsync<IEnumerable<Course>>();
             }
             catch (JsonException e)
             {
@@ -182,7 +182,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             }
         }
 
-        public async Task<ApiResponse> AddDest(string province, string city)
+        public async Task<ApiResponse> AddDestAsync(string province, string city)
         {
             try
             {
@@ -191,7 +191,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "province", province },
                     { "city", city }
                 });
-                return await response.ReadTo<ApiResponse>();
+                return await response.ReadToAsync<ApiResponse>();
             }
             catch (JsonException e)
             {
@@ -200,7 +200,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             }
         }
 
-        public async Task<ApiResponse> AddStruct(string profession, string xclass, int year)
+        public async Task<ApiResponse> AddStructAsync(string profession, string xclass, int year)
         {
             try
             {
@@ -210,7 +210,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "xclass", xclass },
                     { "year", year }
                 });
-                return await response.ReadTo<ApiResponse>();
+                return await response.ReadToAsync<ApiResponse>();
             }
             catch(JsonException e)
             {
@@ -219,7 +219,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             } 
         }
 
-        public async Task<ApiResponse> AddStudent(string sno, string name, Sex sex, int age, int cno, int cino)
+        public async Task<ApiResponse> AddStudentAsync(string sno, string name, Sex sex, int age, int cno, int cino)
         {
             try
             {
@@ -231,7 +231,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                     { "cno", cno },
                     { "cino", cino }
                 });
-                return await response.ReadTo<ApiResponse>();
+                return await response.ReadToAsync<ApiResponse>();
             } 
             catch(JsonException e)
             {
@@ -239,5 +239,105 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 return null;
             }
         }
+
+        public async Task<ApiResponse> AddTeacherAsync(string tno, string name, Sex sex, int age, Level level, string phone)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddTeacher, new Dictionary<string, object> {
+                    { "tno", tno },
+                    { "name", name },
+                    { "sex", sex },
+                    { "age", age },
+                    { "level", level },
+                    { "phone", phone }
+                });
+                return await response.ReadToAsync<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<ApiResponse> AddTermAsync(int year, Term term)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddTerm, new Dictionary<string, object>
+                {
+                    { "year", year },
+                    { "term", term }
+                });
+                return await response.ReadToAsync<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<ApiResponse> AddCourseAsync(string name, int period, Way way, double credit)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddCourse, new Dictionary<string, object>
+                {
+                    { "name", name },
+                    { "period", period },
+                    { "way", way },
+                    { "credit", credit }
+                });
+                return await response.ReadToAsync<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<ApiResponse> AddOpenCourseAsync(int cono, int cno, int year, Term term, string tno)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddOpenCourse, new Dictionary<string, object>
+                {
+                    { "cono", cono },
+                    { "cno", cno },
+                    { "year", year },
+                    { "term", term },
+                    { "tno", tno }
+                });
+                return await response.ReadToAsync<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public async Task<ApiResponse> AddReportAsync(string sno, int cono, double grade)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddReport, new Dictionary<string, object>
+                {
+                    { "sno", sno },
+                    { "cono", cono },
+                    { "grade", grade }
+                });
+                return await response.ReadToAsync<ApiResponse>();
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
     }
+
 }

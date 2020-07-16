@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
+using Tro.DbGrade.FrameWork.Dto;
 using Tro.DbGrade.FrameWork.Models;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
@@ -72,6 +73,27 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(CoursesProperty, value); }
         }
 
+        public ReplaceCollection<StudentOut> Students
+        {
+            get { return (ReplaceCollection<StudentOut>)GetValue(StudentsProperty); }
+            set { SetValue(StudentsProperty, value); }
+        }
+
+        public int StudentIndex
+        {
+            get {
+                int v =  (int)GetValue(StudentIndexProperty);
+                if (v >= 0 && v < Students.Count)
+                {
+                    return v;
+                } else
+                {
+                    return 0;
+                }
+            }
+            set { SetValue(StudentIndexProperty, value); }
+        }
+
         public int ModeIndex
         {
             get
@@ -138,6 +160,19 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             set { SetValue(ClassIndexProperty, value); }
         }
 
+        public StudentOut Student
+        {
+            get
+            {
+                if (StudentIndex > 0 && StudentIndex < Students.Count)
+                {
+                    return Students[StudentIndex];
+                } else
+                {
+                    return null;
+                }
+            }
+        }
         public int CYearIndex
         {
             get
@@ -286,6 +321,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             get { return (bool)GetValue(IsCourseFetchEnabledProperty); }
             set { SetValue(IsCourseFetchEnabledProperty, value); }
         }
+        public bool IsStudentFetchEnabled
+        {
+            get { return (bool)GetValue(IsStudentFetchEnabledProperty); }
+            set { SetValue(IsStudentFetchEnabledProperty, value); }
+        }
 
         public SelectorMode SelectorMode
         {
@@ -299,8 +339,16 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public Locator GetLocator()
         {
-            int? cYear = CYears[CYearIndex] <= 0 ? default(int?) : CYears[CYearIndex];
-            int? year = Years[YearIndex] <= 0 ? default(int?) : Years[YearIndex];
+            int? cYear = null;
+            if (CYearIndex > 0 && CYearIndex < CYears.Count)
+            {
+                cYear = CYears[CYearIndex];
+            }
+            int? year = null;
+            if (YearIndex > 0 && YearIndex < Years.Count)
+            {
+                year = Years[YearIndex];
+            }
             int modeIndex = ModeIndex;
             if (modeIndex < 0 || modeIndex >= Modes.Count)
             {
@@ -459,7 +507,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         }
 
-        public async void FetchStudentStruct()
+        public async void FetchStudentStructAsync()
         {
             App.Dispatcher.Invoke(() =>
             {
@@ -523,7 +571,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 IsStudentStructFetchingEnabled = true;
             });
         }
-        public async void FetchDestStruct()
+        public async void FetchDestStructAsync()
         {
             App.Dispatcher.Invoke(() =>
             {
@@ -561,7 +609,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 IsDestStructFetchEnabled = true;
             });
         }
-        public async void FetchYears()
+        public async void FetchYearsAsync()
         {
             App.Dispatcher.Invoke(() =>
             {
@@ -603,8 +651,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 IsYearsFetchEnabled = true;
             });
         }
-
-        public async void FetchTeachers()
+        public async void FetchTeachersAsync()
         {
             App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = false);
             var teachers = await HttpClient.GetTeachersAsync();
@@ -632,8 +679,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
             App.Dispatcher.Invoke(() => IsTeacherFetchEnabled = true);
         }
-
-        public async void FetchCourses()
+        public async void FetchCoursesAsync()
         {
             App.Dispatcher.Invoke(() => IsCourseFetchEnabled = false);
             var courses = await HttpClient.GetCoursesAysnc();
@@ -663,13 +709,49 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             App.Dispatcher.Invoke(() => IsCourseFetchEnabled = true);
         }
 
+        public async void FetchStudentAsync()
+        {
+            App.Dispatcher.Invoke(() => IsStudentFetchEnabled = false);
+
+            if (ClassIndex > 0 && ClassIndex < Xclasses.Count)
+            {
+                var students = await HttpClient.GetStudentsAsync(Scope.Xclass, Xclasses[ClassIndex].Cno.ToString());
+                lock (Students)
+                {
+                    App.Dispatcher.Invoke(() =>
+                    {
+                        if (students == null)
+                        {
+                            State.Message = "加载错误";
+                        }
+                        var studentIndex = StudentIndex;
+                        Students.ReplaceItems(students);
+                        Students.Insert(0, StudentOut.All);
+                        if (studentIndex > 0 && studentIndex < Students.Count)
+                        {
+                            StudentIndex = studentIndex;
+                        }
+                        else
+                        {
+                            StudentIndex = 0;
+                        }
+                    });
+                }
+            }
+            
+            
+
+            App.Dispatcher.Invoke(() => IsStudentFetchEnabled = true);
+        }
+
         public void FetchData()
         {
-            FetchStudentStruct();
-            FetchDestStruct();
-            FetchYears();
-            FetchTeachers();
-            FetchCourses();
+            FetchStudentStructAsync();
+            FetchDestStructAsync();
+            FetchYearsAsync();
+            FetchTeachersAsync();
+            FetchCoursesAsync();
+            FetchStudentAsync();
         }
 
         public static readonly DependencyProperty ProfessionsProperty =
@@ -711,7 +793,7 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(Courses), typeof(ReplaceCollection<Course>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Course>() { Course.All }));
 
         public static readonly DependencyProperty TeachersProperty =
-            DependencyProperty.Register("Teachers", typeof(ReplaceCollection<Teacher>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Teacher>() { Teacher.All }));
+            DependencyProperty.Register(nameof(Teachers), typeof(ReplaceCollection<Teacher>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<Teacher>() { Teacher.All }));
 
         public ReplaceCollection<LocatorMode> Modes
         {
@@ -746,14 +828,18 @@ namespace Tro.DbGrade.Client.Wpf.Storage
             DependencyProperty.Register(nameof(YearIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
 
         public static readonly DependencyProperty ProfessionIndexProperty =
-        DependencyProperty.Register(nameof(ProfessionIndex), typeof(int), typeof(SelectorViewModel),
-            new PropertyMetadata(0, (d, e) => {
-                var dobj = (SelectorViewModel)d;
-                dobj.OnUpdateXclass();
-            }));
+            DependencyProperty.Register(nameof(ProfessionIndex), typeof(int), typeof(SelectorViewModel),
+                new PropertyMetadata(0, (d, e) => {
+                    var dobj = (SelectorViewModel)d;
+                    dobj.OnUpdateXclass();
+                }));
 
         public static readonly DependencyProperty ClassIndexProperty =
-            DependencyProperty.Register(nameof(ClassIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
+            DependencyProperty.Register(nameof(ClassIndex), typeof(int), typeof(SelectorViewModel),
+                new PropertyMetadata(0, (d,e) => {
+                    var dobj = (SelectorViewModel)d;
+                    dobj.FetchStudentAsync();
+                }));
 
         public static readonly DependencyProperty ProvinceIndexProperty =
             DependencyProperty.Register(nameof(ProvinceIndex), typeof(int), typeof(SelectorViewModel),
@@ -771,6 +857,8 @@ namespace Tro.DbGrade.Client.Wpf.Storage
         public static readonly DependencyProperty TeacherIndexProperty =
             DependencyProperty.Register(nameof(TeacherIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
 
+        public static readonly DependencyProperty StudentIndexProperty =
+            DependencyProperty.Register(nameof(StudentIndex), typeof(int), typeof(SelectorViewModel), new PropertyMetadata(0));
 
         public static readonly DependencyProperty IsStudentStructFetchingEnabledProperty =
             DependencyProperty.Register(nameof(IsStudentStructFetchingEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
@@ -796,5 +884,11 @@ namespace Tro.DbGrade.Client.Wpf.Storage
 
         public static readonly DependencyProperty IsCourseFetchEnabledProperty =
             DependencyProperty.Register(nameof(IsCourseFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty IsStudentFetchEnabledProperty =
+            DependencyProperty.Register(nameof(IsStudentFetchEnabled), typeof(bool), typeof(SelectorViewModel), new PropertyMetadata(true));
+
+        public static readonly DependencyProperty StudentsProperty =
+            DependencyProperty.Register(nameof(Students), typeof(ReplaceCollection<StudentOut>), typeof(SelectorViewModel), new PropertyMetadata(new ReplaceCollection<StudentOut>() { StudentOut.All}));
     }
 }

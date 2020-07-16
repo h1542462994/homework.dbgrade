@@ -16,48 +16,52 @@ using Tro.DbGrade.Client.Wpf.Storage;
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
     /// <summary>
-    /// StructAddPage.xaml 的交互逻辑
+    /// ReportAddPage.xaml 的交互逻辑
     /// </summary>
-    public partial class StructAddPage : Page
+    public partial class ReportAddPage : Page
     {
-        public StructAddPage()
+        public ReportAddPage()
         {
             InitializeComponent();
-            Loaded += StructAddPage_Loaded;
+            Loaded += ReportAddPage_Loaded;
         }
 
-        public StructAddPage(FrameWork.Dto.Profession profession): this()
+        private void ReportAddPage_Loaded(object sender, RoutedEventArgs e)
         {
-            TextBoxProfession.Text = profession.Name;
-        }
-
-        private void StructAddPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            ButtonCommit.Click += ButtonCommit_Click;
             State.AddMessage = "";
+            ButtonCommit.Click += ButtonCommit_Click;
         }
 
         private async void ButtonCommit_Click(object sender, RoutedEventArgs e)
         {
             ButtonCommit.IsEnabled = false;
-            var profession = TextBoxProfession.Text;
-            var xclass = TextBoxClass.Text;
-            var yearStr = TextBoxYear.Text;
-            if (string.IsNullOrEmpty(profession) || string.IsNullOrEmpty(xclass) || string.IsNullOrEmpty(yearStr))
+            var gradeStr = TextBoxGrade.Text;
+            if (string.IsNullOrEmpty(gradeStr))
             {
                 State.AddMessage = "参数不能为空";
                 ButtonCommit.IsEnabled = true;
                 return;
             }
-            if (profession.Length > 20 || profession.Length > 20)
+            if (SelectorViewModel.StudentIndex <= 0 || SelectorViewModel.CourseIndex <= 0)
             {
-                State.AddMessage = "参数太长";
+                State.AddMessage = "学生或者课程必选";
                 ButtonCommit.IsEnabled = true;
                 return;
             }
-            if (int.TryParse(yearStr, out int year))
+            if (double.TryParse(gradeStr, out double grade))
             {
-                var response = await HttpClient.AddStructAsync(profession, xclass, year);
+                if (grade < 0 || grade > 100)
+                {
+                    State.AddMessage = "成绩必须在0-100之间";
+                    ButtonCommit.IsEnabled = true;
+                    return;
+                }
+
+                var response = await HttpClient.AddReportAsync(
+                    SelectorViewModel.Students[SelectorViewModel.StudentIndex].Sno,
+                    SelectorViewModel.Courses[SelectorViewModel.CourseIndex].Cono,
+                    grade
+                    );
                 if (response.Code == System.Net.HttpStatusCode.OK)
                 {
                     State.AddMessage = "添加成功";
@@ -75,10 +79,16 @@ namespace Tro.DbGrade.Client.Wpf.Pages
                 ButtonCommit.IsEnabled = true;
                 return;
             }
+
+            ButtonCommit.IsEnabled = true;
         }
+
+        public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
 
         public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
         public GradeHttpClient HttpClient => App.Current.ServiceProvider.GetService<GradeHttpClient>();
         public GlobalState State => App.Current.ServiceProvider.GetService<GlobalState>();
     }
+
+
 }

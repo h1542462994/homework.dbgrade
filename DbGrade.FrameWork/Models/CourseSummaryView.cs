@@ -44,6 +44,7 @@ namespace Tro.DbGrade.FrameWork.Models
         /// 在班级内的排名
         /// </summary>
         public long OrderOfClass { get; set; }
+        public int Count { get; set; }
 
         public int CompareTo([AllowNull] CourseSummaryView other)
         {

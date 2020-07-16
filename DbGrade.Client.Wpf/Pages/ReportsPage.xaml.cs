@@ -29,8 +29,10 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         {
             SelectorViewModel.SelectorMode = SelectorMode.StructTeacherCourse;
             ButtonQuery.Click += (o, e) => RemoteStorage.FetchReportsAsync();
+            ButtonAdd.Click += (o, e) => PageNavigator.NavigateToPopup<ReportAddPage>();
         }
 
+        public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();
     }

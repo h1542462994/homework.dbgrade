@@ -19,6 +19,5 @@ namespace Tro.DbGrade.FrameWork.Dto
         public int Pno { get; set; }
         public string PName { get; set; }
         public Grade TotalGrade { get; set; }
-        public IEnumerable<Grade> Grades { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +23,18 @@ namespace Tro.DbGrade.Client.Wpf.UI
         public DataSelector()
         {
             InitializeComponent();
+            Loaded += DataSelector_Loaded;
+        }
+
+        private void DataSelector_Loaded(object sender, RoutedEventArgs e)
+        {
+            ButtonFresh.Click += async (o, e) =>
+            {
+                ButtonFresh.IsEnabled = false;
+                SelectorViewModel.FetchData();
+                await Task.Delay(2000);
+                ButtonFresh.IsEnabled = true;
+            };
         }
 
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();

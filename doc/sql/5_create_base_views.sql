@@ -238,7 +238,7 @@ from
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}) summary) summary2
 
 /*添加课程概览视图,baseon=OpenCourseView,ReportsView*/
-create or alter view @{middle}_CourseSummaryView@{no}
+create   view @{middle}_CourseSummaryView@{no}
 as
 select
 	summary3.*,
@@ -248,19 +248,21 @@ select
 from
 	(select 
 		@{middle}_OpenCoursesView@{no}.*,
-		summary2.@{short}_AvgGrade@{no}
+		summary2.@{short}_AvgGrade@{no},
+		summary2._count @{short}_Count@{no}
 	from
 		(select 
 			summary.@{short}_Ono@{no} @{short}_Ono@{no},
-			gradeSum / _count @{short}_AvgGrade@{no}
+		    case when (_count > 0) then gradeSum / _count else 0 end @{short}_AvgGrade@{no},
+			summary._count
 		from
 			(select
 				@{middle}_OpenCourses@{no}.@{short}_Ono@{no} @{short}_Ono@{no},
 				sum(@{middle}_Reports@{no}.@{short}_Grade@{no}) gradeSum,
-				count(*) _count
+				count(@{middle}_Reports@{no}.@{short}_Ono@{no}) _count
 			from 
-				@{middle}_OpenCourses@{no}, @{middle}_Reports@{no}
-			where
+				@{middle}_OpenCourses@{no} left join @{middle}_Reports@{no}
+			on
 				@{middle}_OpenCourses@{no}.@{short}_Ono@{no} = @{middle}_Reports@{no}.@{short}_Ono@{no}
 			group by @{middle}_OpenCourses@{no}.@{short}_Ono@{no}) summary) summary2, @{middle}_OpenCoursesView@{no}
 		where summary2.@{short}_Ono@{no} = @{middle}_OpenCoursesView@{no}.@{short}_Ono@{no}) summary3

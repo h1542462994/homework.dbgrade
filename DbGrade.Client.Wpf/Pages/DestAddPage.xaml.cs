@@ -56,7 +56,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
                 return;
             }
 
-            await HttpClient.AddDest(province, city);
+            await HttpClient.AddDestAsync(province, city);
 
             ButtonCommit.IsEnabled = true;
             await Task.Delay(3000);

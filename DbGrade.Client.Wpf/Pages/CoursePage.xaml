@@ -20,7 +20,7 @@
             <StackPanel Margin="0,4" Orientation="Horizontal">
                 <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsCourseFetchEnabled}"/>
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
-                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
+                <!--<Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>-->
             </StackPanel>
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.Courses}">

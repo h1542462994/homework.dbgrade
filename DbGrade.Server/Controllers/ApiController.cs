@@ -149,7 +149,67 @@ namespace Tro.DbGrade.Server.Controllers
             } 
             else
             {
-                return ApiResponse.BadRequest();
+                return ApiResponse.BadRequest("该教师已存在");
+            }
+        }
+
+        [HttpGet("term/add")]
+        [HttpPost("term/add")]
+        public object AddTerm(int year, Term term)
+        {
+            var result = GradeRepository.AddTerm(year, term);
+            if (result)
+            {
+                return ApiResponse.OK();
+            } 
+            else
+            {
+                return ApiResponse.BadRequest("该学期已存在");
+            }
+        }
+
+        [HttpGet("course/add")]
+        [HttpPost("course/add")]
+        public object AddCourse(string name, int period, Way way, double credit)
+        {
+            var result = GradeRepository.AddCourse(name, period, way, credit);
+            if (result)
+            {
+                return ApiResponse.OK();
+            }
+            else
+            {
+                return ApiResponse.BadRequest("该课程已存在");
+            }
+        }
+
+        [HttpGet("open_course/add")]
+        [HttpPost("open_course/add")]
+        public object AddOpenCourse(int cono, int cno, int year, Term term, string tno)
+        {
+            var result = GradeRepository.AddOpenCourse(cono, cno, year, term, tno);
+            if (result)
+            {
+                return ApiResponse.OK();
+            } 
+            else
+            {
+                return ApiResponse.BadRequest("该开设课程已存在");
+            }
+        }
+
+        [HttpGet("report/add")]
+        [HttpPost("report/add")]
+        public object AddReport(string sno, int cono, double grade)
+        {
+            var result = GradeRepository.AddReport(sno, cono, grade);
+            if (result == null)
+            {
+                return ApiResponse.OK();
+            } 
+            else
+            {
+                return ApiResponse.BadRequest(result);
             }
         }
     }

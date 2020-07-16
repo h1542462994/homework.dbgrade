@@ -44,13 +44,21 @@ namespace Tro.DbGrade.FrameWork.Models
 
         public int CompareTo([AllowNull] ReportsView other)
         {
-            if (Sno == other.Sno)
+            if (Grade == other.Grade)
             {
-                return Ono.CompareTo(other.Ono);
+                if (Sno == other.Sno)
+                {
+                    return Ono.CompareTo(other.Ono);
+                }
+                else
+                {
+                    return Sno.CompareTo(other.Sno);
+                }
             } else
             {
-                return Sno.CompareTo(other.Sno);
+                return Grade.CompareTo(other.Grade);
             }
+
         }
     }
 }

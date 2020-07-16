@@ -66,7 +66,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
                     return;
                 }
 
-                var response = await HttpClient.AddStudent(sno, name, sex, age,
+                var response = await HttpClient.AddStudentAsync(sno, name, sex, age,
                     SelectorViewModel.Xclasses[SelectorViewModel.ClassIndex].Cno,
                     SelectorViewModel.Cities[SelectorViewModel.CityIndex].Cino);
                 if (response.Code == System.Net.HttpStatusCode.OK)

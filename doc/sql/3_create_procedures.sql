@@ -105,7 +105,6 @@ create or alter proc addReport
 (
 	@sno varchar(20), --学生
 	@cono int, --课程号
-	@tno varchar(20), --教师
 	@grade float --成绩
 ) as 
 begin

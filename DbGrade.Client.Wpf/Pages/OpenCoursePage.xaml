@@ -8,7 +8,7 @@
       xmlns:ui="clr-namespace:Tro.DbGrade.Client.Wpf.UI"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="CoursePage" Background="Wheat">
+      Title="开课详细查询" Background="Wheat">
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
@@ -16,12 +16,12 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel Margin="20,6" Orientation="Vertical">
-            <TextBlock Style="{StaticResource TextTitle}" Text="成绩详细查询"/>
+            <TextBlock Style="{StaticResource TextTitle}" Text="{Binding ElementName=page, Path=Title}"/>
             <ui:DataSelector/>
             <StackPanel Margin="0,4" Orientation="Horizontal">
                 <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsCourseSummariesFetchEnabled}"/>
                 <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
-                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
+                <!--<Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>-->
             </StackPanel>
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.CourseSummaries}">
@@ -36,6 +36,7 @@
                 <DataGridTextColumn Header="开课学年" MinWidth="80" Binding="{Binding Year}"/>
                 <DataGridTextColumn Header="开课学期" MinWidth="80" Binding="{Binding Term, Converter={StaticResource TermStringConverter}}"/>
                 <DataGridTextColumn Header="平均成绩" MinWidth="80" Binding="{Binding AvgGrade}"/>
+                <DataGridTextColumn Header="已考人数" MinWidth="80" Binding="{Binding Count}"/>
             </DataGrid.Columns>
         </DataGrid>
 

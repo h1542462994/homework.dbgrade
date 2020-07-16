@@ -32,7 +32,25 @@ namespace Tro.DbGrade.FrameWork.Dto
 
         public int CompareTo([AllowNull] StudentOut other)
         {
+            if (Sno == null && other.Sno == null)
+            {
+                return 0;
+            }
+            else if (Sno == null)
+            {
+                return -1;
+            }
+            else if (other.Sno == null)
+            {
+                return 1;
+            }
             return Sno.CompareTo(other.Sno);
         }
+
+        public static readonly StudentOut All = new StudentOut()
+        {
+            Sno = null,
+            Name = "--全部--"
+        };
     }
 }

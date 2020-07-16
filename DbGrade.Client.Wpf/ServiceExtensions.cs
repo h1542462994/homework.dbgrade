@@ -56,7 +56,7 @@ namespace Tro.DbGrade.Client.Wpf
             return await client.PostAsync(uri, content:null);
         }
 
-        public static async Task<T> ReadTo<T>(this HttpResponseMessage message)
+        public static async Task<T> ReadToAsync<T>(this HttpResponseMessage message)
         {
             var str = await message.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(str);

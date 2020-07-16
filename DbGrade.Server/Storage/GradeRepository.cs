@@ -9,6 +9,7 @@ using Tro.DbGrade.FrameWork;
 using System.Runtime.Serialization;
 using System.Globalization;
 using Tro.DbGrade.FrameWork.Models.Types;
+using Microsoft.Data.SqlClient;
 
 namespace Tro.DbGrade.Server.Storage
 {
@@ -191,78 +192,49 @@ namespace Tro.DbGrade.Server.Storage
         [Completed]
         public IEnumerable<ReportSummaryOut> GetReportSummaries(string scope, int? tag, int? year, int? cyear)
         {
-            var reports = from student in DbContext.StudentOutView
-                   where
-                   ((scope == Scope.Profession && student.Pno == tag) ||
-                   (scope == Scope.Xclass && student.Cno == tag) ||
-                   (scope == Scope.All || scope == null)) && (cyear == null || cyear == student.CYear)
-                   select new ReportSummary()
-                   {
-                       Sno = student.Sno,
-                       Name = student.Name,
-                       Age = student.Age,
-                       Sex = student.Sex,
-                       Cno = student.Cno,
-                       CName = student.CName,
-                       CYear = student.CYear,
-                       Pno = student.Pno,
-                       PName = student.PName,
-                       TotalGrade = new Grade()
-                       {
-                           Year = null,
-                           TotalCredit = student.TotalCredit,
-                           CompleteCredit = student.CompleteCredit,
-                           Point = student.Point,
-                           GPA = student.GPA,
-                           OrderOfSchool = student.OrderOfSchool,
-                           OrderOfProfession = student.OrderOfProfession,
-                           OrderOfClass = student.OrderOfClass
-                       },
-                       Grades = (from report in DbContext.ReportSummaryView
-                                where student.Sno == report.Sno
-                                select new Grade()
-                                {
-                                    Year = report.Year,
-                                    TotalCredit = report.TotalCredit,
-                                    CompleteCredit = report.CompleteCredit,
-                                    Point = report.Point,
-                                    GPA = report.GPA,
-                                    OrderOfSchool = report.OrderOfSchool,
-                                    OrderOfProfession = report.OrderOfProfession,
-                                    OrderOfClass = report.OrderOfClass
-                                })
-                   };
+            var reports = (from student in DbContext.StudentOutView
+                           where
+                           ((scope == Scope.Profession && student.Pno == tag) ||
+                           (scope == Scope.Xclass && student.Cno == tag) ||
+                           (scope == Scope.All || scope == null)) && (cyear == null || cyear == student.CYear)
+                           select new ReportSummary()
+                           {
+                               Sno = student.Sno,
+                               Name = student.Name,
+                               Age = student.Age,
+                               Sex = student.Sex,
+                               Cno = student.Cno,
+                               CName = student.CName,
+                               CYear = student.CYear,
+                               Pno = student.Pno,
+                               PName = student.PName,
+                               TotalGrade = year == null ? new Grade()
+                               {
+                                   Year = null,
+                                   TotalCredit = student.TotalCredit,
+                                   CompleteCredit = student.CompleteCredit,
+                                   Point = student.Point,
+                                   GPA = student.GPA,
+                                   OrderOfSchool = student.OrderOfSchool,
+                                   OrderOfProfession = student.OrderOfProfession,
+                                   OrderOfClass = student.OrderOfClass
+                               } : (from report in DbContext.ReportSummaryView
+                                    where student.Sno == report.Sno && report.Year == year
+                                    select new Grade()
+                                    {
+                                        Year = report.Year,
+                                        TotalCredit = report.TotalCredit,
+                                        CompleteCredit = report.CompleteCredit,
+                                        Point = report.Point,
+                                        GPA = report.GPA,
+                                        OrderOfSchool = report.OrderOfSchool,
+                                        OrderOfProfession = report.OrderOfProfession,
+                                        OrderOfClass = report.OrderOfClass
+                                    }).First()
+                           });
 
 
-            if (year == null)
-            {
-                return from report in reports
-                       select new ReportSummaryOut()
-                       {
-                           Sno = report.Sno,
-                           Name = report.Name,
-                           Age = report.Age,
-                           Sex = report.Sex,
-                           Cno = report.Cno,
-                           CName = report.CName,
-                           CYear = report.CYear,
-                           Pno = report.Pno,
-                           PName = report.PName,
-                           TotalCredit = report.TotalGrade.TotalCredit,
-                           CompleteCredit = report.TotalGrade.CompleteCredit,
-                           Point = report.TotalGrade.Point,
-                           GPA = report.TotalGrade.GPA,
-                           Order = scope == Scope.Xclass ? report.TotalGrade.OrderOfClass: (scope == Scope.Profession ? report.TotalGrade.OrderOfProfession: report.TotalGrade.OrderOfSchool)
-                       };
-            } 
-            else
-            {
-                //使用ToList()，强制读取reports到内存，以切换QueryProvider。
-                return reports.ToList().SelectMany((report) => 
-                    (from item in report.Grades where year == item.Year select item).Any() ?    
-
-                    from item in report.Grades
-                    where year == item.Year
+            return from report in reports
                     select new ReportSummaryOut()
                     {
                         Sno = report.Sno,
@@ -274,29 +246,12 @@ namespace Tro.DbGrade.Server.Storage
                         CYear = report.CYear,
                         Pno = report.Pno,
                         PName = report.PName,
-                        TotalCredit = item.TotalCredit,
-                        CompleteCredit = item.CompleteCredit,
-                        Point = item.Point,
-                        GPA = item.GPA,
-                        Order = scope == Scope.Xclass ? item.OrderOfClass : (scope == Scope.Profession ? item.OrderOfProfession : item.OrderOfSchool)
-                    } : (
-                        new ReportSummaryOut[]
-                        {
-                            new ReportSummaryOut()
-                            {               
-                                Sno = report.Sno,
-                                Name = report.Name,
-                                Age = report.Age,
-                                Sex = report.Sex,
-                                Cno = report.Cno,
-                                CName = report.CName,
-                                CYear = report.CYear,
-                                Pno = report.Pno,
-                                PName = report.PName,
-                            }
-                        })
-                );
-            }
+                        TotalCredit = report.TotalGrade.TotalCredit,
+                        CompleteCredit = report.TotalGrade.CompleteCredit,
+                        Point = report.TotalGrade.Point,
+                        GPA = report.TotalGrade.GPA,
+                        Order = scope == Scope.Xclass ? report.TotalGrade.OrderOfClass: (scope == Scope.Profession ? report.TotalGrade.OrderOfProfession: report.TotalGrade.OrderOfSchool)
+                    };
         }
 
         [Completed]
@@ -308,7 +263,7 @@ namespace Tro.DbGrade.Server.Storage
                    (scope == Scope.Xclass && courseSummary.Cno == int.Parse(tag, CultureInfo.InvariantCulture)) ||
                    (scope == Scope.Course && courseSummary.Cono == int.Parse(tag, CultureInfo.InvariantCulture)) ||
                    (scope == Scope.Teacher && courseSummary.Tno == tag) ||
-                   (scope == Scope.All || scope == null)) && (year == null || year == courseSummary.CYear)
+                   (scope == Scope.All || scope == null)) && (year == null || year == courseSummary.Year) && (cyear == null || cyear == courseSummary.CYear)
                    select courseSummary;
         }
 
@@ -401,7 +356,16 @@ namespace Tro.DbGrade.Server.Storage
             }
             else
             {
-                DbContext.Database.ExecuteSqlInterpolated($"exec addCourse {name},{period},{way},{credit}");
+                try
+                {
+                    DbContext.Database.ExecuteSqlInterpolated($"exec addCourse {name},{period},{way},{credit}");
+
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e);
+                    return false;
+                }
                 return true;
             }
         }
@@ -419,16 +383,22 @@ namespace Tro.DbGrade.Server.Storage
             }
         }
 
-        public bool AddReport(string sno, int cono, string tno, double grade)
+        public string AddReport(string sno, int cono, double grade)
         {
-            if ((from report in DbContext.ReportsView where report.Sno == sno && report.Cono == cono && report.Tno == tno select report).Any())
+            var student = (from item in DbContext.Students where item.Sno == sno select item).First();
+            if (!(from openCourse in DbContext.OpenCoursesView where openCourse.Cono == cono && openCourse.Cno == student.Cno select openCourse).Any())
             {
-                return false;
+                return "不存在的开课";
+            }
+
+            if ((from report in DbContext.ReportsView where report.Sno == sno && report.Cono == cono select report).Any())
+            {
+                return "已存在该报告";
             } 
             else
             {
-                DbContext.Database.ExecuteSqlInterpolated($"exec addReport {sno},{cono},{tno},{grade}");
-                return true;
+                DbContext.Database.ExecuteSqlInterpolated($"exec addReport {sno},{cono},{grade}");
+                return null;
             }
         }
     }

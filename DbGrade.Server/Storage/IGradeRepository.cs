@@ -48,6 +48,6 @@ namespace Tro.DbGrade.Server.Storage
 
         bool AddOpenCourse(int cono, int cno, int year, Term term, string tno);
        
-        bool AddReport(string sno, int cono, string tno, double grade);
+        string AddReport(string sno, int cono, double grade);
     }
 }

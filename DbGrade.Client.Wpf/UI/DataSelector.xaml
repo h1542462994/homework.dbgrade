@@ -28,6 +28,7 @@
                     </ItemContainerTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <Button x:Name="ButtonFresh" Margin="12,0,0,0" Padding="0,4" Content="刷新" />
         </StackPanel>
 
         <StackPanel Margin="0,4" Orientation="Horizontal" Visibility="{Binding ElementName=control, Path=SelectorViewModel.Mode.Index, Converter={StaticResource IntJudgeConverter}, ConverterParameter=0}" >
