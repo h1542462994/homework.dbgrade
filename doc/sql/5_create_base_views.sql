@@ -13,53 +13,6 @@ from
 on
 	@{middle}_Provinces@{no}.@{short}_Prno@{no} = @{middle}_Cities@{no}.@{short}_Prno@{no}
 
-
-/*创建结构概览视图*/
-create or alter view @{middle}_StructView@{no}
-as
-select
-	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
-	(select @{short}_Count@{no} from @{middle}_ProfessionSummaryView@{no} where @{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_ProfessionSummaryView@{no}.@{short}_Pno@{no}) @{short}_PCount@{no},
-	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no},
-	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_Year@{no},
-	(select @{short}_Count@{no} from @{middle}_XclassSummaryView@{no} where @{middle}_Xclasses@{no}.@{short}_Cno@{no} = @{middle}_XclassSummaryView@{no}.@{short}_Cno@{no}) @{short}_CCount@{no}
-from
-	@{middle}_Professions@{no} left join @{middle}_Xclasses@{no} 
-on	
-	@{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_Xclasses@{no}.@{short}_Pno@{no}
-
-create or alter view @{middle}_XclassSummaryView@{no}
-as
-select 
-	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
-	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_Name@{no},
-	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
-	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	case when (studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
-from
-	@{middle}_Xclasses@{no} left join (
-		select distinct @{short}_Cno@{no} @{short}_Cno@{no}, count(*)_count from @{middle}_Students@{no}
-		group by @{short}_Cno@{no}
-	) studentSummary
-on 
-	@{middle}_Xclasses@{no}.@{short}_Cno@{no} = studentSummary.@{short}_Cno@{no}
-
-create or alter view @{middle}_ProfessionSummaryView@{no}
-as
-select
-	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
-	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
-	case when(studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
-from
-	@{middle}_Professions@{no} left join (
-	select @{short}_Pno@{no} @{short}_Pno@{no}, count(*)_count from @{middle}_StudentsView@{no}
-	group by @{short}_Pno@{no}
-	) studentSummary
-on
-	@{middle}_Professions@{no}.@{short}_Pno@{no} = studentSummary.@{short}_Pno@{no}
-
 /*创建学生详细视图*/
 create or alter view @{middle}_StudentsView@{no}
 as
@@ -84,6 +37,54 @@ as
 	where
 		@{middle}_Students@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no} and @{middle}_Xclasses@{no}.@{short}_Pno@{no} = @{middle}_Professions@{no}.@{short}_Pno@{no} and
 		@{middle}_Students@{no}.@{short}_Cino@{no} = @{middle}_Cities@{no}.@{short}_Cino@{no} and @{middle}_Cities@{no}.@{short}_Prno@{no} = @{middle}_Provinces@{no}.@{short}_Prno@{no}
+
+/*添加专业概览视图 baseon=StudentsView*/
+create or alter view @{middle}_ProfessionSummaryView@{no}
+as
+select
+	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
+	case when(studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
+from
+	@{middle}_Professions@{no} left join (
+	select @{short}_Pno@{no} @{short}_Pno@{no}, count(*)_count from @{middle}_StudentsView@{no}
+	group by @{short}_Pno@{no}
+	) studentSummary
+on
+	@{middle}_Professions@{no}.@{short}_Pno@{no} = studentSummary.@{short}_Pno@{no}
+
+/*添加班级概览视图*/
+create or alter view @{middle}_XclassSummaryView@{no}
+as
+select 
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
+	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_Name@{no},
+	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_CYear@{no},
+	@{middle}_Xclasses@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	case when (studentSummary._count is null) then 0 else studentSummary._count end @{short}_Count@{no}
+from
+	@{middle}_Xclasses@{no} left join (
+		select distinct @{short}_Cno@{no} @{short}_Cno@{no}, count(*)_count from @{middle}_Students@{no}
+		group by @{short}_Cno@{no}
+	) studentSummary
+on 
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} = studentSummary.@{short}_Cno@{no}
+
+/*创建结构概览视图 baseon=ProfessionSummaryView,XclassSummaryView*/
+create or alter view @{middle}_StructView@{no}
+as
+select
+	@{middle}_Professions@{no}.@{short}_Pno@{no} @{short}_Pno@{no},
+	@{middle}_Professions@{no}.@{short}_Name@{no} @{short}_PName@{no},
+	(select @{short}_Count@{no} from @{middle}_ProfessionSummaryView@{no} where @{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_ProfessionSummaryView@{no}.@{short}_Pno@{no}) @{short}_PCount@{no},
+	@{middle}_Xclasses@{no}.@{short}_Cno@{no} @{short}_Cno@{no},
+	@{middle}_Xclasses@{no}.@{short}_Name@{no} @{short}_CName@{no},
+	@{middle}_Xclasses@{no}.@{short}_Year@{no} @{short}_Year@{no},
+	(select @{short}_Count@{no} from @{middle}_XclassSummaryView@{no} where @{middle}_Xclasses@{no}.@{short}_Cno@{no} = @{middle}_XclassSummaryView@{no}.@{short}_Cno@{no}) @{short}_CCount@{no}
+from
+	@{middle}_Professions@{no} left join @{middle}_Xclasses@{no} 
+on	
+	@{middle}_Professions@{no}.@{short}_Pno@{no} = @{middle}_Xclasses@{no}.@{short}_Pno@{no}
 
 /*创建开设课程详细视图*/
 create or alter view @{middle}_OpenCoursesView@{no}
@@ -115,6 +116,7 @@ where
 	@{middle}_OpenCourses@{no}.@{short}_Cno@{no} = @{middle}_Xclasses@{no}.@{short}_Cno@{no} and
 	@{middle}_Xclasses@{no}.@{short}_Pno@{no} = @{middle}_Professions@{no}.@{short}_Pno@{no}
 
+/*添加报告详细视图,baseon=OpenCourseView,StudentsView*/
 create or alter view @{middle}_ReportsView@{no}
 as
 select distinct
@@ -153,6 +155,7 @@ where
 	@{middle}_Reports@{no}.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no} and
 	@{middle}_Reports@{no}.@{short}_Ono@{no} = @{middle}_OpenCoursesView@{no}.@{short}_Ono@{no}
 
+/*添加报告概览视图,baseon=ReportsView*/
 create or alter view @{middle}_ReportSummaryView@{no}
 as
 select
@@ -191,6 +194,7 @@ from
 	, @{middle}_StudentsView@{no}	
 	where summary.@{short}_Sno@{no} = @{middle}_StudentsView@{no}.@{short}_Sno@{no}) summary2
 
+/*添加学生导出视图,baseon=StudentsView,ReportSummaryView*/
 create or alter view @{middle}_StudentOutView@{no}
 as
 select 
@@ -233,6 +237,7 @@ from
 		on
 			@{middle}_StudentsView@{no}.@{short}_Sno@{no} = reportSummary.@{short}_Sno@{no}) summary) summary2
 
+/*添加课程概览视图,baseon=OpenCourseView,ReportsView*/
 create or alter view @{middle}_CourseSummaryView@{no}
 as
 select
