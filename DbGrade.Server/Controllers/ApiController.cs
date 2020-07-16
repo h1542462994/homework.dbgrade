@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Dto;
+using Tro.DbGrade.FrameWork.Models.Types;
 using Tro.DbGrade.Server.Storage;
 
 namespace Tro.DbGrade.Server.Controllers
@@ -120,6 +121,36 @@ namespace Tro.DbGrade.Server.Controllers
             if (profession.Length > 20 || xclass.Length > 20) return ApiResponse.BadRequest("参数太长");
             GradeRepository.AddStruct(profession, xclass, year);
             return ApiResponse.OK();
+        }
+
+        [HttpGet("student/add")]
+        [HttpPost("student/add")]
+        public object AddStudent(string sno, string name, Sex sex, int age, int cno, int cino)
+        {
+            var result = GradeRepository.AddStudent(sno, name, sex, age, cno, cino);
+            if (result)
+            {
+                return ApiResponse.OK();
+            } 
+            else
+            {
+                return ApiResponse.BadRequest("该学生已存在");
+            }
+        }
+
+        [HttpGet("teacher/add")]
+        [HttpPost("teacher/add")]
+        public object AddTeacher(string tno, string name, Sex sex, int age, Level level, string phone)
+        {
+            var result = GradeRepository.AddTeacher(tno, name, sex, age, level, phone);
+            if (result)
+            {
+                return ApiResponse.OK();
+            } 
+            else
+            {
+                return ApiResponse.BadRequest();
+            }
         }
     }
 }

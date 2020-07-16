@@ -28,7 +28,10 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         private void TeacherPage_Loaded(object sender, RoutedEventArgs e)
         {
             ButtonQuery.Click += (o, e) => RemoteStorage.FetchTeachersAsync();
+            ButtonAdd.Click += (o, e) => PageNavigator.NavigateToPopup<TeacherAddPage>();
         }
+
+        public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
 
         public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
         public RemoteStorage RemoteStorage => App.Current.ServiceProvider.GetService<RemoteStorage>();

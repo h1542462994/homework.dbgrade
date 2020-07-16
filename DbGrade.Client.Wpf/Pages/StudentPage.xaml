@@ -21,19 +21,19 @@
             <ui:DataSelector/>
             <StackPanel Margin="0,4" Orientation="Horizontal">
                 <Button x:Name="ButtonQuery" Padding="0,4" Width="80" Content="查询" IsEnabled="{Binding ElementName=page, Path=RemoteStorage.IsStudentOutViewFetchingEnabled}"/>
-                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
-                <Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>
+                <Button x:Name="ButtonAdd" Padding="0,4" Width="80" Margin="12,0,0,0" Content="添加"/>
+                <!--<Button Padding="0,4" Width="80" Margin="12,0,0,0" Content="删除"/>-->
             </StackPanel>
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="DataGrid1" ItemsSource="{Binding ElementName=page, Path=RemoteStorage.StudentOut}">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="" MinWidth="100">
+                    <!--<DataGridTemplateColumn Header="" MinWidth="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <ItemContainerTemplate>
                                 <TextBlock TextDecorations="{x:Static TextDecorations.Underline}" Text="查看" Style="{StaticResource TextLink}" Tag="{Binding Sno}" MouseDown="DataGridLink_MouseDown"/>
                             </ItemContainerTemplate>
                         </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    </DataGridTemplateColumn>-->
                     <DataGridTextColumn Header="学号" MinWidth="100" Binding="{Binding Sno}"/>
                     <DataGridTextColumn Header="姓名" MinWidth="100" Binding="{Binding Name}"/>
                     <DataGridTextColumn Header="性别" MinWidth="60" Binding="{Binding Sex, Converter={StaticResource SexStringConverter}}"/>

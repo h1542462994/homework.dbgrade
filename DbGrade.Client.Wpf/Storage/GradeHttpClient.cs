@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tro.DbGrade.FrameWork.Dto;
 using Tro.DbGrade.FrameWork.Models;
+using Tro.DbGrade.FrameWork.Models.Types;
 
 namespace Tro.DbGrade.Client.Wpf.Storage
 {
@@ -216,6 +217,27 @@ namespace Tro.DbGrade.Client.Wpf.Storage
                 Console.WriteLine(e);
                 return null;
             } 
+        }
+
+        public async Task<ApiResponse> AddStudent(string sno, string name, Sex sex, int age, int cno, int cino)
+        {
+            try
+            {
+                var response = await Client.PostAsync(ApiRoute.AddStudent, new Dictionary<string, object> {
+                    { "sno", sno },
+                    { "name", name},
+                    { "sex", sex },
+                    { "age", age },
+                    { "cno", cno },
+                    { "cino", cino }
+                });
+                return await response.ReadTo<ApiResponse>();
+            } 
+            catch(JsonException e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
     }
 }

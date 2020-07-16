@@ -8,6 +8,7 @@ using Tro.DbGrade.FrameWork.Models;
 using Tro.DbGrade.FrameWork;
 using System.Runtime.Serialization;
 using System.Globalization;
+using Tro.DbGrade.FrameWork.Models.Types;
 
 namespace Tro.DbGrade.Server.Storage
 {
@@ -172,6 +173,7 @@ namespace Tro.DbGrade.Server.Storage
                    };
         }
 
+        [Completed]
         public IEnumerable<ReportsView> GetReports(string scope, string tag, int? year, int? cyear) =>
             from report in DbContext.ReportsView
             where
@@ -186,6 +188,7 @@ namespace Tro.DbGrade.Server.Storage
                 scope == Scope.All || scope == null) && (year == null || year == report.Year) && (cyear == null || year == report.CYear)
             select report;
 
+        [Completed]
         public IEnumerable<ReportSummaryOut> GetReportSummaries(string scope, int? tag, int? year, int? cyear)
         {
             var reports = from student in DbContext.StudentOutView
@@ -296,6 +299,7 @@ namespace Tro.DbGrade.Server.Storage
             }
         }
 
+        [Completed]
         public IEnumerable<CourseSummaryView> GetCourseSummaries(string scope, string tag, int? year, int? cyear)
         {
             return from courseSummary in DbContext.CourseSummaryView
@@ -308,16 +312,19 @@ namespace Tro.DbGrade.Server.Storage
                    select courseSummary;
         }
 
+        [Completed]
         public IEnumerable<XTerm> GetTerms()
         {
             return DbContext.Terms;
         }
 
+        [Completed]
         public IEnumerable<Teacher> GetTeachers()
         {
             return DbContext.Teachers;
         }
 
+        [Completed]
         public IEnumerable<OpenCoursesView> GetOpenCourses(string scope, string tag, int? year, int? cyear)
         {
             return from openCourse in DbContext.OpenCoursesView
@@ -331,6 +338,7 @@ namespace Tro.DbGrade.Server.Storage
                    select openCourse;
         }
 
+        [Completed]
         public IEnumerable<Course> GetCourses()
         {
             return DbContext.Courses;
@@ -344,6 +352,84 @@ namespace Tro.DbGrade.Server.Storage
         public void AddStruct(string profession, string xclass, int year)
         {
             DbContext.Database.ExecuteSqlInterpolated($"exec addStruc {profession},{xclass},{year}");
+        }
+
+        public bool AddStudent(string sno, string name, Sex sex, int age, int cno, int cino)
+        {
+            if ((from student in DbContext.Students where student.Sno == sno select student).Any())
+            {
+                return false;
+            } 
+            else
+            { 
+                DbContext.Database.ExecuteSqlInterpolated($"exec addStudent {sno},{name},{sex},{age},{cno},{cino}");
+                return true;
+            }
+        }
+
+        public bool AddTeacher(string tno, string name, Sex sex, int age, Level level, string phone)
+        {
+            if ((from teacher in DbContext.Teachers where teacher.Tno == tno select teacher).Any())
+            {
+                return false;
+            }
+            else
+            {
+                DbContext.Database.ExecuteSqlInterpolated($"exec addTeacher {tno},{name},{sex},{age},{level},{phone}");
+                return true;
+            }
+        }
+
+        public bool AddTerm(int year, Term term)
+        {
+            if ((from xterm in DbContext.Terms where xterm.Year == year && xterm.Term == term select xterm).Any())
+            {
+                return false;
+            } 
+            else
+            {
+                DbContext.Database.ExecuteSqlInterpolated($"exec addTerm {year},{term}");
+                return true;
+            }
+        }
+
+        public bool AddCourse(string name, int period, Way way, double credit)
+        {
+            if ((from course in DbContext.Courses where course.Name == name select course).Any())
+            {
+                return false;
+            }
+            else
+            {
+                DbContext.Database.ExecuteSqlInterpolated($"exec addCourse {name},{period},{way},{credit}");
+                return true;
+            }
+        }
+
+        public bool AddOpenCourse(int cono, int cno, int year, Term term, string tno)
+        {
+            if ((from openCourse in DbContext.OpenCoursesView where openCourse.Cono == cono && openCourse.Cno == cno select openCourse).Any())
+            {
+                return false;
+            }
+            else
+            {
+                DbContext.Database.ExecuteSqlInterpolated($"exec addOpenCourse {cono},{cno},{year},{term},{tno}");
+                return true;
+            }
+        }
+
+        public bool AddReport(string sno, int cono, string tno, double grade)
+        {
+            if ((from report in DbContext.ReportsView where report.Sno == sno && report.Cono == cono && report.Tno == tno select report).Any())
+            {
+                return false;
+            } 
+            else
+            {
+                DbContext.Database.ExecuteSqlInterpolated($"exec addReport {sno},{cono},{tno},{grade}");
+                return true;
+            }
         }
     }
 }

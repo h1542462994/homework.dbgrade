@@ -32,8 +32,8 @@ namespace Tro.DbGrade.Client.Wpf.Pages
             //DataGrid1.ItemsSource = RemoteStorage.StudentOutView;
             //RemoteStorage.FetchStudent();
             SelectorViewModel.SelectorMode = SelectorMode.StructDest;
-            ButtonQuery.Click += (o, e) => { RemoteStorage.FetchStudentsAsync(); };
-           
+            ButtonQuery.Click += (o, e) => RemoteStorage.FetchStudentsAsync(); 
+            ButtonAdd.Click += (o, e) => PageNavigator.NavigateToPopup<StudentAddPage>();
         }
 
         public GlobalState State => App.Current.ServiceProvider.GetService<GlobalState>();

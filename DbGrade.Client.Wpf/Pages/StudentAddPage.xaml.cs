@@ -12,26 +12,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Tro.DbGrade.Client.Wpf.Storage;
+using Tro.DbGrade.FrameWork.Models.Types;
 
 namespace Tro.DbGrade.Client.Wpf.Pages
 {
     /// <summary>
-    /// StructAddPage.xaml 的交互逻辑
+    /// StudentAddPage.xaml 的交互逻辑
     /// </summary>
-    public partial class StructAddPage : Page
+    public partial class StudentAddPage : Page
     {
-        public StructAddPage()
+        public StudentAddPage()
         {
             InitializeComponent();
-            Loaded += StructAddPage_Loaded;
+            Loaded += StudentAddPage_Loaded;
         }
 
-        public StructAddPage(FrameWork.Dto.Profession profession): this()
-        {
-            TextBoxProfession.Text = profession.Name;
-        }
-
-        private void StructAddPage_Loaded(object sender, RoutedEventArgs e)
+        private void StudentAddPage_Loaded(object sender, RoutedEventArgs e)
         {
             ButtonCommit.Click += ButtonCommit_Click;
             State.AddMessage = "";
@@ -40,24 +36,39 @@ namespace Tro.DbGrade.Client.Wpf.Pages
         private async void ButtonCommit_Click(object sender, RoutedEventArgs e)
         {
             ButtonCommit.IsEnabled = false;
-            var profession = TextBoxProfession.Text;
-            var xclass = TextBoxClass.Text;
-            var yearStr = TextBoxYear.Text;
-            if (string.IsNullOrEmpty(profession) || string.IsNullOrEmpty(xclass) || string.IsNullOrEmpty(yearStr))
+            var sno = TextBoxSno.Text;
+            var name = TextBoxName.Text;
+            var ageStr = TextBoxAge.Text;
+            Sex sex = (Sex)ComboBoxSex.SelectedIndex;
+            if (string.IsNullOrEmpty(sno) || string.IsNullOrEmpty(ageStr) || string.IsNullOrEmpty(name))
             {
                 State.AddMessage = "参数不能为空";
                 ButtonCommit.IsEnabled = true;
                 return;
             }
-            if (profession.Length > 20 || profession.Length > 20)
+            if (sno.Length > 20)
             {
                 State.AddMessage = "参数太长";
                 ButtonCommit.IsEnabled = true;
                 return;
             }
-            if (int.TryParse(yearStr, out int year))
+            if (int.TryParse(ageStr, out int age))
             {
-                var response = await HttpClient.AddStruct(profession, xclass, year);
+                if (age < 8 || age > 120)
+                {
+                    State.AddMessage = "年龄不是一个学生该有的年龄";
+                }
+
+                if (SelectorViewModel.CityIndex <= 0 || SelectorViewModel.ClassIndex <= 0)
+                {
+                    State.AddMessage = "城市或者班级必选";
+                    ButtonCommit.IsEnabled = true;
+                    return;
+                }
+
+                var response = await HttpClient.AddStudent(sno, name, sex, age,
+                    SelectorViewModel.Xclasses[SelectorViewModel.ClassIndex].Cno,
+                    SelectorViewModel.Cities[SelectorViewModel.CityIndex].Cino);
                 if (response.Code == System.Net.HttpStatusCode.OK)
                 {
                     State.AddMessage = "添加成功";
@@ -69,7 +80,9 @@ namespace Tro.DbGrade.Client.Wpf.Pages
                     State.AddMessage = response.Msg;
                     ButtonCommit.IsEnabled = true;
                 }
-            } else
+
+            }
+            else
             {
                 State.AddMessage = "输入不符合数字";
                 ButtonCommit.IsEnabled = true;
@@ -77,6 +90,7 @@ namespace Tro.DbGrade.Client.Wpf.Pages
             }
         }
 
+        public SelectorViewModel SelectorViewModel => App.Current.ServiceProvider.GetService<SelectorViewModel>();
         public PageNavigator PageNavigator => App.Current.ServiceProvider.GetService<PageNavigator>();
         public GradeHttpClient HttpClient => App.Current.ServiceProvider.GetService<GradeHttpClient>();
         public GlobalState State => App.Current.ServiceProvider.GetService<GlobalState>();
